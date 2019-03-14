@@ -55,12 +55,69 @@ lp_Print(void (*output)(void *, char *, int),
     char padc;
 
     int length;
+	int state = 0;
 
-    for(;;) {
+    for(; *fmt; ++fmt) {
 	{ 
+		if (state == 0) {
+			if (*fmt != '%') {
+				OUTPUT(arg, fmt, 1);
+			} else {
+				state = 1;
+				ladjust = 0;
+				padc = ' ';
+				prec = 0;
+				width = 0;
+				longFlag = 0;
+			}
+			continue;
+		} else if(state == 1) {
+			if(*fmt == '-') {
+				ladjust = 1;
+			} else if(*fmt == '0') {
+				padc = '0';
+			} else {
+				state = 2;
+				--fmt;
+			}
+			continue;
+		} else if(state == 2) {
+			if(IsDigit(*fmt)) {
+				width = width*10+Ctod(*fmt);
+			} else {
+				--fmt;
+				state = 3;
+			}
+			continue;
+		} else if(state == 3) {
+			if(*fmt == '.') {
+				state = 4;
+			} else {
+				--fmt;
+				state = 5;
+			}
+			continue;
+		} else if(state == 4) {
+			if(IsDigit(*fmt)) {
+				prec = prec*10+Ctod(*fmt);
+			} else {
+				--fmt;
+				state = 5;
+			}
+			continue;
+		} else if(state == 5) {
+			if(*fmt == 'l') {
+				longFlag = 1;
+			} else {
+				--fmt;
+			}
+			state = 6;
+			continue;
+		}
+		state = 0;
+
 	    /* scan for the next '%' */
 	    /* flush the string found so far */
-
 	    /* are we hitting the end? */
 	}
 
@@ -85,7 +142,7 @@ lp_Print(void (*output)(void *, char *, int),
 
 	 case 'd':
 	 case 'D':
-	    if (longFlag) { 
+	    if (longFlag){ 
 		num = va_arg(ap, long int);
 	    } else { 
 		num = va_arg(ap, int); 
@@ -161,7 +218,6 @@ lp_Print(void (*output)(void *, char *, int),
 	    OUTPUT(arg, fmt, 1);
 	}	/* switch (*fmt) */
 
-	fmt ++;
     }		/* for(;;) */
 
     /* special termination call */

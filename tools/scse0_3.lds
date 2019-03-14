@@ -8,6 +8,11 @@ Set the ENTRY point of the program to _start.
 */
 SECTIONS
 {
+	. = 0x80010000;
+	.text : {*(.text)}
+	. = 0x80400000;
+	.data : {*(.data)}
+	.bss : {*(.bss)}
 
 /*To do:
   fill in the correct address of the key section
