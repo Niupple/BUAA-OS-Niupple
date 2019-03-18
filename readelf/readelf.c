@@ -105,8 +105,13 @@ int readelf(u_char *binary, int size)
         // for each section header, output section number and section addr.
 		for (Nr = 0; Nr < sh_entry_count; ++Nr) {
 			int off = Nr*sh_entry_size;
+			int addr;
 			shdr = ((Elf32_Shdr *)(ptr_sh_table+off));
-			printf("%d:0x%x\n", Nr, blswitch32(shdr->sh_addr));
+			addr = shdr->sh_addr;
+			if(big_endian) {
+				addr = blswitch32(addr);
+			}
+			printf("%d:0x%x\n", Nr, addr);
 		}
 
         return 0;
