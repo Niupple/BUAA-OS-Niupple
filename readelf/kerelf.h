@@ -93,6 +93,8 @@ typedef struct {
 #define EI_MAG3         3               /* File identification byte 3 index */
 #define ELFMAG3         'F'             /* Magic number byte 3 */
 
+#define EI_DATA	5
+
 
 /* Section segment header.  */
 typedef struct{

@@ -16,6 +16,21 @@
  *   Return 0 if `binary` isn't an elf. Otherwise
  * return 1.
  */
+int blswitch32(int x)
+{
+	int ret = 0;
+	ret |= ((x&(0xFF))<<24);
+	ret |= ((x&(0xFF00))<<8);
+	ret |= ((x&(0xFF0000))>>8);
+	ret |= ((x&(0xFF000000))>>24);
+	return ret;
+}
+short blswitch16(short x) {
+	int ret = 0;
+	ret |= ((x&0xFF)<<8);
+	ret |= ((x&0xFF00)>>8);
+	return ret;
+}
 int is_elf_format(u_char *binary)
 {
         Elf32_Ehdr *ehdr = (Elf32_Ehdr *)binary;
@@ -28,7 +43,10 @@ int is_elf_format(u_char *binary)
 
         return 0;
 }
-
+int endian_type(Elf32_Ehdr *ehdr)
+{
+	return ehdr->e_ident[EI_DATA];
+}
 /* Overview:
  *   read an elf format binary file. get ELF's information
  *
@@ -42,17 +60,15 @@ int is_elf_format(u_char *binary)
 int readelf(u_char *binary, int size)
 {
         Elf32_Ehdr *ehdr = (Elf32_Ehdr *)binary;
+		Elf32_Off shoff;
 
         int Nr;
+		int big_endian = 0;
 
         Elf32_Shdr *shdr = NULL;
-		Elf32_Phdr *phdr = NULL;
 
         u_char *ptr_sh_table = NULL;
-		u_char *ptr_ph_table = NULL;
-		Elf32_Half ph_entry_count;
         Elf32_Half sh_entry_count;
-		Elf32_Half ph_entry_size;
         Elf32_Half sh_entry_size;
 
 
@@ -61,28 +77,34 @@ int readelf(u_char *binary, int size)
                 printf("not a standard elf format\n");
                 return -1;
         }
+		big_endian = (endian_type(ehdr) == 2);
+
+		/*debug-----------------------------
+		if(big_endian) {
+			printf("Big endian\n");
+		} else {
+			printf("Little endian\n");
+		}
+		*/
 
         // get section table addr, section header number and section header size.
 
-		ptr_sh_table = (binary+ehdr->e_shoff);
-		ptr_ph_table = (binary+ehdr->e_phoff);
+		shoff = ehdr->e_shoff;
+		if(big_endian) {
+			shoff = blswitch32(shoff);
+		}
+		ptr_sh_table = (binary+shoff);
 		sh_entry_size = ehdr->e_shentsize;
-		ph_entry_size = ehdr->e_phentsize;
 		sh_entry_count = ehdr->e_shnum;
-		ph_entry_count = ehdr->e_phnum;
-
+		if(big_endian) {
+			sh_entry_size = blswitch16(sh_entry_size);
+			sh_entry_count = blswitch16(sh_entry_count);
+		}
         // for each section header, output section number and section addr.
-		/*
 		for (Nr = 0; Nr < sh_entry_count; ++Nr) {
 			int off = Nr*sh_entry_size;
 			shdr = ((Elf32_Shdr *)(ptr_sh_table+off));
-			printf("%d:0x%x\n", Nr, shdr->sh_offset);
-		}
-		*/
-		for (Nr = 0; Nr < ph_entry_count; ++Nr) {
-			int off = Nr*ph_entry_size;
-			phdr = ((Elf32_Phdr *)(ptr_ph_table+off));
-			printf("%d:0x%x\n", Nr, phdr->p_offset);
+			printf("%d:0x%x\n", Nr, blswitch32(shdr->sh_addr));
 		}
 
         return 0;
