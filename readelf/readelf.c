@@ -6,6 +6,8 @@
 
 #include "kerelf.h"
 #include <stdio.h>
+#define EI_DATA	5
+
 /* Overview:
  *   Check whether it is a ELF file.
  *
