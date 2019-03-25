@@ -14,7 +14,11 @@
 
 int main()
 {
+	int a[] = {1, 2, 10000, 1000};
+	long int b[] = {1, 2, 4, 8};
 	printf("main.c:\tmain is start ...\n");
+	printf("array test: %#4a, %4#4a, %04#4a, %-4#4a\n", a, a, a, a);
+	printf("empty %#0a, long %#4la\n", b, b);
 
 	mips_init();
 	panic("main is over is error!");
