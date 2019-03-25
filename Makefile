@@ -9,7 +9,7 @@ boot_dir	  := boot
 init_dir	  := init
 lib_dir		  := lib
 tools_dir	  := tools
-test_dir          :=
+test_dir      := extra
 vmlinux_elf	  := gxemul/vmlinux
 
 link_script   := $(tools_dir)/scse0_3.lds
@@ -35,6 +35,9 @@ vmlinux: $(modules)
 
 $(modules): 
 	$(MAKE) --directory=$@
+
+test:
+	/OSLAB/gxemul -E testmips -C R3000 -M 64 $(vmlinux_elf)
 
 clean: 
 	for d in $(modules);	\

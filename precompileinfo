@@ -1,0 +1,130 @@
+# 1 "extra/calculator.S"
+# 1 "<built-in>"
+# 1 "<command line>"
+# 1 "extra/calculator.S"
+# 1 "/OSLAB/compiler/usr/../mips_4KC/usr/include/asm/regdef.h" 1 3 4
+# 13 "/OSLAB/compiler/usr/../mips_4KC/usr/include/asm/regdef.h" 3 4
+# 1 "/OSLAB/compiler/usr/../mips_4KC/usr/include/asm/sgidefs.h" 1 3 4
+# 14 "/OSLAB/compiler/usr/../mips_4KC/usr/include/asm/regdef.h" 2 3 4
+# 2 "extra/calculator.S" 2
+
+# 1 "/OSLAB/compiler/usr/../mips_4KC/usr/include/asm/asm.h" 1 3 4
+# 4 "extra/calculator.S" 2
+
+#$16: driver
+#$17: operator
+.text
+.globl calculator; .align 2; .type calculator,@function; .ent calculator,0; calculator: .frame $29,0,$31
+
+li $16, 0x10000000 #address of driver
+
+main_loop:
+ #get operator
+ jal get_byte
+ nop
+ move $2, $17
+ li $8, 81 #Q
+ bne $17, $8, quit_else
+ nop
+ jal quit
+ nop
+ quit_else:
+
+ #then input two operands
+ jal get_number
+ nop
+ move $2, $18 #first operand
+
+ jal get_number
+ nop
+ move $2, $19 #second operand
+
+ #then calculate
+ add:
+ addi $8, $17, -43
+ bnez $8, sub
+ nop
+
+ add $4, $18, $19
+ j end_calc
+
+ sub:
+ sub $4, $18, $19
+ end_calc:
+ jal output
+ nop
+
+get_byte:
+ input_loop:
+ lb $2, 0($16) #byte inputed
+ beqz $2, input_loop
+ nop
+ sb $2, 0($16)
+ jr $31
+ nop
+
+get_number:
+ addi $29, $29, -16
+ sw $8, 0($29)
+ sw $9, 4($29)
+ sw $10, 8($29)
+ sw $31, 12($29)
+
+ number_loop:
+ jal get_byte
+ nop
+ li $8, 68 #D
+ beq $8, $2, end_number_loop
+ nop
+ li $8, 10
+ mult $9, $8
+ mfhi $8 #$8 = $9*10
+ addi $2, -48 #to_digit
+ addu $9, $8, $2
+ j number_loop
+ nop
+ end_number_loop:
+
+ lw $8, 0($29)
+ lw $9, 4($29)
+ lw $10, 8($29)
+ lw $31, 12($29)
+ addi $29, $29, 16
+ jr $31
+ nop
+
+output:
+ addi $29, $29, -16
+ sw $8, 0($29)
+ sw $9, 4($29)
+ sw $10, 8($29)
+ sw $31, 12($29)
+
+ output_loop:
+ beqz $4, end_output
+ nop
+ li $8, 10
+ div $4, $8
+ mfhi $8
+ addiu $8, 48
+ sb $8, 0($16) #output
+ mflo $4
+ j output_loop
+ nop
+ end_output:
+
+ lw $8, 0($29)
+ lw $9, 4($29)
+ lw $10, 8($29)
+ lw $31, 12($29)
+ addi $29, $29, 16
+
+ jr $31
+ nop
+
+quit:
+ sw $16, 0x10($16)
+ jr $31
+ nop
+
+.end calculator; .size calculator,.-calculator
