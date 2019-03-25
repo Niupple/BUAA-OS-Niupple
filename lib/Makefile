@@ -9,6 +9,10 @@ INCLUDES := -I./ -I../ -I../include/
 
 all: print.o printf.o 
 
+test: main
+
+main: print.o printf.o main.o
+
 clean:
 	rm -rf *~ *.o
 
