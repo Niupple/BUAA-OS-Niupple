@@ -304,32 +304,32 @@ PrintNum(char * buf, unsigned long u, int base, int negFlag,
 	padc = ' ';
     }
     if (negFlag && !ladjust && (padc == '0')) {
-	for (i = actualLength-1; i< length-1; i++) buf[i] = padc;
-	buf[length -1] = '-';
-    } else {
-	for (i = actualLength; i< length; i++) buf[i] = padc;
-    }
-	    
-
-    /* prepare to reverse the string */
-    {
-	int begin = 0;
-	int end;
-	if (ladjust) {
-	    end = actualLength - 1;
+		for (i = actualLength-1; i< length-1; i++) buf[i] = padc;
+		buf[length -1] = '-';
 	} else {
-	    end = length -1;
+		for (i = actualLength; i< length; i++) buf[i] = padc;
 	}
 
-	while (end > begin) {
-	    char tmp = buf[begin];
-	    buf[begin] = buf[end];
-	    buf[end] = tmp;
-	    begin ++;
-	    end --;
-	}
-    }
 
-    /* adjust the string pointer */
-    return length;
+	/* prepare to reverse the string */
+	{
+		int begin = 0;
+		int end;
+		if (ladjust) {
+			end = actualLength - 1;
+		} else {
+			end = length -1;
+		}
+
+		while (end > begin) {
+			char tmp = buf[begin];
+			buf[begin] = buf[end];
+			buf[end] = tmp;
+			begin ++;
+			end --;
+		}
+	}
+
+	/* adjust the string pointer */
+	return length;
 }
