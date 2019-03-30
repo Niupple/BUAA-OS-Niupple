@@ -26,8 +26,11 @@ void mips_detect_memory()
 {
     /* Step 1: Initialize basemem.
      * (When use real computer, CMOS tells us how many kilobytes there are). */
+	maxpa = 67108864;
+	basemem = 67108864;
 
     // Step 2: Calculate corresponding npage value.
+	npage = basemem/(1024*4);
 
     printf("Physical memory: %dK available, ", (int)(maxpa / 1024));
     printf("base = %dK, extended = %dK\n", (int)(basemem / 1024),
@@ -52,6 +55,7 @@ static void *alloc(u_int n, u_int align, int clear)
         freemem = (u_long)end;
     }
 
+	//printf("before alloc, freemem = %x\n", freemem);
     /* Step 1: Round up `freemem` up to be aligned properly */
     freemem = ROUND(freemem, align);
 
@@ -60,6 +64,7 @@ static void *alloc(u_int n, u_int align, int clear)
 
     /* Step 3: Increase `freemem` to record allocation. */
     freemem = freemem + n;
+	//printf("after alloc of size %d, freemem = %x\n", n, freemem);
 
     /* Step 4: Clear allocated chunk if parameter `clear` is set. */
     if (clear) {
@@ -172,17 +177,30 @@ void mips_vm_init()
 void
 page_init(void)
 {
+	int i;
+	struct Page *pnow;
     /* Step 1: Initialize page_free_list. */
     /* Hint: Use macro `LIST_INIT` defined in include/queue.h. */
-
-
+	LIST_INIT(&page_free_list);
     /* Step 2: Align `freemem` up to multiple of BY2PG. */
-
-
+	freemem = ROUND(freemem, BY2PG);
+	//printf("freemem when init = %x\n", freemem);
+	//printf("starting pa = %x\n", page2pa(pages));
     /* Step 3: Mark all memory blow `freemem` as used(set `pp_ref`
      * filed to 1) */
-
-
+	for(i = 0; i < npage; ++i) {
+		if(page2kva(pages+i) < freemem) {
+			pages[i].pp_ref = 1;
+		} else {
+			pages[i].pp_ref = 0;
+		}
+	}
+	for(i = npage-1; i >= 0; --i) {
+		pnow = pages+i;
+		if(!pnow->pp_ref) {
+			LIST_INSERT_HEAD(&page_free_list, pnow, pp_link);
+		}
+	}
     /* Step 4: Mark the other memory as free. */
 }
 
@@ -206,12 +224,19 @@ page_alloc(struct Page **pp)
     struct Page *ppage_temp;
 
     /* Step 1: Get a page from free memory. If fails, return the error code.*/
-
+	if(LIST_EMPTY(&page_free_list)) {
+		//printf("no free page\n");
+		return -E_NO_MEM;		/*no free page*/
+	}
+	ppage_temp = LIST_FIRST(&page_free_list);
+	LIST_REMOVE(ppage_temp, pp_link);
 
     /* Step 2: Initialize this page.
      * Hint: use `bzero`. */
-
-
+	bzero(page2kva(ppage_temp), BY2PG);
+	*pp = ppage_temp;
+	/*++ppage_temp->pp_ref;*/
+	return 0;
 }
 
 /*Overview:
@@ -222,10 +247,15 @@ void
 page_free(struct Page *pp)
 {
     /* Step 1: If there's still virtual address refers to this page, do nothing. */
-
-
+	/*--pp->pp_ref;*/
+	//printf("freeing page %x, counter = %d\n", page2kva(pp), pp->pp_ref);
+	if((int)pp->pp_ref > 0) {
+		return;
+	} else if(pp->pp_ref == 0) {
+		LIST_INSERT_HEAD(&page_free_list, pp, pp_link);
+		return;
+	}
     /* Step 2: If the `pp_ref` reaches to 0, mark this page as free and return. */
-
 
     /* If the value of `pp_ref` less than 0, some error must occurred before,
      * so PANIC !!! */
@@ -415,8 +445,6 @@ physical_memory_manage_check(void)
     assert(pp1 && pp1 != pp0);
     assert(pp2 && pp2 != pp1 && pp2 != pp0);
 
-
-
     // temporarily steal the rest of the free pages
     fl = page_free_list;
     // now this page_free list must be empty!!!!
@@ -447,19 +475,23 @@ physical_memory_manage_check(void)
     struct Page_list test_free;
     struct Page *test_pages;
 	test_pages= (struct Page *)alloc(10 * sizeof(struct Page), BY2PG, 1);
+	//printf("test_pages starts at %x\n", test_pages);
 	LIST_INIT(&test_free);
 	//LIST_FIRST(&test_free) = &test_pages[0];
 	int i,j=0;
 	struct Page *p, *q;
 	//test inert tail
+	//printf("ok till now\n");
 	for(i=0;i<10;i++) {
 		test_pages[i].pp_ref=i;
+		//printf("on %d\n", i);
 		//test_pages[i].pp_link=NULL;
 		//printf("0x%x  0x%x\n",&test_pages[i], test_pages[i].pp_link.le_next);
 		LIST_INSERT_TAIL(&test_free,&test_pages[i],pp_link);
 		//printf("0x%x  0x%x\n",&test_pages[i], test_pages[i].pp_link.le_next);
 
 	}
+	//printf("ok till now\n");
 	p = LIST_FIRST(&test_free);
 	int answer1[]={0,1,2,3,4,5,6,7,8,9};
 	assert(p!=NULL);
