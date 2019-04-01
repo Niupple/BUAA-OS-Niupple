@@ -88,11 +88,12 @@ static void *alloc(u_int n, u_int align, int clear) {
 
 	if (freemem == 0) {
 		freemem = (u_long)end;
-		reverse_freemem = (u_long)(KADDR(maxpa-1)+1);
+		reverse_freemem = (u_long)(KADDR(maxpa-1));
 	}
 
 	freemem = ROUND(freemem, align);
-	reverse_freemem -= ROUND(n, align);
+	reverse_freemem -= n;
+	reverse_freemem = ROUNDDOWN(reverse_freemem, align);
 	freemem = freemem + n;
 	alloced_mem = reverse_freemem;
 
@@ -101,7 +102,7 @@ static void *alloc(u_int n, u_int align, int clear) {
 	}
 
 	if (PADDR(freemem) >= maxpa) {
-		panic("out of memorty\n");
+        panic("out of memorty\n");
 		return (void *)-E_NO_MEM;
 	}
 
