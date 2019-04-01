@@ -667,6 +667,7 @@ void pageout(int va, int context)
 }
 
 void get_page_status(int pa) {
+	static int times = 0;
 	int idx = pa/BY2PG;
 	int ret;
 	struct Page *p;
@@ -681,6 +682,6 @@ void get_page_status(int pa) {
 			}
 		}
 	}
-	printf("times:%d,page status:%d\n", pages[idx].pp_ref, ret);
+	printf("times:%d,page status:%d\n", ++times, ret);
 }
 

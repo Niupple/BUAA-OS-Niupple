@@ -16,7 +16,6 @@ void mips_init()
 	physical_memory_manage_check();
 	/*page_check();*/
 
-	/*
 	get_page_status(0);
 	struct Page *tp;
 	assert(page_alloc(&tp) == 0);
@@ -27,7 +26,6 @@ void mips_init()
 	get_page_status(page2pa(tp));
 	page_free(tp);
 	get_page_status(page2pa(tp));
-	*/
 
 	panic("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
 
