@@ -88,7 +88,7 @@ static void *alloc(u_int n, u_int align, int clear) {
 
 	if (freemem == 0) {
 		freemem = (u_long)end;
-		reverse_freemem = (u_long)(KADDR(maxpa-1));
+		reverse_freemem = (u_long)(KADDR(maxpa-1)+1);
 	}
 
 	freemem = ROUND(freemem, align);
@@ -698,5 +698,13 @@ void pageout(int va, int context)
 
     page_insert((Pde *)context, p, VA2PFN(va), PTE_R);
     printf("pageout:\t@@@___0x%x___@@@  ins a page \n", va);
+}
+
+void test_alloc() {
+	int i;
+	int cnt = 0;
+	extern char end[];
+	alloc((u_long)KADDR(maxpa-1)-(u_long)end, BY2PG, 1);
+	printf("okk\n");
 }
 
