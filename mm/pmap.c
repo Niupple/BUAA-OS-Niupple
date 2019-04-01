@@ -173,7 +173,7 @@ void mips_vm_init()
 
     /* Step 1: Allocate a page for page directory(first level page table). */
     pgdir = alloc(BY2PG, BY2PG, 1);
-    printf("to memory %x for struct page directory.\n", reverse_freemem);
+    printf("to memory %x for struct page directory.\n", reverse_freemem+BY2PG);
     mCONTEXT = (int)pgdir;
 
     boot_pgdir = pgdir;
@@ -183,7 +183,7 @@ void mips_vm_init()
      * physical address `pages` allocated before. For consideration of alignment,
      * you should round up the memory size before map. */
     pages = (struct Page *)alloc(npage * sizeof(struct Page), BY2PG, 1);
-    printf("to memory %x for struct Pages.\n", reverse_freemem);
+    printf("to memory %x for struct Pages.\n", reverse_freemem+(npage * sizeof(struct Page)));
     n = ROUND(npage * sizeof(struct Page), BY2PG);
     boot_map_segment(pgdir, UPAGES, n, PADDR(pages), PTE_R);
 
