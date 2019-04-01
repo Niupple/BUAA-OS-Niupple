@@ -100,6 +100,8 @@ void tlb_invalidate(Pde *pgdir, u_long va);
 
 void boot_map_segment(Pde *pgdir, u_long va, u_long size, u_long pa, int perm);
 
+void get_page_status(int);
+
 extern struct Page *pages;
 
 
