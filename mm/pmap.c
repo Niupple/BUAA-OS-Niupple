@@ -18,6 +18,8 @@ static u_long freemem;
 
 static struct Page_list page_free_list;	/* Free list of physical pages */
 
+void test_queue();
+void pm_check();
 
 /* Overview:
  	Initialize basemem and npage.
@@ -662,5 +664,23 @@ void pageout(int va, int context)
 
     page_insert((Pde *)context, p, VA2PFN(va), PTE_R);
     printf("pageout:\t@@@___0x%x___@@@  ins a page \n", va);
+}
+
+void get_page_status(int pa) {
+	int idx = pa/BY2PG;
+	int ret;
+	struct Page *p;
+	if(pages[idx].pp_ref) {
+		ret = 3;
+	} else {
+		ret = 2;
+		LIST_FOREACH(p, &page_free_list, pp_link) {
+			if(p && page2ppn(p) == idx) {
+				ret = 1;
+				break;
+			}
+		}
+	}
+	printf("times:%d,page status:%d\n", pages[idx].pp_ref, ret);
 }
 
