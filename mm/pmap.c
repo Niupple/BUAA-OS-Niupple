@@ -15,8 +15,9 @@ Pde *boot_pgdir;
 
 struct Page *pages;
 static u_long freemem;
+static u_long reverse_freemem;
 
-static struct Page_list page_free_list;	/* Free list of physical pages */
+struct Page_list page_free_list;	/* Free list of physical pages */
 
 
 /* Overview:
@@ -44,7 +45,7 @@ void mips_detect_memory()
 
    Post-Condition:
 	If we're out of memory, should panic, else return this address of memory we have allocated.*/
-static void *alloc(u_int n, u_int align, int clear)
+static void *alloc_old(u_int n, u_int align, int clear)
 {
     extern char end[];
     u_long alloced_mem;
@@ -79,6 +80,32 @@ static void *alloc(u_int n, u_int align, int clear)
 
     /* Step 5: return allocated chunk. */
     return (void *)alloced_mem;
+}
+
+static void *alloc(u_int n, u_int align, int clear) {
+	extern char end[];
+	u_long alloced_mem;
+
+	if (freemem == 0) {
+		freemem = (u_long)end;
+		reverse_freemem = (u_long)(KADDR(maxpa-1)+1);
+	}
+
+	freemem = ROUND(freemem, align);
+	reverse_freemem -= ROUND(n, align);
+	freemem = freemem + n;
+	alloced_mem = reverse_freemem;
+
+	if (clear) {
+		bzero((void *)alloced_mem, n);
+	}
+
+	if (PADDR(freemem) >= maxpa) {
+		panic("out of memorty\n");
+		return (void *)-E_NO_MEM;
+	}
+
+	return (void *)alloced_mem;
 }
 
 /* Overview:
@@ -145,7 +172,7 @@ void mips_vm_init()
 
     /* Step 1: Allocate a page for page directory(first level page table). */
     pgdir = alloc(BY2PG, BY2PG, 1);
-    printf("to memory %x for struct page directory.\n", freemem);
+    printf("to memory %x for struct page directory.\n", reverse_freemem);
     mCONTEXT = (int)pgdir;
 
     boot_pgdir = pgdir;
@@ -155,7 +182,7 @@ void mips_vm_init()
      * physical address `pages` allocated before. For consideration of alignment,
      * you should round up the memory size before map. */
     pages = (struct Page *)alloc(npage * sizeof(struct Page), BY2PG, 1);
-    printf("to memory %x for struct Pages.\n", freemem);
+    printf("to memory %x for struct Pages.\n", reverse_freemem);
     n = ROUND(npage * sizeof(struct Page), BY2PG);
     boot_map_segment(pgdir, UPAGES, n, PADDR(pages), PTE_R);
 
@@ -179,6 +206,7 @@ page_init(void)
 {
 	int i;
 	struct Page *pnow;
+	extern char end[];
     /* Step 1: Initialize page_free_list. */
     /* Hint: Use macro `LIST_INIT` defined in include/queue.h. */
 	LIST_INIT(&page_free_list);
@@ -189,7 +217,7 @@ page_init(void)
     /* Step 3: Mark all memory blow `freemem` as used(set `pp_ref`
      * filed to 1) */
 	for(i = 0; i < npage; ++i) {
-		if(page2kva(pages+i) < freemem) {
+		if(page2kva(pages+i) < end || page2kva(pages+i) >= reverse_freemem) {
 			pages[i].pp_ref = 1;
 		} else {
 			pages[i].pp_ref = 0;
@@ -520,6 +548,13 @@ physical_memory_manage_check(void)
 			p=LIST_NEXT(p,pp_link);
 	}
 
+	/*///////////////////////////////////////////////
+	for(i = 0; i < npage; ++i) {
+		if(pages[i].pp_ref) {
+			printf("pages[%6d], pp_ref = %d\n", i, pages[i].pp_ref);
+		}
+	}
+	///////////////////////////////////////////////*/
 
    
     printf("physical_memory_manage_check() succeeded\n");
