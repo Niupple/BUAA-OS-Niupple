@@ -700,6 +700,7 @@ void pageout(int va, int context)
     printf("pageout:\t@@@___0x%x___@@@  ins a page \n", va);
 }
 
+/*
 void test_alloc() {
 	int i;
 	int cnt = 0;
@@ -708,3 +709,4 @@ void test_alloc() {
 	printf("okk\n");
 }
 
+*/
