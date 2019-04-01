@@ -548,7 +548,7 @@ physical_memory_manage_check(void)
 			p=LIST_NEXT(p,pp_link);
 	}
 
-	/*///////////////////////////////////////////////
+	/*//////////////////////////////////////////////
 	for(i = 0; i < npage; ++i) {
 		if(pages[i].pp_ref) {
 			printf("pages[%6d], pp_ref = %d\n", i, pages[i].pp_ref);
