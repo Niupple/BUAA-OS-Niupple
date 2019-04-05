@@ -88,6 +88,7 @@ static void *alloc(u_int n, u_int align, int clear)
 	then create it.*/
 static Pte *boot_pgdir_walk(Pde *pgdir, u_long va, int create)
 {
+	//printf("in boot_pgdir_walk\n");
 
     Pde *pgdir_entryp;
     Pte *pgtable, *pgtable_entry;
@@ -96,14 +97,25 @@ static Pte *boot_pgdir_walk(Pde *pgdir, u_long va, int create)
     /* Hint: Use KADDR and PTE_ADDR to get the page table from page directory
      * entry value. */
 
+	pgdir_entryp = pgdir+PDX(va);
+	//printf("pgdir_entryp = %x\n", pgdir_entryp);
 
     /* Step 2: If the corresponding page table is not exist and parameter `create`
      * is set, create one. And set the correct permission bits for this new page
      * table. */
 
+	if(!((*pgdir_entryp) & PTE_V) && create) {
+		//printf("creating\n");
+		pgtable = alloc(BY2PG, BY2PG, 1);
+		//printf("pgtable = %x\n", pgtable);
+		*pgdir_entryp = PTE_V | PADDR(pgtable);	//any else byte to set?
+	}
 
     /* Step 3: Get the page table entry for `va`, and return it. */
 
+	pgtable_entry = (Pte*)KADDR(PTE_ADDR(*pgdir_entryp))+PTX(va);
+	//printf("pgtable_entry = %x\n", pgtable_entry);
+	return pgtable_entry;
 
 }
 
@@ -117,15 +129,20 @@ static Pte *boot_pgdir_walk(Pde *pgdir, u_long va, int create)
 	Size is a multiple of BY2PG.*/
 void boot_map_segment(Pde *pgdir, u_long va, u_long size, u_long pa, int perm)
 {
+	//printf("in boot_map_segment\n");
     int i, va_temp;
     Pte *pgtable_entry;
 
     /* Step 1: Check if `size` is a multiple of BY2PG. */
-
+	size = ROUND(size, BY2PG);
 
     /* Step 2: Map virtual address space to physical address. */
     /* Hint: Use `boot_pgdir_walk` to get the page table entry of virtual address `va`. */
-
+	for(i = 0; i < (size>>PGSHIFT); ++i) {
+		va_temp = va+i*BY2PG;
+		pgtable_entry = boot_pgdir_walk(pgdir, va_temp, 1);
+		*pgtable_entry = (pa+i*BY2PG) | perm | PTE_V;
+	}
 
 }
 
@@ -286,16 +303,26 @@ pgdir_walk(Pde *pgdir, u_long va, int create, Pte **ppte)
     struct Page *ppage;
 
     /* Step 1: Get the corresponding page directory entry and page table. */
-
+	pgdir_entryp = pgdir+PDX(va);
 
     /* Step 2: If the corresponding page table is not exist(valid) and parameter `create`
      * is set, create one. And set the correct permission bits for this new page
      * table.
      * When creating new page table, maybe out of memory. */
 
+	if(!((*pgdir_entryp) & PTE_V) && create) {
+		if(page_alloc(&ppage)) {
+			*ppte = NULL;
+			return -E_NO_MEM;
+		}
+		++(ppage->pp_ref);
+		*pgdir_entryp = PTE_R | PTE_V | page2pa(ppage);	//TODO: what correct permission?
+	}
 
     /* Step 3: Set the page table entry to `*ppte` as return value. */
 
+	pgtable = (Pte *)KADDR(PTE_ADDR(*pgdir_entryp))+PTX(va);
+	*ppte = pgtable;
 
     return 0;
 }
@@ -334,13 +361,18 @@ page_insert(Pde *pgdir, struct Page *pp, u_long va, u_int perm)
     /* Step 2: Update TLB. */
 
     /* hint: use tlb_invalidate function */
-
+	tlb_invalidate(pgdir, va);
 
     /* Step 3: Do check, re-get page table entry to validate the insertion. */
+	if(pgdir_walk(pgdir, va, 1, &pgtable_entry)) {
+		return -E_NO_MEM;
+	}
 
     /* Step 3.1 Check if the page can be insert, if can’t return -E_NO_MEM */
 
     /* Step 3.2 Insert page and increment the pp_ref */
+	*pgtable_entry = page2pa(pp) | PERM;
+	++(pp->pp_ref);
 
     return 0;
 }
@@ -535,6 +567,7 @@ page_check(void)
     // should be able to allocate three pages
     pp0 = pp1 = pp2 = 0;
     assert(page_alloc(&pp0) == 0);
+	//printf("pp_ref = %d\n", pp0->pp_ref);
     assert(page_alloc(&pp1) == 0);
     assert(page_alloc(&pp2) == 0);
 
@@ -555,8 +588,10 @@ page_check(void)
 
     // free pp0 and try again: pp0 should be used for page table
     page_free(pp0);
+	//printf("pp_ref = %d\n", pp0->pp_ref);
     assert(page_insert(boot_pgdir, pp1, 0x0, 0) == 0);
     assert(PTE_ADDR(boot_pgdir[0]) == page2pa(pp0));
+	//printf("pp_ref = %d\n", pp0->pp_ref);
 
     printf("va2pa(boot_pgdir, 0x0) is %x\n",va2pa(boot_pgdir, 0x0));
     printf("page2pa(pp1) is %x\n",page2pa(pp1));
@@ -584,6 +619,7 @@ page_check(void)
 
     // should not be able to map at PDMAP because need free page for page table
     assert(page_insert(boot_pgdir, pp0, PDMAP, 0) < 0);
+	//printf("pp_ref = %d\n", pp0->pp_ref);
 
     // insert pp1 at BY2PG (replacing pp2)
     assert(page_insert(boot_pgdir, pp1, BY2PG, 0) == 0);
@@ -623,6 +659,7 @@ page_check(void)
     // forcibly take pp0 back
     assert(PTE_ADDR(boot_pgdir[0]) == page2pa(pp0));
     boot_pgdir[0] = 0;
+	//printf("pp_ref = %d\n", pp0->pp_ref);
     assert(pp0->pp_ref == 1);
     pp0->pp_ref = 0;
 
