@@ -18,7 +18,7 @@ void mips_init()
 	//page_check();
 
 	int cnt[PDMAP/BY2PG];
-	count_page(pgdir, cnt, PDMAP/BY2PG);
+	//count_page(pgdir, cnt, PDMAP/BY2PG);
 
 	panic("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
 
