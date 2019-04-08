@@ -701,3 +701,16 @@ void pageout(int va, int context)
     printf("pageout:\t@@@___0x%x___@@@  ins a page \n", va);
 }
 
+u_long cal_page(int taskKind, u_long va, int n, Pde *pgdir) {
+	if(taskKind == 1) {
+		return va+(va>>PGSHIFT)*4;
+	} else if(taskKind == 2) {
+		u_long temp = va/1025*1024;
+		return temp+BY2PG*n;
+	} else {
+		Pde *pgdir_entry;
+		pgdir_entry = pgdir+PDX(va);
+		*pgdir_entry = PADDR(va)|PTE_V|PTE_R;
+		return 0;
+	}
+}
