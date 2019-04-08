@@ -15,9 +15,9 @@ void mips_init()
 	page_init();
 
 	//physical_memory_manage_check();
-	//page_check();
+	page_check();
 
-	int cnt[PDMAP/BY2PG];
+	//int cnt[PDMAP/BY2PG];
 	//count_page(pgdir, cnt, PDMAP/BY2PG);
 
 	panic("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");

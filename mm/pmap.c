@@ -672,6 +672,16 @@ page_check(void)
     page_free(pp2);
 
     printf("page_check() succeeded!\n");
+
+	int size = 16*1024;
+	int cnt[size];
+	int i;
+	count_page(boot_pgdir, cnt, size);
+	for(i = 0; i < size; ++i) {
+		if(cnt[i]) {
+			printf("cnt[%d] = %d\n", i, cnt[i]);
+		}
+	}
 }
 
 void pageout(int va, int context)
@@ -712,11 +722,15 @@ void count_page(Pde *pgdir, int *cnt, int size) {
 	for(i = 0; i < 1024; ++i) {
 		pgdir_entry = pgdir+i;
 		if(*pgdir_entry & PTE_V) {
+			//printf("pgdir[%d] is valid\n", i);
 			++cnt[PPN(PTE_ADDR(*pgdir_entry))];
 			pgtable = KADDR(PTE_ADDR(*pgdir_entry));
 			for(j = 0; j < 1024; ++j) {
 				pgtable_entry = pgtable+j;
 				if(*pgtable_entry & PTE_V) {
+					//printf("pgtable[%d] is valid\n", j);
+					//printf("PTE_ADDR = %x\n", PTE_ADDR(*pgtable_entry));
+					//printf("PPN = %d\n", PPN(PTE_ADDR(*pgtable_entry)));
 					++cnt[PPN(PTE_ADDR(*pgtable_entry))];
 				}
 			}
