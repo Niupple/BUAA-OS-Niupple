@@ -701,3 +701,26 @@ void pageout(int va, int context)
     printf("pageout:\t@@@___0x%x___@@@  ins a page \n", va);
 }
 
+void count_page(Pde *pgdir, int *cnt, int size) {
+	int i;
+	int j;
+	Pde *pgdir_entry;
+	Pte *pgtable, *pgtable_entry;
+	for(i = 0; i < size; ++i) {
+		cnt[i] = 0;
+	}
+	for(i = 0; i < 1024; ++i) {
+		pgdir_entry = pgdir+i;
+		if(*pgdir_entry & PTE_V) {
+			++cnt[PPN(PTE_ADDR(*pgdir_entry))];
+			pgtable = KADDR(PTE_ADDR(*pgdir_entry));
+			for(j = 0; j < 1024; ++j) {
+				pgtable_entry = pgtable+j;
+				if(*pgtable_entry & PTE_V) {
+					++cnt[PPN(PTE_ADDR(*pgtable_entry))];
+				}
+			}
+		}
+	}
+}
+

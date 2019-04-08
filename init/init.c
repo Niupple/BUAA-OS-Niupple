@@ -1,4 +1,5 @@
 #include <asm/asm.h>
+#include <mmu.h>
 #include <pmap.h>
 #include <env.h>
 #include <printf.h>
@@ -14,7 +15,10 @@ void mips_init()
 	page_init();
 
 	//physical_memory_manage_check();
-	page_check();
+	//page_check();
+
+	int cnt[PDMAP/BY2PG];
+	count_page(pgdir, cnt, PDMAP/BY2PG);
 
 	panic("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
 
