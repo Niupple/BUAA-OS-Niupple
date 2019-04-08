@@ -173,5 +173,7 @@ extern volatile Pde *vpd[];
 
 extern void tlb_out(u_int entryhi);
 
+struct Page_list page_free_list;
+
 #endif //!__ASSEMBLER__
 #endif // !_MMU_H_

@@ -16,7 +16,7 @@ Pde *boot_pgdir;
 struct Page *pages;
 static u_long freemem;
 
-static struct Page_list page_free_list;	/* Free list of physical pages */
+extern struct Page_list page_free_list;	/* Free list of physical pages */
 
 
 /* Overview:
