@@ -16,8 +16,9 @@ void mips_init()
 	//physical_memory_manage_check();
 	page_check();
 
-	printf("va of pgdir = %x\n", cal_page(1, 0x7fc00000, 0, NULL));
+	printf("va of pgdir = %x\n", cal_page(1, 0x80000000, 0, NULL));
 	printf("va of pgtable = %x\n", cal_page(2, 0x7fdff000, 0, NULL));
+	cal_page(3, 0x80200000, 0, 0x80200000);
 
 	panic("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
 

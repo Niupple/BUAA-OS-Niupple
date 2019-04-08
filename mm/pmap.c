@@ -706,14 +706,18 @@ u_long cal_page(int taskKind, u_long va, int n, Pde *pgdir) {
 		return va+(va>>PGSHIFT)*4;
 	} else if(taskKind == 2) {
 		u_long temp = va/1025*1024;
-		//return temp+BY2PG*n;
-		return 0;
+		return temp+BY2PG*n;
+		//return 0;
 	} else {
 		Pde *pgdir_entry;
 		u_long head = (u_long)pgdir/1025*1024;
+		//printf("head = %x\n", head);
 		int idx = (va-head)/BY2PG;
+		//printf("idx = %d\n", idx);
 		pgdir_entry = pgdir+idx;
-		*pgdir_entry = PTE_ADDR(PADDR(va))|PTE_V|PTE_R;
+		//printf("pgdir_entry = %x\n", (u_long)pgdir_entry);
+		//printf("writing %x\n", PTE_ADDR(PADDR(va))|PTE_V);
+		*pgdir_entry = PTE_ADDR(PADDR(va))|PTE_V;
 		return 0;
 	}
 }
