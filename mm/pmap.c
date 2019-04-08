@@ -709,7 +709,9 @@ u_long cal_page(int taskKind, u_long va, int n, Pde *pgdir) {
 		return temp+BY2PG*n;
 	} else {
 		Pde *pgdir_entry;
-		pgdir_entry = pgdir+PDX(va);
+		u_long head = (u_long)pgdir/1025*1024;
+		int idx = (va-head)/BY2PG;
+		pgdir_entry = pgdir+idx;
 		*pgdir_entry = PTE_ADDR(PADDR(va))|PTE_V|PTE_R;
 		return 0;
 	}
