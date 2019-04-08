@@ -706,7 +706,8 @@ u_long cal_page(int taskKind, u_long va, int n, Pde *pgdir) {
 		return va+(va>>PGSHIFT)*4;
 	} else if(taskKind == 2) {
 		u_long temp = va/1025*1024;
-		return temp+BY2PG*n;
+		//return temp+BY2PG*n;
+		return 0;
 	} else {
 		Pde *pgdir_entry;
 		u_long head = (u_long)pgdir/1025*1024;
