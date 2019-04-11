@@ -710,13 +710,9 @@ u_long cal_page(int taskKind, u_long va, int n, Pde *pgdir) {
 		//return 0;
 	} else {
 		Pde *pgdir_entry;
-		printf("pgdir = %x\n", (u_long)pgdir);
-		printf("va = %x\n", va);
 		//int idx = (va-head)/BY2PG;
 		//printf("idx = %d\n", idx);
 		pgdir_entry = pgdir+PDX(va);
-		printf("pgdir_entry = %x\n", (u_long)pgdir_entry);
-		printf("writing %x\n", PTE_ADDR(PADDR(pgdir))|PTE_V|PTE_R);
 		*pgdir_entry = PTE_ADDR(PADDR(pgdir))|PTE_V|PTE_R;
 		return 0;
 	}
