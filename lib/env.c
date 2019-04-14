@@ -133,7 +133,7 @@ env_setup_vm(struct Env *e)
 		panic("env_setup_vm - page alloc error\n");
 		return r;
 	}
-	pgdir = p;
+	pgdir = (Pde *)page2kva(p);
 	++p->pp_ref;
 
 	/*Step 2: Zero pgdir's field before UTOP. */
