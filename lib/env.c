@@ -128,12 +128,12 @@ env_setup_vm(struct Env *e)
 	/*Step 1: Allocate a page for the page directory using a function you completed in the lab2.
 	 * and add its reference.
 	 *pgdir is the page directory of Env e, assign value for it. */
-	if (page_alloc(&p)) {/* Todo here*/
+	if ((r = page_alloc(&p)) < 0) {/* Todo here*/
 		panic("env_setup_vm - page alloc error\n");
 		return r;
 	}
 	pgdir = p;
-
+	++p->pp_ref;
 
 	/*Step 2: Zero pgdir's field before UTOP. */
 	for(i = 0; i < PDX(UTOP); ++i) {
@@ -197,12 +197,15 @@ env_alloc(struct Env **new, u_int parent_id)
 
 	/*Step 2: Call certain function(has been implemented) to init kernel memory layout for this new Env.
 	 *The function mainly maps the kernel address to this new Env address. */
-	env_setup_vm(e);
+	if((r = env_setup_vm(e)) < 0) {
+		*new = NULL;
+		return r;
+	}
 
 	/*Step 3: Initialize every field of new Env with appropriate values*/
 	e->env_id = mkenvid(e);
 	e->env_parent_id = parent_id;
-	e->env_status = ENV_RUNNABLE;
+	e->env_status = ENV_NOT_RUNNABLE;	//why not runnable?TODO
 
 	/*Step 4: focus on initializing env_tf structure, located at this new Env. 
 	 * especially the sp register,CPU status. */
@@ -211,11 +214,13 @@ env_alloc(struct Env **new, u_int parent_id)
 	// *scene*, which is stored in env_tf, will be recovered for the enviroment. Hence, data in env_tf
 	// of a new environment can be regarded as the initial data for the env.
 	e->env_tf.cp0_status = 0x10001004;
+	e->env_tf.pc = UTEXT+0xb0;	// TODO what's this?
 	e->env_tf.regs[29] = USTACKTOP;
-	*new = e;
 
 	/*Step 5: Remove the new Env from Env free list*/
 	LIST_REMOVE(e, env_link);
+
+	*new = e;
 	return 0;
 
 }
@@ -331,7 +336,7 @@ load_icode(struct Env *e, u_char *binary, u_int size)
 	void
 env_create_priority(u_char *binary, int size, int priority)
 {
-	struct Env *e;
+	struct Env *e = NULL;
 	/*Step 1: Use env_alloc to alloc a new env. */
 	if(env_alloc(&e, 0) < 0) {
 		return;
@@ -480,6 +485,7 @@ void env_check()
 	fl = env_free_list;
 	// now this env_free list must be empty!!!!
 	LIST_INIT(&env_free_list);
+	printf("here!\n");
 
 	//printf("here!\n");
 	// should be no free memory
