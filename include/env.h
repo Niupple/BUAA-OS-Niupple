@@ -27,7 +27,7 @@ struct Env {
 	Pde  *env_pgdir;                // Kernel virtual address of page dir
 	u_int env_cr3;
 	LIST_ENTRY(Env) env_sched_link;
-        u_int env_pri;
+	u_int env_pri;
 	// Lab 4 IPC
 	u_int env_ipc_value;            // data value sent to us 
 	u_int env_ipc_from;             // envid of the sender  
@@ -37,9 +37,7 @@ struct Env {
 
 	// Lab 4 fault handling
 	u_int env_pgfault_handler;      // page fault state
-	u_int env_xstacktop;            // top of exception stack
-
-	// Lab 6 scheduler counts
+	u_int env_xstacktop;            // top of exception stack // Lab 6 scheduler counts
 	u_int env_runs;			// number of times been env_run'ed
 	u_int env_nop;                  // align to avoid mul instruction
 };
@@ -68,17 +66,17 @@ void env_run(struct Env *e);
 }
 #define ENV_CREATE_PRIORITY(x, y) \
 {\
-        extern u_char binary_##x##_start[]; \
-        extern u_int binary_##x##_size;\
-        env_create_priority(binary_##x##_start, \
-                (u_int)binary_##x##_size, y);\
+	extern u_char binary_##x##_start[]; \
+	extern u_int binary_##x##_size;\
+	env_create_priority(binary_##x##_start, \
+			(u_int)binary_##x##_size, y);\
 }
 #define ENV_CREATE(x) \
 { \
 	extern u_char binary_##x##_start[];\
 	extern u_int binary_##x##_size; \
 	env_create(binary_##x##_start, \
-		(u_int)binary_##x##_size); \
+			(u_int)binary_##x##_size); \
 }
 
 #endif // !_ENV_H_
