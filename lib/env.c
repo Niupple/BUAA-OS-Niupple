@@ -440,10 +440,13 @@ env_run(struct Env *e)
 	/*Step 1: save register state of curenv. */
 	/* Hint: if there is a environment running,you should do
 	 *  context switch.You can imitate env_destroy() 's behaviors.*/
-	bcopy(  (void*)TIMESTACK-sizeof(struct Trapframe),	//assume that trapframe has already been loaded beneath KENEL_SP
-			(void*)&(curenv->env_tf), sizeof(struct Trapframe));
+	if(curenv) {
+		bcopy(  (void*)TIMESTACK-sizeof(struct Trapframe),	//assume that trapframe has already been loaded beneath KENEL_SP
+				(void*)&(curenv->env_tf), sizeof(struct Trapframe));
+		curenv->env_tf.pc = curenv->env_tf.cp0_epc;
 
-	/*Step 2: Set 'curenv' to the new environment. */
+		/*Step 2: Set 'curenv' to the new environment. */
+	}
 	curenv = e;
 
 	/*Step 3: Use lcontext() to switch to its address space. */
