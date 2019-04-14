@@ -13,7 +13,7 @@ struct Env *envs = NULL;		// All environments
 struct Env *curenv = NULL;	        // the current env
 
 static struct Env_list env_free_list;	// Free list
-truct Env_list env_sched_list[2];      // Runnable list
+struct Env_list env_sched_list[2];      // Runnable list
 
 extern Pde *boot_pgdir;
 extern char *KERNEL_SP;
@@ -73,7 +73,7 @@ int envid2env(u_int envid, struct Env **penv, int checkperm)
 	if(envid == 0) {
 		*penv = curenv;
 		return 0;
-	} else if(!checkperm || (curenv->env_id == envid || curenv-env_parent_id == envid)) {
+	} else if(!checkperm || (curenv->env_id == envid || curenv->env_parent_id == envid)) {
 		*penv = e;
 		return 0;
 	} else {
@@ -102,9 +102,9 @@ env_init(void)
 	/*Step 2: Travel the elements in 'envs', init every element(mainly initial its status, mark it as free)
 	 * and inserts them into the env_free_list as reverse order. */
 
-	for(i = ENVS-1; i >= 0; --i) {	// on earth which order TODO
+	for(i = NENV-1; i >= 0; --i) {	// on earth which order TODO
 		envs[i].env_status = ENV_FREE;
-		LIST_INSERT_HEAD(&env_free_list, envs[i], env_link);
+		LIST_INSERT_HEAD(&env_free_list, &envs[i], env_link);
 	}
 
 }
@@ -212,6 +212,7 @@ env_alloc(struct Env **new, u_int parent_id)
 	// of a new environment can be regarded as the initial data for the env.
 	e->env_tf.cp0_status = 0x10001004;
 	e->env_tf.regs[29] = USTACKTOP;
+	*new = e;
 
 	/*Step 5: Remove the new Env from Env free list*/
 	LIST_REMOVE(e, env_link);
@@ -311,7 +312,7 @@ load_icode(struct Env *e, u_char *binary, u_int size)
 	page_insert(e->env_pgdir, p, USTACKTOP-BY2PG, PTE_R);
 
 	/*Step 3:load the binary by using elf loader. */
-	load_elf(binary, size, &entry_point, e, map_load_icode);
+	load_elf(binary, size, &entry_point, e, load_icode_mapper);
 
 	/***Your Question Here***/
 	/*Step 4:Set CPU's PC register as appropriate value. */
@@ -440,7 +441,7 @@ env_run(struct Env *e)
 	/* Hint: if there is a environment running,you should do
 	 *  context switch.You can imitate env_destroy() 's behaviors.*/
 	bcopy(  (void*)KERNEL_SP-sizeof(struct Trapframe),	//assume that trapframe has already been loaded beneath KENEL_SP
-			(void*)curenv->env_tf, sizeof(struct Trapframe));
+			(void*)&(curenv->env_tf), sizeof(struct Trapframe));
 
 	/*Step 2: Set 'curenv' to the new environment. */
 	curenv = e;
@@ -453,7 +454,7 @@ env_run(struct Env *e)
 	 * the   environment.
 	 */
 	/* Hint: You should use GET_ENV_ASID there.Think why? */
-	env_pop_tf(e->env_tf, GET_ENV_ASID(e->env_id));
+	env_pop_tf(&(e->env_tf), GET_ENV_ASID(e->env_id));
 }
 void env_check()
 {
@@ -477,6 +478,7 @@ void env_check()
 	// now this env_free list must be empty!!!!
 	LIST_INIT(&env_free_list);
 
+	//printf("here!\n");
 	// should be no free memory
 	assert(env_alloc(&pe, 0) == -E_NO_FREE_ENV);
 

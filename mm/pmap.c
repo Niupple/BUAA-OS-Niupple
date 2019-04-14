@@ -212,7 +212,7 @@ page_init(void)
 			pages[i].pp_ref = 0;
 		}
 	}
-	for(i = npage-1; i >= 0; --i) {
+	for(i = 0; i < npage; ++i) {
 		pnow = pages+i;
 		if(!pnow->pp_ref) {
 			LIST_INSERT_HEAD(&page_free_list, pnow, pp_link);
