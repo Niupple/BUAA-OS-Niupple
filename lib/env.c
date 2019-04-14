@@ -74,14 +74,11 @@ int envid2env(u_int envid, struct Env **penv, int checkperm)
 	 *  must be either the current environment.
 	 *  or an immediate child of the current environment.If not, error! */
 	/*Step 2: Make a check according to checkperm. */
-	if(envid == 0) {
-		*penv = curenv;
-		return 0;
-	} else if(!checkperm || (curenv->env_id == envid || curenv->env_parent_id == envid)) {
+	if(!checkperm || (curenv->env_id == envid || curenv->env_id == e->env_parent_id)) {
 		*penv = e;
 		return 0;
 	} else {
-		*penv = 0;
+		*penv = NULL;
 		return -E_BAD_ENV;
 	}
 	return 233; 
