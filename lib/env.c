@@ -57,6 +57,10 @@ int envid2env(u_int envid, struct Env **penv, int checkperm)
 	/* Hint:
 	 *      *  If envid is zero, return the current environment.*/
 	/*Step 1: Assign value to e using envid. */
+	if(envid == 0) {
+		*penv = curenv;
+		return 0;
+	}
 
 	e = envs+ENVX(envid);
 	if (e->env_status == ENV_FREE || e->env_id != envid) {
@@ -102,7 +106,7 @@ env_init(void)
 	/*Step 2: Travel the elements in 'envs', init every element(mainly initial its status, mark it as free)
 	 * and inserts them into the env_free_list as reverse order. */
 
-	for(i = NENV-1; i >= 0; --i) {	// on earth which order TODO
+	for(i = NENV-1; i >= 0; --i) {
 		envs[i].env_status = ENV_FREE;
 		LIST_INSERT_HEAD(&env_free_list, &envs[i], env_link);
 	}
