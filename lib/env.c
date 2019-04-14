@@ -253,10 +253,12 @@ static int load_icode_mapper(u_long va, u_int32_t sgsize,
 	/*Step 1: load all content of bin into memory. */
 	for (i = 0; i < bin_size; i += BY2PG) {
 		/* Hint: You should alloc a page and increase the reference count of it. */
-		if(page_alloc(&p)) {
-			return -E_NO_MEM;	//TODO or other flags?
+		if((r = page_alloc(&p)) < 0) {
+			return r;
 		}
-		page_insert(env->env_pgdir, p, va+i-offset, 0);
+		if((r = page_insert(env->env_pgdir, p, va+i-offset, 0)) < 0) {
+			return r;
+		}
 		r = bin_size-i+offset;
 		if(i == 0) {
 			bcopy(va, page2kva(p)+offset, MIN(BY2PG-offset, bin_size));
@@ -270,10 +272,12 @@ static int load_icode_mapper(u_long va, u_int32_t sgsize,
 	/*Step 2: alloc pages to reach `sgsize` when `bin_size` < `sgsize`.
 	 * i has the value of `bin_size` now. */
 	while (i < sgsize) {
-		if(page_alloc(&p)) {
-			return -E_NO_MEM;	//TODO or other flags?
+		if((r = page_alloc(&p)) < 0) {
+			return r;
 		}
-		page_insert(env->env_pgdir, p, va+i-offset, 0);
+		if((r = page_insert(env->env_pgdir, p, va+i-offset, 0)) < 0) {
+			return r;
+		}
 		//r = bin_size-i+offset;
 		//bzero(va+i-offset, page2kva(p), MIN(BY2PG, sgsize-i));
 		i += BY2PG;
@@ -314,10 +318,14 @@ load_icode(struct Env *e, u_char *binary, u_int size)
 	/*Step 2: Use appropriate perm to set initial stack for new Env. */
 	/*Hint: The user-stack should be writable? */
 	// of course?
-	page_insert(e->env_pgdir, p, USTACKTOP-BY2PG, PTE_R);
+	if((r = page_insert(e->env_pgdir, p, USTACKTOP-BY2PG, PTE_R)) < 0) {
+		return;
+	}
 
 	/*Step 3:load the binary by using elf loader. */
-	load_elf(binary, size, &entry_point, e, load_icode_mapper);
+	if(load_elf(binary, size, &entry_point, e, load_icode_mapper) < 0) {
+		return;
+	}
 
 	/***Your Question Here***/
 	/*Step 4:Set CPU's PC register as appropriate value. */
