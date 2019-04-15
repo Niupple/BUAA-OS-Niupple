@@ -542,3 +542,79 @@ void env_check()
 	printf("pe2`s sp register %x\n",pe2->env_tf.regs[29]);
 	printf("env_check() succeeded!\n");
 }
+
+struct Env *getenv(u_int envid) {
+	return &envs[ENVX(envid)];
+}
+
+struct Env *getroot(struct Env *x) {
+	while(x->env_parent_id != 0) {
+		x = getenv(x->env_parent_id);
+	}
+	return x;
+}
+
+int check_same_root(u_int envid1, u_int envid2) {
+	struct Env *x, *y;
+	x = getenv(envid1);
+	y = getenv(envid2);
+
+	if(x->env_status == ENV_NOT_RUNNABLE || y->env_status == ENV_NOT_RUNNABLE) {
+		return -1;
+	}
+	
+	x = getroot(x);
+	y = getroot(y);
+
+	//printf("x = %d, y = %d\n", x-envs, y-envs);
+
+	if(x == y) {
+		return 1;
+	} else {
+		return 0;
+	}
+}
+
+int dfn[NENV] = {}, root[NENV];
+int tim = 0;
+
+void find_root(struct Env *x) {
+	dfn[x-envs] = tim;
+	if(x->env_parent_id == 0) {
+		root[x-envs] = x-envs;
+		return;
+	}
+	struct Env *y;
+	y = getenv(x->env_parent_id);
+	if(dfn[y-envs] != tim) {
+		find_root(y);
+	}
+	root[x-envs] = root[y-envs];
+}
+
+void kill_all(u_int envid) {
+
+	int rt = getroot(getenv(envid))-envs;
+	int i;
+	++tim;
+
+	for(i = 0; i < NENV; ++i) {
+		if(dfn[i] != tim) {
+			find_root(&envs[i]);
+		}
+	}
+
+	for(i = 0; i < NENV; ++i) {
+		if(root[i] == rt && envs[i].env_status == ENV_NOT_RUNNABLE) {
+			printf("something is wrong!\n");
+			return;
+		}
+	}
+
+	for(i = 0; i < NENV; ++i) {
+		if(root[i] == rt) {
+			envs[i].env_status = ENV_NOT_RUNNABLE;
+		}
+	}
+}
+
