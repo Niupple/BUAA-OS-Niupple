@@ -14,9 +14,27 @@ void mips_init()
 	page_init();
 
 	env_init();
-	printf("env_init end\n");
 	env_check();
-	printf("env_check end\n");
+	
+	int i;
+	envs[0].env_status = ENV_RUNNABLE;
+	envs[0].env_pri = 0;
+	envs[1].env_status = ENV_RUNNABLE;
+	envs[1].env_pri = 1;
+	envs[2].env_status = ENV_RUNNABLE;
+	envs[2].env_pri = 3;
+	envs[3].env_status = ENV_RUNNABLE;
+	envs[3].env_pri = 15;
+	envs[4].env_status = ENV_RUNNABLE;
+	envs[4].env_pri = 10;
+	envs[1023].env_status = ENV_RUNNABLE;
+	envs[1023].env_pri = 0;
+	init_envid();
+	for(i = 0; i < NENV; ++i) {
+		if(envs[i].env_status == ENV_RUNNABLE) {
+			output_env_info(envs[i].env_id);
+		}
+	}
 
 	/*you can create some processes(env) here. in terms of binary code, please refer current directory/code_a.c
 	 * code_b.c*/

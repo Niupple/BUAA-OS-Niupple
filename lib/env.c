@@ -133,7 +133,7 @@ env_setup_vm(struct Env *e)
 		panic("env_setup_vm - page alloc error\n");
 		return r;
 	}
-	pgdir = (Pde *)page2kva(p);
+	pgdir = p;
 	++p->pp_ref;
 
 	/*Step 2: Zero pgdir's field before UTOP. */
@@ -542,3 +542,64 @@ void env_check()
 	printf("pe2`s sp register %x\n",pe2->env_tf.regs[29]);
 	printf("env_check() succeeded!\n");
 }
+
+u_int newmkenvid(struct Env* e, int pri) {
+	static u_long next_env_id_pri[16] = {};
+
+	u_int idx = e-envs;
+	u_int ret = (++next_env_id_pri[pri] << (4+LOG2NENV)) | (pri << LOG2NENV) | idx;
+	printf("making, %x\n", ret);
+
+	return ret;
+}
+
+void output_env_info(int envid) {
+	static int called = 0;
+	int index = envid & (NENV-1);
+	int pri = (envid >> LOG2NENV) & 15U;
+	printf("no=%d,env_index=%d,env_pri=%d\n", ++called, index, pri);
+}
+
+void init_envid() {
+	int i;
+	struct Env *e;
+	for(i = 0; i < NENV; ++i) {
+		e = envs+i;
+		if(e->env_status == ENV_RUNNABLE) {
+			e->env_id = newmkenvid(e, e->env_pri);
+		}
+	}
+}
+
+int newenvid2env(u_int envid, struct Env **penv, int checkperm) {
+	struct Env *e;
+	/* Hint:
+	 *      *  If envid is zero, return the current environment.*/
+	/*Step 1: Assign value to e using envid. */
+	if(envid == 0) {
+		*penv = curenv;
+		return 0;
+	}
+
+	e = envs+(envid & (NENV-1));
+	if (e->env_status == ENV_FREE || e->env_id != envid) {
+		*penv = 0;
+		return -E_BAD_ENV;
+	}
+	/* Hint:
+	 *  Check that the calling environment has legitimate permissions
+	 *  to manipulate the specified environment.
+	 *  If checkperm is set, the specified environment
+	 *  must be either the current environment.
+	 *  or an immediate child of the current environment.If not, error! */
+	/*Step 2: Make a check according to checkperm. */
+	if(!checkperm || (curenv->env_id == envid || curenv->env_id == e->env_parent_id)) {
+		*penv = e;
+		return 0;
+	} else {
+		*penv = NULL;
+		return -E_BAD_ENV;
+	}
+	return 233; 
+}
+

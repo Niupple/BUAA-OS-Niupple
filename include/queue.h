@@ -155,7 +155,6 @@
  * The "field" name is the link element as above. You can refer to LIST_INSERT_HEAD.
  * Note: this function has big differences with LIST_INSERT_HEAD !
  */
-//TODO: here are some problems
 #define LIST_INSERT_TAIL(head, elm, field)										\
 	do {																		\
 		if(LIST_EMPTY(head)) {													\
