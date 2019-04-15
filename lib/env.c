@@ -206,7 +206,7 @@ env_alloc(struct Env **new, u_int parent_id)
 	/*Step 3: Initialize every field of new Env with appropriate values*/
 	e->env_id = mkenvid(e);
 	e->env_parent_id = parent_id;
-	e->env_status = ENV_NOT_RUNNABLE;	//why not runnable?TODO
+	e->env_status = ENV_RUNNABLE;	//why not runnable?TODO
 
 	/*Step 4: focus on initializing env_tf structure, located at this new Env. 
 	 * especially the sp register,CPU status. */
