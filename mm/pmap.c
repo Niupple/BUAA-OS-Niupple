@@ -548,156 +548,156 @@ physical_memory_manage_check(void)
 	//printf("into test\n");
 	while(p!=NULL){
 	//      printf("%d %d\n",p->pp_ref,answer2[j]);
-			assert(p->pp_ref==answer2[j++]);
-			p=LIST_NEXT(p,pp_link);
+		assert(p->pp_ref==answer2[j++]);
+		p=LIST_NEXT(p,pp_link);
 	}
 
 
-   
-    printf("physical_memory_manage_check() succeeded\n");
+
+	printf("physical_memory_manage_check() succeeded\n");
 }
 
 
-void
+	void
 page_check(void)
 {
-    struct Page *pp, *pp0, *pp1, *pp2;
-    struct Page_list fl;
+	struct Page *pp, *pp0, *pp1, *pp2;
+	struct Page_list fl;
 
-    // should be able to allocate three pages
-    pp0 = pp1 = pp2 = 0;
-    assert(page_alloc(&pp0) == 0);
+	// should be able to allocate three pages
+	pp0 = pp1 = pp2 = 0;
+	assert(page_alloc(&pp0) == 0);
 	//printf("pp_ref = %d\n", pp0->pp_ref);
-    assert(page_alloc(&pp1) == 0);
-    assert(page_alloc(&pp2) == 0);
+	assert(page_alloc(&pp1) == 0);
+	assert(page_alloc(&pp2) == 0);
 
-    assert(pp0);
-    assert(pp1 && pp1 != pp0);
-    assert(pp2 && pp2 != pp1 && pp2 != pp0);
+	assert(pp0);
+	assert(pp1 && pp1 != pp0);
+	assert(pp2 && pp2 != pp1 && pp2 != pp0);
 
-    // temporarily steal the rest of the free pages
-    fl = page_free_list;
-    // now this page_free list must be empty!!!!
-    LIST_INIT(&page_free_list);
+	// temporarily steal the rest of the free pages
+	fl = page_free_list;
+	// now this page_free list must be empty!!!!
+	LIST_INIT(&page_free_list);
 
-    // should be no free memory
-    assert(page_alloc(&pp) == -E_NO_MEM);
+	// should be no free memory
+	assert(page_alloc(&pp) == -E_NO_MEM);
 
-    // there is no free memory, so we can't allocate a page table
-    assert(page_insert(boot_pgdir, pp1, 0x0, 0) < 0);
+	// there is no free memory, so we can't allocate a page table
+	assert(page_insert(boot_pgdir, pp1, 0x0, 0) < 0);
 
-    // free pp0 and try again: pp0 should be used for page table
-    page_free(pp0);
+	// free pp0 and try again: pp0 should be used for page table
+	page_free(pp0);
 	//printf("pp_ref = %d\n", pp0->pp_ref);
-    assert(page_insert(boot_pgdir, pp1, 0x0, 0) == 0);
-    assert(PTE_ADDR(boot_pgdir[0]) == page2pa(pp0));
-	//printf("pp_ref = %d\n", pp0->pp_ref);
-
-    printf("va2pa(boot_pgdir, 0x0) is %x\n",va2pa(boot_pgdir, 0x0));
-    printf("page2pa(pp1) is %x\n",page2pa(pp1));
-
-    assert(va2pa(boot_pgdir, 0x0) == page2pa(pp1));
-    assert(pp1->pp_ref == 1);
-
-    // should be able to map pp2 at BY2PG because pp0 is already allocated for page table
-    assert(page_insert(boot_pgdir, pp2, BY2PG, 0) == 0);
-    assert(va2pa(boot_pgdir, BY2PG) == page2pa(pp2));
-    assert(pp2->pp_ref == 1);
-
-    // should be no free memory
-    assert(page_alloc(&pp) == -E_NO_MEM);
-
-    printf("start page_insert\n");
-    // should be able to map pp2 at BY2PG because it's already there
-    assert(page_insert(boot_pgdir, pp2, BY2PG, 0) == 0);
-    assert(va2pa(boot_pgdir, BY2PG) == page2pa(pp2));
-    assert(pp2->pp_ref == 1);
-
-    // pp2 should NOT be on the free list
-    // could happen in ref counts are handled sloppily in page_insert
-    assert(page_alloc(&pp) == -E_NO_MEM);
-
-    // should not be able to map at PDMAP because need free page for page table
-    assert(page_insert(boot_pgdir, pp0, PDMAP, 0) < 0);
+	assert(page_insert(boot_pgdir, pp1, 0x0, 0) == 0);
+	assert(PTE_ADDR(boot_pgdir[0]) == page2pa(pp0));
 	//printf("pp_ref = %d\n", pp0->pp_ref);
 
-    // insert pp1 at BY2PG (replacing pp2)
-    assert(page_insert(boot_pgdir, pp1, BY2PG, 0) == 0);
+	printf("va2pa(boot_pgdir, 0x0) is %x\n",va2pa(boot_pgdir, 0x0));
+	printf("page2pa(pp1) is %x\n",page2pa(pp1));
 
-    // should have pp1 at both 0 and BY2PG, pp2 nowhere, ...
-    assert(va2pa(boot_pgdir, 0x0) == page2pa(pp1));
-    assert(va2pa(boot_pgdir, BY2PG) == page2pa(pp1));
-    // ... and ref counts should reflect this
-    assert(pp1->pp_ref == 2);
-    printf("pp2->pp_ref %d\n",pp2->pp_ref);
-    assert(pp2->pp_ref == 0);
-    printf("end page_insert\n");
+	assert(va2pa(boot_pgdir, 0x0) == page2pa(pp1));
+	assert(pp1->pp_ref == 1);
 
-    // pp2 should be returned by page_alloc
-    assert(page_alloc(&pp) == 0 && pp == pp2);
+	// should be able to map pp2 at BY2PG because pp0 is already allocated for page table
+	assert(page_insert(boot_pgdir, pp2, BY2PG, 0) == 0);
+	assert(va2pa(boot_pgdir, BY2PG) == page2pa(pp2));
+	assert(pp2->pp_ref == 1);
 
-    // unmapping pp1 at 0 should keep pp1 at BY2PG
-    page_remove(boot_pgdir, 0x0);
-    assert(va2pa(boot_pgdir, 0x0) == ~0);
-    assert(va2pa(boot_pgdir, BY2PG) == page2pa(pp1));
-    assert(pp1->pp_ref == 1);
-    assert(pp2->pp_ref == 0);
+	// should be no free memory
+	assert(page_alloc(&pp) == -E_NO_MEM);
 
-    // unmapping pp1 at BY2PG should free it
-    page_remove(boot_pgdir, BY2PG);
-    assert(va2pa(boot_pgdir, 0x0) == ~0);
-    assert(va2pa(boot_pgdir, BY2PG) == ~0);
-    assert(pp1->pp_ref == 0);
-    assert(pp2->pp_ref == 0);
+	//printf("start page_insert\n");
+	// should be able to map pp2 at BY2PG because it's already there
+	assert(page_insert(boot_pgdir, pp2, BY2PG, 0) == 0);
+	assert(va2pa(boot_pgdir, BY2PG) == page2pa(pp2));
+	assert(pp2->pp_ref == 1);
 
-    // so it should be returned by page_alloc
-    assert(page_alloc(&pp) == 0 && pp == pp1);
+	// pp2 should NOT be on the free list
+	// could happen in ref counts are handled sloppily in page_insert
+	assert(page_alloc(&pp) == -E_NO_MEM);
 
-    // should be no free memory
-    assert(page_alloc(&pp) == -E_NO_MEM);
-
-    // forcibly take pp0 back
-    assert(PTE_ADDR(boot_pgdir[0]) == page2pa(pp0));
-    boot_pgdir[0] = 0;
+	// should not be able to map at PDMAP because need free page for page table
+	assert(page_insert(boot_pgdir, pp0, PDMAP, 0) < 0);
 	//printf("pp_ref = %d\n", pp0->pp_ref);
-    assert(pp0->pp_ref == 1);
-    pp0->pp_ref = 0;
 
-    // give free list back
-    page_free_list = fl;
+	// insert pp1 at BY2PG (replacing pp2)
+	assert(page_insert(boot_pgdir, pp1, BY2PG, 0) == 0);
 
-    // free the pages we took
-    page_free(pp0);
-    page_free(pp1);
-    page_free(pp2);
+	// should have pp1 at both 0 and BY2PG, pp2 nowhere, ...
+	assert(va2pa(boot_pgdir, 0x0) == page2pa(pp1));
+	assert(va2pa(boot_pgdir, BY2PG) == page2pa(pp1));
+	// ... and ref counts should reflect this
+	assert(pp1->pp_ref == 2);
+	printf("pp2->pp_ref %d\n",pp2->pp_ref);
+	assert(pp2->pp_ref == 0);
+	printf("end page_insert\n");
 
-    printf("page_check() succeeded!\n");
+	// pp2 should be returned by page_alloc
+	assert(page_alloc(&pp) == 0 && pp == pp2);
+
+	// unmapping pp1 at 0 should keep pp1 at BY2PG
+	page_remove(boot_pgdir, 0x0);
+	assert(va2pa(boot_pgdir, 0x0) == ~0);
+	assert(va2pa(boot_pgdir, BY2PG) == page2pa(pp1));
+	assert(pp1->pp_ref == 1);
+	assert(pp2->pp_ref == 0);
+
+	// unmapping pp1 at BY2PG should free it
+	page_remove(boot_pgdir, BY2PG);
+	assert(va2pa(boot_pgdir, 0x0) == ~0);
+	assert(va2pa(boot_pgdir, BY2PG) == ~0);
+	assert(pp1->pp_ref == 0);
+	assert(pp2->pp_ref == 0);
+
+	// so it should be returned by page_alloc
+	assert(page_alloc(&pp) == 0 && pp == pp1);
+
+	// should be no free memory
+	assert(page_alloc(&pp) == -E_NO_MEM);
+
+	// forcibly take pp0 back
+	assert(PTE_ADDR(boot_pgdir[0]) == page2pa(pp0));
+	boot_pgdir[0] = 0;
+	//printf("pp_ref = %d\n", pp0->pp_ref);
+	assert(pp0->pp_ref == 1);
+	pp0->pp_ref = 0;
+
+	// give free list back
+	page_free_list = fl;
+
+	// free the pages we took
+	page_free(pp0);
+	page_free(pp1);
+	page_free(pp2);
+
+	printf("page_check() succeeded!\n");
 }
 
 void pageout(int va, int context)
 {
-    u_long r;
-    struct Page *p = NULL;
+	u_long r;
+	struct Page *p = NULL;
 
-    if (context < 0x80000000) {
-        panic("tlb refill and alloc error!");
-    }
+	if (context < 0x80000000) {
+		panic("tlb refill and alloc error!");
+	}
 
-    if ((va > 0x7f400000) && (va < 0x7f800000)) {
-        panic(">>>>>>>>>>>>>>>>>>>>>>it's env's zone");
-    }
+	if ((va > 0x7f400000) && (va < 0x7f800000)) {
+		panic(">>>>>>>>>>>>>>>>>>>>>>it's env's zone");
+	}
 
-    if (va < 0x10000) {
-        panic("^^^^^^TOO LOW^^^^^^^^^");
-    }
+	if (va < 0x10000) {
+		panic("^^^^^^TOO LOW^^^^^^^^^");
+	}
 
-    if ((r = page_alloc(&p)) < 0) {
-        panic ("page alloc error!");
-    }
+	if ((r = page_alloc(&p)) < 0) {
+		panic ("page alloc error!");
+	}
 
-    p->pp_ref++;
+	p->pp_ref++;
 
-    page_insert((Pde *)context, p, VA2PFN(va), PTE_R);
-    printf("pageout:\t@@@___0x%x___@@@  ins a page \n", va);
+	page_insert((Pde *)context, p, VA2PFN(va), PTE_R);
+	printf("pageout:\t@@@___0x%x___@@@  ins a page \n", va);
 }
 

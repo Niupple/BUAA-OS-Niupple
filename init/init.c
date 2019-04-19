@@ -15,8 +15,8 @@ void mips_init()
 
 	env_init();
 	printf("env_init end\n");
-	env_check();
-	printf("env_check end\n");
+	//env_check();
+	//printf("env_check end\n");
 
 	/*you can create some processes(env) here. in terms of binary code, please refer current directory/code_a.c
 	 * code_b.c*/
@@ -25,8 +25,12 @@ void mips_init()
 	ENV_CREATE_PRIORITY(user_A, 2);
 	ENV_CREATE_PRIORITY(user_B, 1);
 
-	//trap_init();
-	//kclock_init();
+	printf("env_created\n");
+
+	trap_init();
+	printf("trap inited\n");
+	kclock_init();
+	printf("kclock inited\n");
 	panic("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
 	while(1);
 	panic("init.c:\tend of mips_init() reached!");
@@ -34,6 +38,7 @@ void mips_init()
 
 void bcopy(const void *src, void *dst, size_t len)
 {
+	//printf("in bcopy\n");
 	void *max;
 
 	max = dst + len;

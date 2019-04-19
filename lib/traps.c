@@ -11,7 +11,7 @@ unsigned long exception_handlers[32];
 void trap_init(){
 	int i;
 	for(i=0;i<32;i++)
-	set_except_vector(i, handle_reserved);
+		set_except_vector(i, handle_reserved);
 	set_except_vector(0, handle_int);
 	set_except_vector(1, handle_mod);
 	set_except_vector(2, handle_tlb);
@@ -27,29 +27,29 @@ void *set_except_vector(int n, void * addr){
 
 
 struct pgfault_trap_frame{
-        u_int fault_va;
-        u_int err;
-        u_int sp;
-        u_int eflags;
-        u_int pc;
-        u_int empty1;
-        u_int empty2;
-        u_int empty3;
-        u_int empty4;
-        u_int empty5;
+	u_int fault_va;
+	u_int err;
+	u_int sp;
+	u_int eflags;
+	u_int pc;
+	u_int empty1;
+	u_int empty2;
+	u_int empty3;
+	u_int empty4;
+	u_int empty5;
 };
 
 
-void
+	void
 page_fault_handler(struct Trapframe *tf)
 {
-        u_int va;
-        u_int *tos, d;
+	u_int va;
+	u_int *tos, d;
 	struct Trapframe PgTrapFrame;
 	extern struct Env * curenv;
-//printf("^^^^cp0_BadVAddress:%x\n",tf->cp0_badvaddr);
+	//printf("^^^^cp0_BadVAddress:%x\n",tf->cp0_badvaddr);
 
-	
+
 	bcopy(tf, &PgTrapFrame,sizeof(struct Trapframe));
 	if(tf->regs[29] >= (curenv->env_xstacktop - BY2PG) && tf->regs[29] <= (curenv->env_xstacktop - 1))
 	{
@@ -59,15 +59,15 @@ page_fault_handler(struct Trapframe *tf)
 	}
 	else
 	{
-		
+
 		tf->regs[29] = curenv->env_xstacktop - sizeof(struct  Trapframe);
-//		printf("page_fault_handler(): bcopy(): src:%x\tdes:%x\n",(int)&PgTrapFrame,(int)(curenv->env_xstacktop - sizeof(struct  Trapframe)));		
+		//		printf("page_fault_handler(): bcopy(): src:%x\tdes:%x\n",(int)&PgTrapFrame,(int)(curenv->env_xstacktop - sizeof(struct  Trapframe)));		
 		bcopy(&PgTrapFrame, curenv->env_xstacktop - sizeof(struct  Trapframe), sizeof(struct Trapframe));
 	}
-//	printf("^^^^cp0_epc:%x\tcurenv->env_pgfault_handler:%x\n",tf->cp0_epc,curenv->env_pgfault_handler);
+	//	printf("^^^^cp0_epc:%x\tcurenv->env_pgfault_handler:%x\n",tf->cp0_epc,curenv->env_pgfault_handler);
 
 	tf->cp0_epc = curenv->env_pgfault_handler;
-	
-	
+
+
 	return;
 }

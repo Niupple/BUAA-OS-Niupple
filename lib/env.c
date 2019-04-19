@@ -99,6 +99,11 @@ env_init(void)
 	int i;
 	/*Step 1: Initial env_free_list. */
 	LIST_INIT(&env_free_list);
+	LIST_INIT(&env_sched_list[0]);
+	LIST_INIT(&env_sched_list[1]);
+
+	assert(LIST_EMPTY(&env_sched_list[0]));
+	assert(LIST_EMPTY(&env_sched_list[1]));
 
 	/*Step 2: Travel the elements in 'envs', init every element(mainly initial its status, mark it as free)
 	 * and inserts them into the env_free_list as reverse order. */
@@ -206,7 +211,7 @@ env_alloc(struct Env **new, u_int parent_id)
 	/*Step 3: Initialize every field of new Env with appropriate values*/
 	e->env_id = mkenvid(e);
 	e->env_parent_id = parent_id;
-	e->env_status = ENV_NOT_RUNNABLE;	//why not runnable?TODO
+	e->env_status = ENV_RUNNABLE;	//why not runnable?TODO
 
 	/*Step 4: focus on initializing env_tf structure, located at this new Env. 
 	 * especially the sp register,CPU status. */
@@ -245,6 +250,7 @@ env_alloc(struct Env **new, u_int parent_id)
 static int load_icode_mapper(u_long va, u_int32_t sgsize,
 		u_char *bin, u_int32_t bin_size, void *user_data)
 {
+	//printf("in load_icode_mapper(sgisze = %d, bin_size = %d)\n", sgsize, bin_size);
 	struct Env *env = (struct Env *)user_data;
 	struct Page *p = NULL;
 	u_long i;
@@ -253,26 +259,32 @@ static int load_icode_mapper(u_long va, u_int32_t sgsize,
 
 	/*Step 1: load all content of bin into memory. */
 	for (i = 0; i < bin_size; i += BY2PG) {
+		//printf("in loop %d\n", i);
 		/* Hint: You should alloc a page and increase the reference count of it. */
 		if((r = page_alloc(&p)) < 0) {
+			//printf("no free page\n");
 			return r;
 		}
 		if((r = page_insert(env->env_pgdir, p, va+i-offset, 0)) < 0) {
+			//printf("page_insert failed\n");
 			return r;
 		}
 		r = bin_size-i+offset;
 		if(i == 0) {
-			bcopy(va, page2kva(p)+offset, MIN(BY2PG-offset, bin_size));
+			//printf("ready to start copying %x, %x\n", bin, page2kva(p)+offset);
+			bcopy(bin, page2kva(p)+offset, MIN(BY2PG-offset, bin_size));
 		} else if(BY2PG <= r) {
-			bcopy(va+i-offset, page2kva(p), BY2PG);
+			bcopy(bin+i-offset, page2kva(p), BY2PG);
 		} else {
-			bcopy(va+i-offset, page2kva(p), r);
+			bcopy(bin+i-offset, page2kva(p), r);
 			//bzero(va+bin_size, MIN(sgsize-bin_size, BY2PG-bin_size+i));
 		}
+		//printf("one page copyed\n");
 	}
 	/*Step 2: alloc pages to reach `sgsize` when `bin_size` < `sgsize`.
 	 * i has the value of `bin_size` now. */
 	while (i < sgsize) {
+		//printf("here\n");
 		if((r = page_alloc(&p)) < 0) {
 			return r;
 		}
@@ -300,6 +312,7 @@ static int load_icode_mapper(u_long va, u_int32_t sgsize,
 	static void
 load_icode(struct Env *e, u_char *binary, u_int size)
 {
+	//printf("loading icode\n");
 	/* Hint:
 	 *  You must figure out which permissions you'll need
 	 *  for the different mappings you create.
@@ -313,20 +326,26 @@ load_icode(struct Env *e, u_char *binary, u_int size)
 
 	/*Step 1: alloc a page. */
 	if(page_alloc(&p)) {
+		//printf("no free page\n");
 		return;
 	}
+	//printf("page alloced\n");
 
 	/*Step 2: Use appropriate perm to set initial stack for new Env. */
 	/*Hint: The user-stack should be writable? */
 	// of course?
 	if((r = page_insert(e->env_pgdir, p, USTACKTOP-BY2PG, PTE_R)) < 0) {
+		//printf("page_insert failed\n");
 		return;
 	}
+	//printf("page inserted\n");
 
 	/*Step 3:load the binary by using elf loader. */
 	if(load_elf(binary, size, &entry_point, e, load_icode_mapper) < 0) {
+		//printf("load_elf failed\n");
 		return;
 	}
+	//printf("load finished\n");
 
 	/***Your Question Here***/
 	/*Step 4:Set CPU's PC register as appropriate value. */
@@ -345,17 +364,23 @@ load_icode(struct Env *e, u_char *binary, u_int size)
 	void
 env_create_priority(u_char *binary, int size, int priority)
 {
+	//printf("creating env with priority\n");
 	struct Env *e = NULL;
 	/*Step 1: Use env_alloc to alloc a new env. */
 	if(env_alloc(&e, 0) < 0) {
+		//printf("env_alloc failed\n");
 		return;
 	}
+	//printf("env_alloc finished\n");
 
 	/*Step 2: assign priority to the new env. */
 	e->env_pri = priority;
 
 	/*Step 3: Use load_icode() to load the named elf binary. */
 	load_icode(e, binary, size);
+
+	//printf("inserting env into env_sched_list %x\n", e);
+	LIST_INSERT_HEAD(&env_sched_list[0], e, env_sched_link);
 }
 /* Overview:
  * Allocates a new env with default priority value.
@@ -381,7 +406,7 @@ env_free(struct Env *e)
 	u_int pdeno, pteno, pa;
 
 	/* Hint: Note the environment's demise.*/
-	printf("[%08x] free env %08x\n", curenv ? curenv->env_id : 0, e->env_id);
+	//printf("[%08x] free env %08x\n", curenv ? curenv->env_id : 0, e->env_id);
 
 	/* Hint: Flush all mapped pages in the user portion of the address space */
 	for (pdeno = 0; pdeno < PDX(UTOP); pdeno++) {
@@ -451,20 +476,30 @@ extern void lcontext(u_int contxt);
 	void
 env_run(struct Env *e)
 {
+	//printf("in env_run, trying to start %x\n", e);
 	/*Step 1: save register state of curenv. */
 	/* Hint: if there is a environment running,you should do
 	 *  context switch.You can imitate env_destroy() 's behaviors.*/
+	/*
+	if(curenv == e) {
+		return;	//TODO is this right?
+	}
+	*/
 	if(curenv) {
+		//printf("not a kernel env\n");
 		bcopy(  (void*)TIMESTACK-sizeof(struct Trapframe),	//assume that trapframe has already been loaded beneath KENEL_SP
 				(void*)&(curenv->env_tf), sizeof(struct Trapframe));
 		curenv->env_tf.pc = curenv->env_tf.cp0_epc;
 
 		/*Step 2: Set 'curenv' to the new environment. */
 	}
+	//printf("hello \n");
 	curenv = e;
 
 	/*Step 3: Use lcontext() to switch to its address space. */
+	//printf("e->env_pgdir = %x\n", e->env_pgdir);
 	lcontext(e->env_pgdir);
+	//printf("lcontext finished\n");
 
 	/*Step 4: Use env_pop_tf() to restore the environment's
 	 * environment   registers and drop into user mode in the
@@ -472,6 +507,7 @@ env_run(struct Env *e)
 	 */
 	/* Hint: You should use GET_ENV_ASID there.Think why? */
 	env_pop_tf(&(e->env_tf), GET_ENV_ASID(e->env_id));
+	//printf("env_pop_tf finished\n");
 }
 void env_check()
 {
@@ -494,7 +530,7 @@ void env_check()
 	fl = env_free_list;
 	// now this env_free list must be empty!!!!
 	LIST_INIT(&env_free_list);
-	printf("here!\n");
+	//printf("here!\n");
 
 	//printf("here!\n");
 	// should be no free memory
