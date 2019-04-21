@@ -28,7 +28,7 @@ void sched_yield(void)
 		LIST_INSERT_HEAD(&env_sched_list[nowat^1], e, env_sched_link);
 		//printf("list inserted\n");
 	}
-	while(LIST_EMPTY(&env_sched_list[nowat])) {
+	if (LIST_EMPTY(&env_sched_list[nowat])) {
 		//printf("switching sched list\n");
 		nowat ^= 1;
 	}
@@ -37,5 +37,8 @@ void sched_yield(void)
 	//printf("now try to run %x\n", e);
 	//check RUNNABLE?
 	//timer_init();
+	if(!e) {
+		return;
+	}
 	env_run(e);
 }

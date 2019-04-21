@@ -445,6 +445,7 @@ env_free(struct Env *e)
 env_destroy(struct Env *e)
 {
 	/* Hint: free e. */
+	//LIST_REMOVE(e, env_sched_link);
 	env_free(e);
 
 	/* Hint: schedule to run a new environment. */
