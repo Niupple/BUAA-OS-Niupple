@@ -220,7 +220,7 @@ env_alloc(struct Env **new, u_int parent_id)
 	// *scene*, which is stored in env_tf, will be recovered for the enviroment. Hence, data in env_tf
 	// of a new environment can be regarded as the initial data for the env.
 	e->env_tf.cp0_status = 0x10001004;
-	e->env_tf.pc = UTEXT+0xb0;	// TODO what's this?
+	//e->env_tf.pc = UTEXT+0xb0;	// TODO what's this?
 	e->env_tf.regs[29] = USTACKTOP;
 
 	/*Step 5: Remove the new Env from Env free list*/
