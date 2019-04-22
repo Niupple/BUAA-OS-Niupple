@@ -24,6 +24,15 @@ void mips_init()
 	 * interesting, have fun please*/
 	ENV_CREATE_PRIORITY(user_A, 2);
 	ENV_CREATE_PRIORITY(user_B, 1);
+	ENV_CREATE_PRIORITY(user_C, 40);
+	ENV_CREATE_PRIORITY(user_B, 1);
+	ENV_CREATE_PRIORITY(user_C, 4);
+	ENV_CREATE_PRIORITY(user_A, 2);
+	ENV_CREATE_PRIORITY(user_C, 3);
+	ENV_CREATE_PRIORITY(user_A, 2);
+	ENV_CREATE_PRIORITY(user_B, 1);
+	ENV_CREATE_PRIORITY(user_C, 2);
+	ENV_CREATE_PRIORITY(user_A, 2);
 
 	printf("env_created\n");
 
