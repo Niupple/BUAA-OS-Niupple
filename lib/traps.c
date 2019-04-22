@@ -5,6 +5,7 @@
 extern void handle_int();
 extern void handle_reserved();
 extern void handle_tlb();
+extern void handle_ov();
 extern void handle_sys();
 extern void handle_mod();
 unsigned long exception_handlers[32];
@@ -17,6 +18,7 @@ void trap_init(){
 	set_except_vector(2, handle_tlb);
 	set_except_vector(3, handle_tlb);
 	set_except_vector(8, handle_sys);
+	set_except_vector(12, handle_ov);
 }
 void *set_except_vector(int n, void * addr){
 	unsigned long handler=(unsigned long)addr;
@@ -70,4 +72,12 @@ page_fault_handler(struct Trapframe *tf)
 
 
 	return;
+}
+
+void print_instr(unsigned long ins) {
+	printf("Instr: 0x%x\n", ins);
+}
+
+void print_regs(int a, int b) {
+	printf("reg %d and reg %d\n", a, b);
 }
