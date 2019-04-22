@@ -11,14 +11,13 @@
  * Hints:
  *  The variable which is for counting should be defined as 'static'.
  */
-void sched_yield_new(void)
-{
+void sched_yield_new(void) {
 	//printf("yielding of %x\n", curenv);
 	static int nowat = 0;
 	static int counter = 0;
 	struct Env *e = curenv;
 	if(e) {
-		if(--e->env_pri > 0) {
+		if((int)(--e->env_pri) > 0) {
 			//printf("not yet\n");
 			env_run(e);
 			return;
@@ -40,6 +39,10 @@ void sched_yield_new(void)
 	//timer_init();
 	if(!e) {
 		//panic("no runnable envs\n");
+	} else if(e->env_pri == 0) {
+		//panic("pri == 0\n");
+		curenv = e;
+		env_destroy(e);
 	}
 	env_run(e);
 }
