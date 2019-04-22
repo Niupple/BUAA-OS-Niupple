@@ -39,7 +39,7 @@ void sched_yield_new(void)
 	//check RUNNABLE?
 	//timer_init();
 	if(!e) {
-		panic("no runnable envs\n");
+		//panic("no runnable envs\n");
 	}
 	env_run(e);
 }
