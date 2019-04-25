@@ -4,11 +4,11 @@
 #include <stackframe.h>
 
 .macro	__build_clear_sti
-	STI	/*set IE*/
+	STI
 .endm
 
 .macro	__build_clear_cli
-	CLI	/*unset IE*/
+	CLI
 .endm
 
 .macro	BUILD_HANDLER exception handler clear
@@ -45,7 +45,7 @@ FEXPORT(ret_from_exception)
 
 .set noreorder
 .align	5
-NESTED(handle_int, TF_SIZE, sp)	/*int is for interrupt*/
+NESTED(handle_int, TF_SIZE, sp)
 .set	noat
 
 //1: j 1b
