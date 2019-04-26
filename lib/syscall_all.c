@@ -147,18 +147,18 @@ int sys_mem_alloc(int sysno, u_int envid, u_int va, u_int perm)
 	int ret;
 	ret = 0;
 	// Your code here.
+	if(!(perm & PTE_V) || (perm & PTE_COW)) {
+		return -E_INVAL;
+	}
+	if(va >= UTOP) {
+		return -E_INVAL;		//TODO or what?
+	}
 	if((ret = page_alloc(&ppage)) < 0) {
 		return ret;
 	}
 
-	if(!(perm & PTE_V) || (perm & PTE_COW)) {
-		return -E_INVAL;
-	}
 	if((ret = envid2env(envid, &env, 1)) < 0) {	//TODO so should I check perm?
 		return ret;
-	}
-	if(va >= UTOP) {
-		return -E_INVAL;		//TODO or what?
 	}
 	if((ret = page_insert(env->env_pgdir, ppage, va, perm)) < 0) {
 		return ret;
@@ -208,10 +208,10 @@ int sys_mem_map(int sysno, u_int srcid, u_int srcva, u_int dstid, u_int dstva,
 	if(srcva >= UTOP || dstva >= UTOP) {
 		return -E_INVAL;	//TODO or what?
 	}
-	if(!(ppage = page_lookup(dstenv->env_pgdir, round_dstva, NULL))) {
+	if(!(ppage = page_lookup(srcenv->env_pgdir, round_srcva, NULL))) {
 		return -1;	// TODO dstva is not mapped, what to return?
 	}
-	if((ret = page_insert(srcenv->env_pgdir, ppage, srcva, perm)) < 0) {
+	if((ret = page_insert(dstenv->env_pgdir, ppage, dstva, perm)) < 0) {
 		return ret;
 	}
 
@@ -339,10 +339,14 @@ void sys_panic(int sysno, char *msg)
  */
 void sys_ipc_recv(int sysno, u_int dstva)
 {
+	if(dstva >= UTOP) {
+		return;
+	}
 	curenv->env_ipc_dstva = dstva;
 	curenv->env_ipc_recving = 1;
 	curenv->env_status = ENV_NOT_RUNNABLE;
 	LIST_REMOVE(curenv, env_sched_link);
+	sched_yield();	//really?
 	// TODO what else?
 }
 
