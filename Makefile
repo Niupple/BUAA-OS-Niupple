@@ -25,9 +25,12 @@ objects		  := $(boot_dir)/start.o			  \
 				 $(user_dir)/*.x \
 				 $(mm_dir)/*.o
 
-.PHONY: all $(modules) clean
+.PHONY: all $(modules) clean test
 
 all: $(modules) vmlinux
+
+test: clean all
+	/OSLAB/gxemul -E testmips -C R3000 -M 64 $(vmlinux_elf)
 
 vmlinux: $(modules)
 	$(LD) -o $(vmlinux_elf) -N -T $(link_script) $(objects)

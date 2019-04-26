@@ -63,6 +63,10 @@ u_int sys_getenvid(void)
  */
 void sys_yield(void)
 {
+	bcopy((void *)KERNEL_SP-sizeof(struct Trapframe),
+			(void *)TIMESTACK-sizeof(struct Trapframe),
+			sizeof(struct Trapframe));
+	sched_yield();
 }
 
 /* Overview:
@@ -135,12 +139,28 @@ int sys_set_pgfault_handler(int sysno, u_int envid, u_int func, u_int xstacktop)
  */
 int sys_mem_alloc(int sysno, u_int envid, u_int va, u_int perm)
 {
-	// Your code here.
 	struct Env *env;
 	struct Page *ppage;
 	int ret;
 	ret = 0;
+	// Your code here.
+	if((ret = page_alloc(&ppage)) < 0) {
+		return ret;
+	}
 
+	if(!(perm & PTE_V) || (perm & PTE_COW)) {
+		return -E_INVAL;
+	}
+	if((ret = envid2env(envid, &env, 1)) < 0) {	//TODO so should I check perm?
+		return ret;
+	}
+	if(va >= UTOP) {
+		return -1;		//TODO or what?
+	}
+	if((ret = page_insert(env->env_pgdir, ppage, va, perm)) < 0) {
+		return ret;
+	}
+	return ret;
 }
 
 /* Overview:
@@ -172,7 +192,26 @@ int sys_mem_map(int sysno, u_int srcid, u_int srcva, u_int dstid, u_int dstva,
 	round_dstva = ROUNDDOWN(dstva, BY2PG);
 
     //your code here
+	if(!(perm & PTE_V) || (perm & PTE_COW)) {
+		return -E_INVAL;
+	}
+	if((ret = envid2env(srcid, &srcenv, 0)) < 0) {
+		return ret;
+	}
+	if((ret = envid2env(dstid, &dstenv, 0)) < 0) {
+		return ret;
+	}
+	if(srcva >= UTOP || srcva >= UTOP) {
+		return -1;	//TODO or what?
+	}
+	if(!(ppage = page_lookup(dstenv->env_pgdir, round_dstva, NULL))) {
+		return -1;	// TODO dstva is not mapped, what to return?
+	}
+	if((ret = page_insert(srcenv->env_pgdir, ppage, srcva, perm)) < 0) {
+		return ret;
+	}
 
+	assert(ret == 0);
 	return ret;
 }
 
@@ -187,9 +226,16 @@ int sys_mem_map(int sysno, u_int srcid, u_int srcva, u_int dstid, u_int dstva,
  */
 int sys_mem_unmap(int sysno, u_int envid, u_int va)
 {
-	// Your code here.
 	int ret;
 	struct Env *env;
+	// Your code here.
+	if(va >= UTOP) {
+		return -1;	// TODO or what?
+	}
+	if((ret = envid2env(envid, &env, 0)) < 0) {
+		return ret;
+	}
+	page_remove(env->env_pgdir, va);
 
 	return ret;
 	//	panic("sys_mem_unmap not implemented");
@@ -288,6 +334,11 @@ void sys_panic(int sysno, char *msg)
  */
 void sys_ipc_recv(int sysno, u_int dstva)
 {
+	curenv->env_ipc_dstva = dstva;
+	curenv->env_ipc_recving = 1;
+	curenv->env_status = ENV_NOT_RUNNABLE;
+	LIST_REMOVE(curenv, env_sched_link);
+	// TODO what else?
 }
 
 /* Overview:
@@ -314,6 +365,18 @@ int sys_ipc_can_send(int sysno, u_int envid, u_int value, u_int srcva,
 	int r;
 	struct Env *e;
 	struct Page *p;
+	
+	if((r = envid2env(envid, &e, 0)) < 0) {
+		return r;
+	}
+	if(e->env_ipc_recving != 1) {
+		return -E_IPC_NOT_RECV;
+	}
+	e->env_ipc_recving = 0;
+	e->env_ipc_from = curenv->env_id;
+	e->env_ipc_value = value;
+	e->env_status = ENV_RUNNABLE;
+	LIST_INSERT_HEAD(&env_sched_list[0], curenv, env_sched_link);
 
 	return 0;
 }

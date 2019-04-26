@@ -5,6 +5,10 @@
 
 LEAF(msyscall)
     // TODO: execute a `syscall` instruction and return from msyscall
+	syscall
+	nop
+	jr ra
+	nop
 
 END(msyscall)
 

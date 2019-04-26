@@ -488,7 +488,7 @@ env_run(struct Env *e)
 	*/
 	if(curenv) {
 		//printf("not a kernel env\n");
-		bcopy(  (void*)TIMESTACK-sizeof(struct Trapframe),	//assume that trapframe has already been loaded beneath KENEL_SP
+		bcopy(  (void*)TIMESTACK-sizeof(struct Trapframe),
 				(void*)&(curenv->env_tf), sizeof(struct Trapframe));
 		curenv->env_tf.pc = curenv->env_tf.cp0_epc;
 

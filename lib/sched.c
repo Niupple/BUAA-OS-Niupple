@@ -37,8 +37,5 @@ void sched_yield(void)
 	//printf("now try to run %x\n", e);
 	//check RUNNABLE?
 	//timer_init();
-	if(!e) {
-		return;
-	}
 	env_run(e);
 }
