@@ -158,11 +158,12 @@ int sys_mem_alloc(int sysno, u_int envid, u_int va, u_int perm)
 		return ret;
 	}
 	if(va >= UTOP) {
-		return -1;		//TODO or what?
+		return -E_INVAL;		//TODO or what?
 	}
 	if((ret = page_insert(env->env_pgdir, ppage, va, perm)) < 0) {
 		return ret;
 	}
+	assert(ret == 0);
 	return ret;
 }
 
@@ -204,8 +205,8 @@ int sys_mem_map(int sysno, u_int srcid, u_int srcva, u_int dstid, u_int dstva,
 	if((ret = envid2env(dstid, &dstenv, 0)) < 0) {
 		return ret;
 	}
-	if(srcva >= UTOP || srcva >= UTOP) {
-		return -1;	//TODO or what?
+	if(srcva >= UTOP || dstva >= UTOP) {
+		return -E_INVAL;	//TODO or what?
 	}
 	if(!(ppage = page_lookup(dstenv->env_pgdir, round_dstva, NULL))) {
 		return -1;	// TODO dstva is not mapped, what to return?
@@ -233,7 +234,7 @@ int sys_mem_unmap(int sysno, u_int envid, u_int va)
 	struct Env *env;
 	// Your code here.
 	if(va >= UTOP) {
-		return -1;	// TODO or what?
+		return -E_INVAL;	// TODO or what?
 	}
 	if((ret = envid2env(envid, &env, 0)) < 0) {
 		return ret;
