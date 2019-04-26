@@ -67,7 +67,7 @@ int load_elf(u_char *binary, int size, u_long *entry_point, void *user_data,
 	ph_entry_size = ehdr->e_phentsize;
 
 	while (ph_entry_count--) {
-		printf("here\n");
+		//printf("here\n");
 		phdr = (Elf32_Phdr *)ptr_ph_table;
 
 		if (phdr->p_type == PT_LOAD) {

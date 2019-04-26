@@ -23,7 +23,7 @@ void mips_init()
 	
     trap_init();
 	printf("pretests finished\n");
-	//kclock_init();
+	kclock_init();
 
 	
 	while(1);
