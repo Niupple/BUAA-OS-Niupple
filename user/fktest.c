@@ -3,6 +3,12 @@
 
 void umain()
 {
+	//while(1);
+	//syscall_getenvid();
+	//syscall_putchar('c');
+	//syscall_panic("wtf\n");
+	//while(1);
+	//writef("here!!!!!!!!!!\n");
 	int a = 0;
 	int id = 0;
 

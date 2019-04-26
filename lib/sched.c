@@ -13,7 +13,7 @@
  */
 void sched_yield(void)
 {
-	//printf("yielding of %x\n", curenv);
+	printf("yielding of %x\n", curenv);
 	static int nowat = 0;
 	static int counter = 0;
 	struct Env *e = curenv;

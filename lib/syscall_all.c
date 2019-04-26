@@ -16,6 +16,8 @@ extern struct Env *curenv;
  */
 void sys_putchar(int sysno, int c, int a2, int a3, int a4, int a5)
 {
+	//printf("sysno = %x\n", sysno);
+	//printf("in sys_putchar, c = %d, aka, %c\n", c, c);
 	printcharc((char) c);
 	return ;
 }
@@ -52,6 +54,7 @@ void *memcpy(void *destaddr, void const *srcaddr, u_int len)
  */
 u_int sys_getenvid(void)
 {
+	//printf("in get_env_id\n");
 	return curenv->env_id;
 }
 
@@ -315,6 +318,7 @@ int sys_set_trapframe(int sysno, u_int envid, struct Trapframe *tf)
  */
 void sys_panic(int sysno, char *msg)
 {
+	//printf("I am panicking! %x\n", sysno);
 	// no page_fault_mode -- we are trying to panic!
 	panic("%s", TRUP(msg));
 }

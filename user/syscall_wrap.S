@@ -5,12 +5,8 @@
 
 LEAF(msyscall)
     // TODO: execute a `syscall` instruction and return from msyscall
-	addiu	sp, sp, -4
-	sw		ra, (sp)
 	syscall
 	nop
-	lw		ra, (sp)
-	addiu	sp, sp, 4
 	jr ra
 	nop
 
