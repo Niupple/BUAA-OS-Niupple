@@ -33,7 +33,9 @@ void sched_yield(void)
 		}
 		if (LIST_EMPTY(&env_sched_list[nowat])) {
 			nowat ^= 1;
+			continue;
 		}
+		break;
 	}
 	counter = 0;
 	e = LIST_FIRST(&env_sched_list[nowat]);
