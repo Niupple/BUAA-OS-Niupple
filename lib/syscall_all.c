@@ -345,7 +345,7 @@ void sys_ipc_recv(int sysno, u_int dstva)
 	curenv->env_ipc_dstva = dstva;
 	curenv->env_ipc_recving = 1;
 	curenv->env_status = ENV_NOT_RUNNABLE;
-	LIST_REMOVE(curenv, env_sched_link);
+	//LIST_REMOVE(curenv, env_sched_link);
 	sched_yield();	//really?
 	// TODO what else?
 }
@@ -385,7 +385,7 @@ int sys_ipc_can_send(int sysno, u_int envid, u_int value, u_int srcva,
 	e->env_ipc_from = curenv->env_id;
 	e->env_ipc_value = value;
 	e->env_status = ENV_RUNNABLE;
-	LIST_INSERT_HEAD(&env_sched_list[0], curenv, env_sched_link);
+	//LIST_INSERT_HEAD(&env_sched_list[0], curenv, env_sched_link);
 
 	return 0;
 }
