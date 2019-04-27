@@ -4,7 +4,7 @@
 void umain()
 {
 	//while(1);
-	syscall_getenvid();
+	writef("I am fktest, my envid is %d\n", syscall_getenvid());
 	syscall_putchar('c');
 	syscall_yield();
 	//while(1);
