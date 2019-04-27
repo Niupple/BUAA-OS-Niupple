@@ -5,11 +5,14 @@ void umain()
 {
 	//while(1);
 	writef("I am fktest, my envid is %d\n", syscall_getenvid());
-	syscall_putchar('c');
-	syscall_yield();
+	//syscall_putchar('c');
+	//syscall_yield();
 	//while(1);
-	writef("here!!!!!!!!!!\n");
-	syscall_panic("wtf\n");
+	writef("sending\n");
+	ipc_send(4097, 233, 0, 0);
+	writef("wtf\n");
+	while(1);
+	//syscall_panic("wtf\n");
 	/*
 	int a = 0;
 	int id = 0;

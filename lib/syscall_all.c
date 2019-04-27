@@ -142,7 +142,6 @@ int sys_set_pgfault_handler(int sysno, u_int envid, u_int func, u_int xstacktop)
  */
 int sys_mem_alloc(int sysno, u_int envid, u_int va, u_int perm)
 {
-	/*
 	struct Env *env;
 	struct Page *ppage;
 	int ret;
@@ -165,7 +164,6 @@ int sys_mem_alloc(int sysno, u_int envid, u_int va, u_int perm)
 	}
 	assert(ret == 0);
 	return ret;
-	*/
 }
 
 /* Overview:
@@ -184,7 +182,6 @@ int sys_mem_alloc(int sysno, u_int envid, u_int va, u_int perm)
 int sys_mem_map(int sysno, u_int srcid, u_int srcva, u_int dstid, u_int dstva,
 				u_int perm)
 {
-	/*
 	int ret;
 	u_int round_srcva, round_dstva;
 	struct Env *srcenv;
@@ -211,7 +208,13 @@ int sys_mem_map(int sysno, u_int srcid, u_int srcva, u_int dstid, u_int dstva,
 		return -E_INVAL;	//TODO or what?
 	}
 	if(!(ppage = page_lookup(srcenv->env_pgdir, round_srcva, NULL))) {
-		return -1;	// TODO dstva is not mapped, what to return?
+		return -E_INVAL;	// TODO dstva is not mapped, what to return? 
+	}
+	if((ret = pgdir_walk(srcenv->env_pgdir, srcva, 0, &ppte)) < 0) {
+		return ret;
+	}
+	if((perm & PTE_R) && !((Pte)ppte & PTE_R)) {
+		return -E_INVAL;
 	}
 	if((ret = page_insert(dstenv->env_pgdir, ppage, dstva, perm)) < 0) {
 		return ret;
@@ -219,7 +222,6 @@ int sys_mem_map(int sysno, u_int srcid, u_int srcva, u_int dstid, u_int dstva,
 
 	assert(ret == 0);
 	return ret;
-	*/
 }
 
 /* Overview:
@@ -233,7 +235,6 @@ int sys_mem_map(int sysno, u_int srcid, u_int srcva, u_int dstid, u_int dstva,
  */
 int sys_mem_unmap(int sysno, u_int envid, u_int va)
 {
-	/*
 	int ret;
 	struct Env *env;
 	// Your code here.
@@ -246,7 +247,6 @@ int sys_mem_unmap(int sysno, u_int envid, u_int va)
 	page_remove(env->env_pgdir, va);
 
 	return ret;
-	*/
 	//	panic("sys_mem_unmap not implemented");
 }
 
@@ -344,7 +344,7 @@ void sys_panic(int sysno, char *msg)
  */
 void sys_ipc_recv(int sysno, u_int dstva)
 {
-	/*
+	//printf("inn sys_ipc_recv\n");
 	if(dstva >= UTOP) {
 		return;
 	}
@@ -352,8 +352,8 @@ void sys_ipc_recv(int sysno, u_int dstva)
 	curenv->env_ipc_recving = 1;
 	curenv->env_status = ENV_NOT_RUNNABLE;
 	//LIST_REMOVE(curenv, env_sched_link);
-	sched_yield();	//really?
-	*/
+	sys_yield();
+	//sched_yield();	//really?
 	// TODO what else?
 }
 
@@ -377,20 +377,25 @@ void sys_ipc_recv(int sysno, u_int dstva)
 int sys_ipc_can_send(int sysno, u_int envid, u_int value, u_int srcva,
 					 u_int perm)
 {
-	/*
 
+	//printf("in sys_ipc_can_send:\n");
 	int r;
 	struct Env *e;
 	struct Page *p;
 	
+	if(srcva >= UTOP) {
+		return -E_INVAL;
+	}
 	if((r = envid2env(envid, &e, 0)) < 0) {
 		return r;
 	}
 	if(e->env_ipc_recving != 1) {
 		return -E_IPC_NOT_RECV;
 	}
+	//printf("sending preconditions met, now changing the status\n");
 	e->env_ipc_recving = 0;
 	e->env_ipc_from = curenv->env_id;
+	e->env_ipc_perm = perm;
 	e->env_ipc_value = value;
 	e->env_status = ENV_RUNNABLE;
 	if(srcva != 0) {
@@ -400,7 +405,6 @@ int sys_ipc_can_send(int sysno, u_int envid, u_int value, u_int srcva,
 		e->env_ipc_perm = perm;
 	}
 	//LIST_INSERT_HEAD(&env_sched_list[0], curenv, env_sched_link);
-	*/
 
 	return 0;
 }

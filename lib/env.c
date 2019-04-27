@@ -477,6 +477,7 @@ extern void lcontext(u_int contxt);
 	void
 env_run(struct Env *e)
 {
+	//printf("running %d\n", e->env_id);
 	//printf("in env_run, trying to start %x\n", e);
 	/*Step 1: save register state of curenv. */
 	/* Hint: if there is a environment running,you should do

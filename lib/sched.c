@@ -26,8 +26,10 @@ void sched_yield(void)
 		LIST_INSERT_HEAD(&env_sched_list[nowat^1], e, env_sched_link);
 	}
 	while(1) {
+		//printf("looking for runnable\n");
 		while(!LIST_EMPTY(&env_sched_list[nowat]) &&
 			LIST_FIRST(&env_sched_list[nowat])->env_status == ENV_NOT_RUNNABLE) {
+			//printf("not runnable\n");
 			e = LIST_FIRST(&env_sched_list[nowat]);
 			LIST_REMOVE(e, env_sched_link);
 			LIST_INSERT_HEAD(&env_sched_list[nowat^1], e, env_sched_link);
@@ -38,6 +40,7 @@ void sched_yield(void)
 		}
 		counter = 0;
 		e = LIST_FIRST(&env_sched_list[nowat]);
+		assert(e->env_status == ENV_RUNNABLE);
 		break;
 	}
 	env_run(e);

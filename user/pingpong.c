@@ -9,7 +9,10 @@ umain(void)
 	u_int who, i;
 
 	writef("I am ping pong, my envid is %d\n", syscall_getenvid());
-	//syscall_ipc_recv
+	writef("I got a %d\n", ipc_recv(NULL, NULL, NULL));
+	writef("QAQ\n");
+	while(1);
+	//syscall_panic("QAQ\n");
 	/*
 	if ((who = fork()) != 0) {
 		// get the ball rolling
