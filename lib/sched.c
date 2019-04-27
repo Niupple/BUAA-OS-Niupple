@@ -18,26 +18,24 @@ void sched_yield(void)
 	static int counter = 0;
 	struct Env *e = curenv;
 	if(e) {
-		if(e->env_status == ENV_NOT_RUNNABLE || ++counter < e->env_pri) {
+		if(++counter < e->env_pri) {
+			//printf("not yet\n");
 			env_run(e);
 			return;
 		}
 		LIST_REMOVE(e, env_sched_link);
+		//printf("list removed\n");
 		LIST_INSERT_HEAD(&env_sched_list[nowat^1], e, env_sched_link);
+		//printf("list inserted\n");
 	}
-	while(1) {
-		while(!LIST_EMPTY(&env_sched_list[nowat]) && LIST_FIRST(&env_sched_list[nowat])->env_status == ENV_NOT_RUNNABLE) {
-			e = LIST_FIRST(&env_sched_list[nowat]);
-			LIST_REMOVE(e, env_sched_link);
-			LIST_INSERT_HEAD(&env_sched_list[nowat^1], e, env_sched_link);
-		}
-		if (LIST_EMPTY(&env_sched_list[nowat])) {
-			nowat ^= 1;
-			continue;
-		}
-		break;
+	if (LIST_EMPTY(&env_sched_list[nowat])) {
+		//printf("switching sched list\n");
+		nowat ^= 1;
 	}
 	counter = 0;
 	e = LIST_FIRST(&env_sched_list[nowat]);
+	//printf("now try to run %x\n", e);
+	//check RUNNABLE?
+	//timer_init();
 	env_run(e);
 }

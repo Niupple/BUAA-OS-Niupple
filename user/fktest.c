@@ -4,12 +4,13 @@
 void umain()
 {
 	//while(1);
-	//syscall_getenvid();
-	//syscall_putchar('c');
-	//syscall_yield();
-	//syscall_panic("wtf\n");
+	syscall_getenvid();
+	syscall_putchar('c');
+	syscall_yield();
 	//while(1);
-	//writef("here!!!!!!!!!!\n");
+	writef("here!!!!!!!!!!\n");
+	syscall_panic("wtf\n");
+	/*
 	int a = 0;
 	int id = 0;
 
@@ -34,4 +35,5 @@ void umain()
 	for (;;) {
 		writef("this is father: a:%d\n", a);
 	}
+	*/
 }
