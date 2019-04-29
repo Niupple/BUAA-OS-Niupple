@@ -26,10 +26,36 @@ NESTED(handle_sys,TF_SIZE, sp)
     lw      t2, 0(t1)                   // t2 <- function entry of specific syscall
 
     lw      t0, TF_REG29(sp)            // t0 <- user's stack pointer
+	lw		t1, TF_REG5(sp)				// t1 <- number of arguments
+	lw		a0, TF_REG2(sp)				// a0 <- syscall number
+	lw		a1, TF_REG6(sp)				// a1 <- 1st arg
+	lw		a2, TF_REG7(sp)				// a2 <- 2nd arg
+	lw		a3, 16(t0)					// a3 <- 3rd arg
+	addiu	t1, t1, 1					// t1 += 1 because #args takes a place
+	sll		t3, t1, 2					// t3 <- stack space required
+	subu	sp, sp, t3					// now sp is at the right place for further calling
+
+	li		t1, 16						// t1 <- iterator of for loop
+	arg_loop:
+	slt		t4, t1, t3
+	beqz	t4, arg_loop_end
+	nop
+
+	addu	t4, t0, t1					// t4 <- &arg[i] in user stack
+	addiu	t4, t4, 4					// 1 more shift due to the #arg
+	lw		t4, (t4)					// t4 <- arg[i]
+	addu	t5, sp, t1					// t5 <- &arg[i] in new callee stack
+	sw		t4, (t5)					// store arg to where it should be
+
+	j arg_loop
+	addiu	t1, t1, 4
+	arg_loop_end:
+
+	move	s0, t3						// temporarily store stack size, for popping
+
+	/*
     lw      t3, 16(t0)                  // t3 <- the 5th argument of msyscall
     lw      t4, 20(t0)                  // t4 <- the 6th argument of msyscall
-
-    // TODO: Allocate a space of six arguments on current kernel stack and copy the six arguments to proper location
 	lw		a0, TF_REG4(sp)				// 
 	lw		a1, TF_REG5(sp)				// 
 	lw		a2, TF_REG6(sp)				// 
@@ -41,11 +67,15 @@ NESTED(handle_sys,TF_SIZE, sp)
 	sw		a3, 12(sp)
 	sw		t3, 16(sp)					// 
 	sw		t4, 20(sp)
+	*/
     
     jalr    t2                          // Invoke sys_* function
     nop
 
+	/*
 	addiu sp, sp, 24
+	*/
+	addu	sp, sp, s0
     
     // TODO: Resume current kernel stack
     
@@ -72,3 +102,4 @@ sys_call_table:                         // Syscall Table
     .word sys_ipc_can_send
     .word sys_ipc_recv
     .word sys_cgetc
+	.word sys_super_multi_parameter

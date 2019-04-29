@@ -409,3 +409,8 @@ int sys_ipc_can_send(int sysno, u_int envid, u_int value, u_int srcva,
 	return 0;
 }
 
+/*
+int sys_super_multi_parameter(int sysno, u_int a, u_int b, u_int c, u_int d, u_int e, u_int f, u_int g, u_int h) {
+	printf("hexa paras: %d, %d, %d, %d, %d, %d, %d, %d\n", a, b, c, d, e, f, g, h);
+}
+*/

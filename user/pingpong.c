@@ -8,6 +8,7 @@ umain(void)
 {
 	u_int who, i;
 
+	syscall_super_multi_parameter(1, 2, 3, 4, 5, 6, 7, 8);
 	writef("I am ping pong, my envid is %d\n", syscall_getenvid());
 	writef("I got a %d\n", ipc_recv(NULL, NULL, NULL));
 	writef("QAQ\n");
