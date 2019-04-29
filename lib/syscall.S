@@ -27,11 +27,11 @@ NESTED(handle_sys,TF_SIZE, sp)
 
     lw      t0, TF_REG29(sp)            // t0 <- user's stack pointer
 	lw		t1, TF_REG5(sp)				// t1 <- number of arguments
-	lw		a0, TF_REG2(sp)				// a0 <- syscall number
+	//lw		a0, TF_REG2(sp)				// a0 <- syscall number
 	lw		a1, TF_REG6(sp)				// a1 <- 1st arg
 	lw		a2, TF_REG7(sp)				// a2 <- 2nd arg
 	lw		a3, 16(t0)					// a3 <- 3rd arg
-	addiu	t1, t1, 1					// t1 += 1 because #args takes a place
+	addiu	t1, t1, 1					// t1 += 1 because sysno takes a place
 	sll		t3, t1, 2					// t3 <- stack space required
 	subu	sp, sp, t3					// now sp is at the right place for further calling
 
