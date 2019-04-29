@@ -17,7 +17,7 @@ NESTED(handle_sys,TF_SIZE, sp)
 	sw		t0, TF_EPC(sp)				// and then write it back
 
     // TODO: Copy the syscall number into $a0.
-	lw		a0, TF_REG2(sp)
+	//lw		a0, TF_REG2(sp)
     
     addiu   a0, a0, -__SYSCALL_BASE     // a0 <- relative syscall number
     sll     t0, a0, 2                   // t0 <- relative syscall number times 4

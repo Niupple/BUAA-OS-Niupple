@@ -5,7 +5,6 @@
 
 LEAF(msyscall)
     // TODO: execute a `syscall` instruction and return from msyscall
-	move	v0, a0
 	syscall
 	nop
 	jr ra

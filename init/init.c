@@ -18,11 +18,10 @@ void mips_init()
 	
 	env_init();
 	
-	ENV_CREATE(user_fktest);
-	ENV_CREATE(user_pingpong);
+	ENV_CREATE(user_pingpong_a);
+	ENV_CREATE(user_pingpong_b);
 	
     trap_init();
-	printf("pretests finished\n");
 	kclock_init();
 
 	
