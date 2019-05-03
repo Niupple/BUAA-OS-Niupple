@@ -12,7 +12,7 @@ umain(void)
 	while(1) {
 		now = 1 + ipc_recv(NULL, NULL, NULL);
 		writef("2048 got %d from 4097\n", now-1);
-		if(now-1 >= 9) {
+		if(now-1 >= 10) {
 			break;
 		}
 		writef("@@@@@send %d from 2048 to 4097\n", now);
