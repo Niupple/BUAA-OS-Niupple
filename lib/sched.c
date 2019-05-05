@@ -13,11 +13,11 @@
  */
 void sched_yield(void)
 {
-	//printf("yielding of %x\n", curenv);
 	static int nowat = 0;
 	static int counter = 0;
 	struct Env *e = curenv;
 	if(e) {
+		//printf("yielding of %d\n", curenv->env_id);
 		if(e->env_status == ENV_RUNNABLE && ++counter < e->env_pri) {
 			env_run(e);
 			return;
@@ -43,5 +43,14 @@ void sched_yield(void)
 		assert(e->env_status == ENV_RUNNABLE);
 		break;
 	}
+	//printf("running %d\n", e->env_id);
+
+	/*
+	//if(e->env_id == 4097) {
+	Pte *ppt;
+	pgdir_walk(e->env_pgdir, 0x4000c8, 0, &ppt);
+	printf("id = %d, pgwalk = %x\n", e->env_id, *ppt);
+	//}
+	*/
 	env_run(e);
 }

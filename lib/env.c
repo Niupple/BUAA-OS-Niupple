@@ -265,7 +265,7 @@ static int load_icode_mapper(u_long va, u_int32_t sgsize,
 			//printf("no free page\n");
 			return r;
 		}
-		if((r = page_insert(env->env_pgdir, p, va+i-offset, 0)) < 0) {
+		if((r = page_insert(env->env_pgdir, p, va+i-offset, PTE_R)) < 0) {
 			//printf("page_insert failed\n");
 			return r;
 		}
@@ -288,7 +288,7 @@ static int load_icode_mapper(u_long va, u_int32_t sgsize,
 		if((r = page_alloc(&p)) < 0) {
 			return r;
 		}
-		if((r = page_insert(env->env_pgdir, p, va+i-offset, 0)) < 0) {
+		if((r = page_insert(env->env_pgdir, p, va+i-offset, PTE_R)) < 0) {
 			return r;
 		}
 		//r = bin_size-i+offset;
@@ -334,7 +334,7 @@ load_icode(struct Env *e, u_char *binary, u_int size)
 	/*Step 2: Use appropriate perm to set initial stack for new Env. */
 	/*Hint: The user-stack should be writable? */
 	// of course?
-	if((r = page_insert(e->env_pgdir, p, USTACKTOP-BY2PG, PTE_R)) < 0) {
+	if((r = page_insert(e->env_pgdir, p, USTACKTOP-BY2PG, PTE_V | PTE_R)) < 0) {
 		//printf("page_insert failed\n");
 		return;
 	}

@@ -114,10 +114,18 @@ int sys_env_destroy(int sysno, u_int envid)
  */
 int sys_set_pgfault_handler(int sysno, u_int envid, u_int func, u_int xstacktop)
 {
+	//printf("in sys_set_pgfault_handler\n");
 	// Your code here.
 	struct Env *env;
 	int ret;
 
+	if((ret = envid2env(envid, &env, 0)) < 0) {
+		return ret;
+	}
+	//printf("env = %x\n", env);
+	env->env_pgfault_handler = func;
+	env->env_xstacktop = xstacktop;
+	//printf("return from in sys_set_pgfault_handler\n");
 
 	return 0;
 	//	panic("sys_set_pgfault_handler not implemented");
@@ -193,32 +201,42 @@ int sys_mem_map(int sysno, u_int srcid, u_int srcva, u_int dstid, u_int dstva,
 	ret = 0;
 	round_srcva = ROUNDDOWN(srcva, BY2PG);
 	round_dstva = ROUNDDOWN(dstva, BY2PG);
+	//printf("in sys_mem_map srcid = %d, srcva = %x, dstid = %d, dstva = %x\n", srcid, srcva, dstid, dstva);
 
     //your code here
-	if(!(perm & PTE_V) || (perm & PTE_COW)) {
+	if(!(perm & PTE_V)) {
+		//printf("%d\n", __LINE__);
 		return -E_INVAL;
 	}
 	if((ret = envid2env(srcid, &srcenv, 0)) < 0) {
+		//printf("%d\n", __LINE__);
 		return ret;
 	}
 	if((ret = envid2env(dstid, &dstenv, 0)) < 0) {
+		//printf("%d\n", __LINE__);
 		return ret;
 	}
 	if(srcva >= UTOP || dstva >= UTOP) {
+		//printf("%d\n", __LINE__);
 		return -E_INVAL;	//TODO or what?
 	}
 	if(!(ppage = page_lookup(srcenv->env_pgdir, round_srcva, NULL))) {
+		//printf("%d\n", __LINE__);
 		return -E_INVAL;	// TODO dstva is not mapped, what to return? 
 	}
 	if((ret = pgdir_walk(srcenv->env_pgdir, srcva, 0, &ppte)) < 0) {
+		//printf("%d\n", __LINE__);
 		return ret;
 	}
-	if((perm & PTE_R) && !((Pte)ppte & PTE_R)) {
+	if((perm & PTE_R) && !(*ppte & PTE_R)) {
+		//printf("%d\n", __LINE__);
 		return -E_INVAL;
 	}
 	if((ret = page_insert(dstenv->env_pgdir, ppage, dstva, perm)) < 0) {
+		//printf("%d\n", __LINE__);
 		return ret;
 	}
+	//printf("return from sys_mem_map\n");
 
 	assert(ret == 0);
 	return ret;
@@ -264,10 +282,22 @@ int sys_mem_unmap(int sysno, u_int envid, u_int va)
  */
 int sys_env_alloc(void)
 {
+	//printf("in sys_env_alloc\n");
 	// Your code here.
 	int r;
 	struct Env *e;
 
+	if((r = env_alloc(&e, curenv->env_id)) < 0) {
+		return r;
+	}
+
+	bcopy((void *)KERNEL_SP - sizeof(struct Trapframe), (void *)&e->env_tf, sizeof(struct Trapframe));
+	//printf("epc = %d\n", ((struct Trapframe *)(KERNEL_SP-sizeof(struct Trapframe)))->cp0_epc);
+	e->env_pri = curenv->env_pri;
+	e->env_status = ENV_NOT_RUNNABLE;
+	e->env_tf.regs[2] = 0;	//v0 = 0
+	e->env_tf.pc = e->env_tf.cp0_epc;
+	LIST_INSERT_HEAD(&env_sched_list[0], e, env_sched_link);
 
 	return e->env_id;
 	//	panic("sys_env_alloc not implemented");
@@ -290,6 +320,16 @@ int sys_set_env_status(int sysno, u_int envid, u_int status)
 	// Your code here.
 	struct Env *env;
 	int ret;
+
+	if((ret = envid2env(envid, &env, 1)) < 0) { //TODO should I check perm?
+		return ret;
+	}
+
+	if(status != ENV_RUNNABLE && status != ENV_NOT_RUNNABLE && status != ENV_FREE) {
+		return -E_INVAL;
+	}
+
+	env->env_status = status;
 
 	return 0;
 	//	panic("sys_env_set_status not implemented");
@@ -326,6 +366,13 @@ void sys_panic(int sysno, char *msg)
 {
 	//printf("I am panicking! %x\n", sysno);
 	// no page_fault_mode -- we are trying to panic!
+	//Pte *ppt;
+	//pgdir_walk(curenv->env_pgdir, 0x7f3fd000, 0, &ppt);
+	/*
+	printf("ppt = %x\n", *ppt);
+	printf("sp = %x\n", ((struct Trapframe *)(KERNEL_SP - sizeof(struct Trapframe)))->regs[29]);
+	printf("epc = %x\n", ((struct Trapframe *)(KERNEL_SP - sizeof(struct Trapframe)))->cp0_epc);
+	*/
 	panic("%s", TRUP(msg));
 }
 
