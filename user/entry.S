@@ -59,6 +59,7 @@ __asm_pgfault_handler:
 //1: j 1b
 nop
 	lw	a0, TF_BADVADDR(sp)
+	lw	a1, TF_EPC(sp)
 	//sw	t0, (sp)
 	//subu	sp,16
 	lw	t1, __pgfault_handler

@@ -698,6 +698,7 @@ void pageout(int va, int context)
 	p->pp_ref++;
 
 	page_insert((Pde *)context, p, VA2PFN(va), PTE_R);
+	++curenv->env_runs;
 	printf("pageout:\t@@@___0x%x___@@@  ins a page \n", va);
 }
 

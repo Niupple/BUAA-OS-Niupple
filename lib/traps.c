@@ -63,8 +63,19 @@ page_fault_handler(struct Trapframe *tf)
             tf->regs[29] = curenv->env_xstacktop - sizeof(struct  Trapframe);
             bcopy(&PgTrapFrame,(void *)curenv->env_xstacktop - sizeof(struct  Trapframe),sizeof(struct Trapframe));
         }
+	u_int instr = *((u_int *)(tf->cp0_epc));
     // TODO: Set EPC to a proper value in the trapframe
 	tf->cp0_epc = curenv->env_pgfault_handler;
+
+	++curenv->env_nop;
+	printf("Env: 0x%x, Instr: 0x%x, opcode: %b, reg_rs: %d, reg_rt: %d, OUT_count: %d, COW_count: %d\n",
+			curenv->env_id,
+			instr,
+			instr >> 26,
+			(instr >> 20) & (0x1f),
+			(instr >> 15) & (0x1f),
+			curenv->env_runs,
+			curenv->env_nop);
 
     return;
 }

@@ -30,7 +30,7 @@ objects		  := $(boot_dir)/start.o			  \
 all: $(modules) vmlinux
 
 test: clean all
-	/OSLAB/gxemul -E testmips -C R3000 -M 64 $(vmlinux_elf)
+	/OSLAB/gxemul -E testmips -R -C R3000 -M 64 $(vmlinux_elf)
 
 debug: clean all
 	/OSLAB/gxemul -v -E testmips -C R3000 -M 64 $(vmlinux_elf)

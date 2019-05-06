@@ -79,11 +79,24 @@ void user_bzero(void *v, u_int n)
  * the faulting page at correct address.
  */
 static void
-pgfault(u_int va)
+pgfault(u_int va, u_int *epc)
 {
 	//writef("%d: in pgfault %x\n", syscall_getenvid(), va);
 	u_int *tmp;
 	//	writef("fork.c:pgfault():\t va:%x\n",va);
+	u_int instr = *epc;
+	//struct Env *env;
+	//++env->env_nop;
+	/*
+	writef("Env: 0x%x, Instr: 0x%x, opcode: %b, reg_rs: %d, reg_rt: %d, OUT_count: %d, COW_count: %d\n",
+			env->env_id,
+			instr,
+			instr >> 26,
+			(instr >> 20) & (0x1f),
+			(instr >> 15) & (0x1f),
+			env->env_runs,
+			env->env_nop);
+			*/
     
     //map the new page at a temporary place
 	tmp = (*vpt)+(va>>12);

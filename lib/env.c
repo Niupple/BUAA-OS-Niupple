@@ -213,6 +213,7 @@ env_alloc(struct Env **new, u_int parent_id)
 	e->env_parent_id = parent_id;
 	e->env_status = ENV_RUNNABLE;	//why not runnable?TODO
 
+	e->env_nop = e->env_runs = 0;
 	/*Step 4: focus on initializing env_tf structure, located at this new Env. 
 	 * especially the sp register,CPU status. */
 	// The purpose of setting env_tf field for a newly allocated environment in this function, is to
@@ -448,6 +449,9 @@ env_destroy(struct Env *e)
 	//LIST_REMOVE(e, env_sched_link);
 	env_free(e);
 
+	printf("%08x envid\n", e->env_id); 
+	printf("%08x pgfault_out\n", e->env_runs); // 用户空间的页面被动分配
+	printf("%08x pgfault_cow\n", e->env_nop); // 写时复制
 	/* Hint: schedule to run a new environment. */
 	if (curenv == e) {
 		curenv = NULL;
