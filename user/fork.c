@@ -81,7 +81,7 @@ void user_bzero(void *v, u_int n)
 static void
 pgfault(u_int va)
 {
-	//writef("%d: in pgfault %x\n", syscall_getenvid(), va);
+	writef("%d: in pgfault %x\n", syscall_getenvid(), va);
 	u_int *tmp;
 	//	writef("fork.c:pgfault():\t va:%x\n",va);
     
@@ -163,6 +163,37 @@ duppage(u_int envid, u_int pn)
 	//	user_panic("duppage not implemented");
 }
 
+static void
+myduppage(u_int envid, u_int pn, int cow) {
+	u_int addr;
+	u_int perm;
+
+	addr = *(*vpt+pn);
+	perm = addr&(BY2PG-1);
+	addr = pn*BY2PG;
+	if(!(perm & PTE_V)) {
+		return;
+	} else {
+		if((perm & PTE_R) && (perm & PTE_LIBRARY)) {
+			//as it is
+		} else if((perm & PTE_R) && cow) {
+			perm |= PTE_COW;
+		}
+	}
+	if(syscall_mem_map(0, addr, envid, addr, perm) < 0) {
+		user_panic("unsuccessful duplicate\n");
+		return;
+	}
+	if(syscall_mem_map(0, addr, 0, addr, perm) < 0) {
+		user_panic("unsuccessful duplicate\n");
+		return;
+	}
+	if(pn == (0x7f3fdf70 >> 12)) {
+		//writef("%d: perm = %x\n", syscall_getenvid(), perm);
+		//syscall_panic("panic in duppage\n");
+	}
+}
+
 /* Overview:
  * 	User-level fork. Create a child and then copy our address space
  * and page fault handler setup to the child.
@@ -205,6 +236,56 @@ fork(void)
 				//syscall_panic("father panic\n");
 			}
 		}
+		if(syscall_mem_alloc(newenvid, UXSTACKTOP - BY2PG, PTE_V | PTE_R) < 0) {
+			user_panic("cannot alloc mem for child as xstack\n");
+		}
+		//writef("loop ended\n");
+		if(syscall_set_pgfault_handler(newenvid, __asm_pgfault_handler, UXSTACKTOP) < 0) {
+			user_panic("set handler failed\n");
+		}
+		if(syscall_set_env_status(newenvid, ENV_RUNNABLE) < 0) {
+			user_panic("set status failed\n");
+		}
+	} else {
+		//writef("I am son\n");
+		env = envs+ENVX(syscall_getenvid());
+		//syscall_panic("son needs to panic\n");
+	}
+	//writef("");
+	//writef("%d returning %d\n", syscall_getenvid(), newenvid);
+	//writef("let's see if you can print this well?\n");
+	//writef("i = %d\n", i);
+
+	return newenvid;
+}
+
+int tfork(void) {
+	//writef("now start to fork\n");
+	// Your code here.
+	u_int newenvid;
+	extern struct Env *envs;
+	extern struct Env *env;
+	u_int i;
+
+
+	//The parent installs pgfault using set_pgfault_handler
+	set_pgfault_handler(pgfault);
+	//writef("set\n");
+
+	//alloc a new alloc
+
+	newenvid = syscall_env_alloc();
+	//writef("successfully return from syscall_env_alloc with id %d\n", newenvid);
+	//writef("my USTACKTOP is %x\n", USTACKTOP);
+	//syscall_panic("panic before dup\n");
+	if(newenvid != 0) {
+		for(i = 0; i < USTACKTOP - BY2PG; i += BY2PG) {
+			if((*vpd)[i >> 22] & PTE_V) {
+				//writef("loop %x\n", i);
+				myduppage(newenvid, i >> 12, 0);
+			}
+		}
+		myduppage(newenvid, (USTACKTOP-BY2PG)>>12, 1);
 		if(syscall_mem_alloc(newenvid, UXSTACKTOP - BY2PG, PTE_V | PTE_R) < 0) {
 			user_panic("cannot alloc mem for child as xstack\n");
 		}
