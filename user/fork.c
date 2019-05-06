@@ -82,6 +82,9 @@ static void
 pgfault(u_int va)
 {
 	writef("%d: in pgfault %x\n", syscall_getenvid(), va);
+	if(va == 0x407000) {
+		syscall_panic("in page fault\n");
+	}
 	u_int *tmp;
 	//	writef("fork.c:pgfault():\t va:%x\n",va);
     
@@ -188,10 +191,8 @@ myduppage(u_int envid, u_int pn, int cow) {
 		user_panic("unsuccessful duplicate\n");
 		return;
 	}
-	if(pn == (0x7f3fdf70 >> 12)) {
-		//writef("%d: perm = %x\n", syscall_getenvid(), perm);
+	writef("%d: addr = %x, perm = %x\n", syscall_getenvid(), addr, perm);
 		//syscall_panic("panic in duppage\n");
-	}
 }
 
 /* Overview:
@@ -279,10 +280,11 @@ int tfork(void) {
 	//writef("my USTACKTOP is %x\n", USTACKTOP);
 	//syscall_panic("panic before dup\n");
 	if(newenvid != 0) {
-		for(i = 0; i < USTACKTOP - BY2PG; i += BY2PG) {
+		myduppage(newenvid, UTEXT >> 12, 1);
+		for(i = UTEXT + BY2PG; i < USTACKTOP - BY2PG; i += BY2PG) {
 			if((*vpd)[i >> 22] & PTE_V) {
 				//writef("loop %x\n", i);
-				myduppage(newenvid, i >> 12, 0);
+				myduppage(newenvid, i >> 12, 1);
 			}
 		}
 		myduppage(newenvid, (USTACKTOP-BY2PG)>>12, 1);

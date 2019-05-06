@@ -4,12 +4,12 @@
 #include "lib.h"
 
 
+int counter = 0;
 void
 umain(void)
 {
 	u_int who, i;
 
-	int counter = 0;
 	//syscall_panic("QAQ\n");
 	if ((who = tfork()) != 0) {
 		writef("father has returned\n");

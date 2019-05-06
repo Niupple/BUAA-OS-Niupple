@@ -366,13 +366,11 @@ void sys_panic(int sysno, char *msg)
 {
 	//printf("I am panicking! %x\n", sysno);
 	// no page_fault_mode -- we are trying to panic!
-	//Pte *ppt;
-	//pgdir_walk(curenv->env_pgdir, 0x7f3fd000, 0, &ppt);
-	/*
+	Pte *ppt;
+	pgdir_walk(curenv->env_pgdir, 0x7f3fd000, 0, &ppt);
 	printf("ppt = %x\n", *ppt);
 	printf("sp = %x\n", ((struct Trapframe *)(KERNEL_SP - sizeof(struct Trapframe)))->regs[29]);
 	printf("epc = %x\n", ((struct Trapframe *)(KERNEL_SP - sizeof(struct Trapframe)))->cp0_epc);
-	*/
 	panic("%s", TRUP(msg));
 }
 
