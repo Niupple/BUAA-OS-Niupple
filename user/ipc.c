@@ -18,7 +18,7 @@ ipc_send(u_int whom, u_int val, u_int srcva, u_int perm)
 
 	while ((r = syscall_ipc_can_send(whom, val, srcva, perm)) == -E_IPC_NOT_RECV) {
 		syscall_yield();
-		//writef("QQ\n");
+		//writef("QQ");
 	}
 
 	if (r == 0) {
@@ -35,9 +35,8 @@ ipc_send(u_int whom, u_int val, u_int srcva, u_int perm)
 u_int
 ipc_recv(u_int *whom, u_int dstva, u_int *perm)
 {
-	//writef("ipc_recv:come 0\n");
+	//printf("ipc_recv:come 0\n");
 	syscall_ipc_recv(dstva);
-	//writef("recv completed\n");
 
 	if (whom) {
 		*whom = env->env_ipc_from;

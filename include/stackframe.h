@@ -151,18 +151,17 @@ rfe
 .endm
 
 
-/*what the hell??*/
 .macro get_sp
 mfc0	k1, CP0_CAUSE
 andi	k1, 0x107C
 xori	k1, 0x1000
-bnez	k1, 1f	// if this is caused by an interrupt, set sp to KERNEL_SP anyway
-nop				// else check if sp is already a kernel stack pointer
+bnez	k1, 1f
+nop
 li	sp, 0x82000000
 j	2f
 nop
 1:
-bltz	sp, 2f	// meaning it is already a kernel stack pointer
+bltz	sp, 2f
 nop
 lw	sp, KERNEL_SP
 nop
