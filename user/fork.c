@@ -81,6 +81,8 @@ void user_bzero(void *v, u_int n)
 static void
 pgfault(u_int va, u_int *epc)
 {
+	//extern struct Env * env;
+	writef("in pagefault envid = %d\n", syscall_getenvid());
 	//writef("%d: in pgfault %x\n", syscall_getenvid(), va);
 	u_int *tmp;
 	//	writef("fork.c:pgfault():\t va:%x\n",va);

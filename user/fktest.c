@@ -35,22 +35,22 @@ void umain()
 		if ((id = fork()) == 0) {
 			a += 3;
 
-			for(;;){
 				writef("\t\tthis is child2 :a:%d\n", a);
+			for(;;){
 			}
 		}
 
 		a += 2;
 
-		for(;;){
 			writef("\tthis is child :a:%d\n", a);
+		for(;;){
 		}
 	}
 	writef("father has returned\n");
 
 	a++;
 
-	for(;;){
 		writef("%d: this is father: a:%d\n", syscall_getenvid(), a);
+	for(;;){
 	}
 }
