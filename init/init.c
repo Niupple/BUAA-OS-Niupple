@@ -22,6 +22,7 @@ void mips_init()
 	env_init();
 	// initialize exception vector.
 	trap_init();
+	//ENV_CREATE(user_fktest);
 	// initialize PIT.
 	kclock_init();
 
