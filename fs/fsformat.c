@@ -106,15 +106,16 @@ void init_disk() {
     int i, r, diff;
 
     // Step 1: Mark boot sector block.
-    disk[0].type = BLOCK_BOOT;
+    disk[0].type = BLOCK_BOOT;	// dist[0] is BOOT
 
     // Step 2: Initialize boundary.
+	// nbitblock = ceiling(NBLOCK/BIT2BLK), number of blocks required to store bitmap(aka. 1)
     nbitblock = (NBLOCK + BIT2BLK - 1) / BIT2BLK;
-    nextbno = 2 + nbitblock;
+    nextbno = 2 + nbitblock;	// ???
 
     // Step 2: Initialize bitmap blocks.
     for(i = 0; i < nbitblock; ++i) {
-        disk[2+i].type = BLOCK_BMAP;
+        disk[2+i].type = BLOCK_BMAP;	// bitmap starts from 2
     }
     for(i = 0; i < nbitblock; ++i) {
         memset(disk[2+i].data, 0xff, NBLOCK/8);
@@ -197,7 +198,7 @@ int make_link_block(struct File *dirf, int nblk) {
 //      file pointers
 //      
 // Post-Condition:
-//      We ASSUM that this function will never fail
+//      We ASSUME that this function will never fail
 
 struct File *create_file(struct File *dirf) {
     struct File *dirblk;
@@ -205,6 +206,25 @@ struct File *create_file(struct File *dirf) {
     int nblk = dirf->f_size / BY2BLK;
     
     // Your code here
+	if(nblk == 0) {
+		bno = make_link_block(dirf, nblk);
+		return (struct File *)disk[bno].data;
+	}
+
+	if(nblk <= NDIRECT) {
+		bno = dirf->f_direct[nblk-1];
+	} else {
+		bno = ((uint32_t *)disk[dirf->f_indirect].data)[nblk-1];
+	}
+	dirblk = (struct File *)disk[bno].data;
+
+	for(i = 0; i < FILE2BLK; ++i) {
+		if(strlen(dirblk[i].f_name) == 0) {
+			return dirblk+i;
+		}
+	}
+	bno = make_link_block(dirf, nblk);
+	return (struct File *)disk[bno].data;
 }
 
 // Write file to disk under specified dir.
@@ -215,12 +235,12 @@ void write_file(struct File *dirf, const char *path) {
     int fd = open(path, O_RDONLY);
     
     // Get file name with no path prefix.
-    const char *fname = strrchr(path, '/');
+    const char *fname = strrchr(path, '/');	//find the last ocurrence of '/', return NULL if not found
     if(fname)
         fname++;
     else
         fname = path;
-    strcpy(target->f_name, fname);
+    strcpy(target->f_name, fname);	//name after the last '/' is the file name
     
     target->f_size = lseek(fd, 0, SEEK_END);
     target->f_type = FTYPE_REG;
@@ -242,6 +262,18 @@ void write_file(struct File *dirf, const char *path) {
 //      We ASSUM that this funcion will never fail
 void write_directory(struct File *dirf, char *name) {
     // Your code here
+    int iblk = 0, r = 0, n = sizeof(disk[0].data);
+    uint8_t buffer[n+1], *dist;
+    struct File *target = create_file(dirf);
+	const char *fname = strrchr(name, '/');
+	if(fname)
+		fname++;
+	else
+		fname = name;
+
+	strcpy(target->f_name, fname);
+	target->f_size = 0;
+	target->f_type = FTYPE_DIR;
 }
 
 int main(int argc, char **argv) {

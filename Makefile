@@ -37,6 +37,9 @@ vmlinux: $(modules)
 $(modules): 
 	$(MAKE) --directory=$@
 
+test: clean all
+	/OSLAB/gxemul -E testmips -C R3000 -M 64 $(vmlinux_elf)
+
 clean: 
 	for d in $(modules);	\
 		do					\
