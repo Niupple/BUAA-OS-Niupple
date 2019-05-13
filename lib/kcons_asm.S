@@ -18,7 +18,7 @@
 LEAF(set_console)
 
 	//sw	sp, KERNEL_SP
-setup_c0_status STATUS_CU0|STATUSF_IP2 0
+setup_c0_status STATUS_CU0|STATUSF_IP2|1 0
 	jr ra
 
 	nop
