@@ -3,17 +3,21 @@
 
 #include "lib.h"
 
+/*
 extern char ugetc();
 extern char uwritef(char *fmt, ...);
 
+*/
 void
 umain(void)
 {
 	u_int who, i;
 
 	char c;
+	/*
 	c = ugetc();
 	uwritef("$$%c$$\n", c);
+	*/
 
 	/*
 	if ((who = fork()) != 0) {
