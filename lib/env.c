@@ -219,7 +219,7 @@ env_alloc(struct Env **new, u_int parent_id)
 	// take advantage of the feature that when system returns from kernal stage to user stage, the
 	// *scene*, which is stored in env_tf, will be recovered for the enviroment. Hence, data in env_tf
 	// of a new environment can be regarded as the initial data for the env.
-	e->env_tf.cp0_status = 0x10001004;
+	e->env_tf.cp0_status = 0x10001404;
 	e->env_tf.pc = UTEXT+0xb0;	// TODO what's this?
 	e->env_tf.regs[29] = USTACKTOP;
 
@@ -494,6 +494,8 @@ env_run(struct Env *e)
 		curenv->env_tf.pc = curenv->env_tf.cp0_epc;
 
 		/*Step 2: Set 'curenv' to the new environment. */
+		//printf("status is %x\n", curenv->env_tf.cp0_status);
+		//panic("in env\n");
 	}
 	//printf("hello \n");
 	curenv = e;
