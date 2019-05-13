@@ -40,6 +40,9 @@ $(modules):
 test: clean all
 	/OSLAB/gxemul -E testmips -C R3000 -M 64 $(vmlinux_elf)
 
+debug: clean all
+	/OSLAB/gxemul -v -E testmips -C R3000 -M 64 $(vmlinux_elf)
+
 clean: 
 	for d in $(modules);	\
 		do					\

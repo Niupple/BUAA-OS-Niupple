@@ -6,6 +6,8 @@
 void
 umain(void)
 {
+	writef("in pingpong");
+	while(1);
 	u_int who, i;
 
 	if ((who = fork()) != 0) {

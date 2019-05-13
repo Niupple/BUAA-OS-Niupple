@@ -58,10 +58,27 @@ mfc0	t0, CP0_CAUSE
 mfc0	t2, CP0_STATUS
 and	t0, t2
 
+andi	t1, t0, STATUSF_IP2
+bnez	t1, cons_irq
+nop
+
 andi	t1, t0, STATUSF_IP4
 bnez	t1, timer_irq
 nop
+
 END(handle_int)
+
+cons_irq:
+
+	li		t0, 0xB0000000	//console address
+	lw		a0, 0(t0)		//read from console
+	mfc0	a1, CP0_STATUS	//retrive status
+
+	jal		handle_cons_ir
+	nop
+
+	j		ret_from_exception
+	nop
 
 	.extern delay
 
