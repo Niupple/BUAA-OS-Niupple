@@ -23,10 +23,10 @@ void mips_init()
 	env_init();
 	// initialize exception vector.
 	trap_init();
-	//ENV_CREATE(user_pingpong);
+	ENV_CREATE(user_pingpong);
 	// initialize PIT.
 	kcons_init();
-	//kclock_init();
+	kclock_init();
 	while(1);
 
 	// Create process using macro 'ENC_CREATE'

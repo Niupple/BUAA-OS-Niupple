@@ -9,7 +9,7 @@ void handle_cons_ir(char c, int status) {
 	buf[len++] = c;
 	if(c == '\r') {
 		buf[len] = '\0';
-		printf("length: %d\n", len);
+		printf("length: %d\n", len-1);
 		printf("content: %s\n", buf);
 		len = 0;
 	}
