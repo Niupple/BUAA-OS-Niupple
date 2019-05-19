@@ -97,8 +97,10 @@ unmap_block(u_int blockno)
 
 	// Step 2: if this block is used(not free) and dirty, it needs to be synced to disk,
 	// can't be unmap directly.
-	if(block_is_dirty(blockno)) {
-		return;	// TODO or what?
+	if(block_is_free(blockno)) {
+		return;
+	} else if(block_is_dirty(blockno)) {
+		write_block(blockno);
 	}
 
 	// Step 3: use `syscall_mem_unmap` to unmap corresponding virtual memory.
