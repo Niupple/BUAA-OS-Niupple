@@ -16,7 +16,6 @@ void umain()
 	writef("%s\n", buf);
 	*/
 
-	/*
 	if ((r = open("/newmotd", O_RDWR)) < 0) {
 		user_panic("open /newmotd: %d", r);
 	}
@@ -73,7 +72,6 @@ void umain()
 	while (1) {
 		//writef("IDLE!");
 	}
-	*/
 }
 
 

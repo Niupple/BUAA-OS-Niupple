@@ -27,6 +27,8 @@ void mips_init()
 	kclock_init();
 
 	// Create process using macro 'ENC_CREATE'
+	ENV_CREATE(user_fstest);
+	ENV_CREATE(fs_serv);
 	// For more details about 'ENV_CREATE', see include/env.h
 
 	panic("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");

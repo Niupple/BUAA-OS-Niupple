@@ -12,6 +12,14 @@
 #define INDEX2FD(i)	(FDTABLE+(i)*BY2PG)
 #define INDEX2DATA(i)	(FILEBASE+(i)*PDMAP)
 
+/*
+   -----------------------
+   存储文件头的位置
+   -------0x60000000------	FILEBASE
+   存放文件描述符的位置
+   -----------------------	FDTABLE
+   */
+
 static struct Dev *devtab[] = {
 	&devfile,
 	&devcons,
@@ -197,12 +205,29 @@ read(int fdnum, void *buf, u_int n)
 	struct Fd *fd;
 
 	// Step 1: Get fd and dev.
+	if((r = fd_lookup(fdnum, &fd)) < 0 || (r = dev_lookup(fd->fd_dev_id, &dev)) < 0) {
+		return r;
+	}
 
 	// Step 2: Check open mode.
 
+	if ((fd->fd_omode & O_ACCMODE) == O_WRONLY) {
+		writef("[%08x] write %d -- bad mode\n", env->env_id, fdnum);
+		return -E_INVAL;
+	}
+
 	// Step 3: Read starting from seek position.
 
+	if (debug) writef("read %d %p %d via dev %s\n",
+						  fdnum, buf, n, dev->dev_name);
+
+	r = (*dev->dev_read)(fd, buf, n, fd->fd_offset);
 	// Step 4: Update seek position and set '\0' at the end of buf.
+
+	if(r >= 0) {
+		fd->fd_offset += r;
+		((char *)buf)[r] = '\0';
+	}
 
 	return r;
 }

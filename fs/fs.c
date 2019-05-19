@@ -15,6 +15,10 @@ int block_is_free(u_int);
 u_int
 diskaddr(u_int blockno)
 {
+	if(blockno >= DISKMAX/BY2BLK) {
+		user_panic("block no too large\n");
+	}
+	return DISKMAP+blockno*BY2BLK;
 }
 
 // Overview:
@@ -64,9 +68,19 @@ block_is_dirty(u_int blockno)
 int
 map_block(u_int blockno)
 {
+	int r;
+	int va;
 	// Step 1: Decide whether this block is already mapped to a page of physical memory.
+	if(block_is_mapped(blockno)) {
+		return 0;
+	}
 
     // Step 2: Alloc a page of memory for this block via syscall.
+	va = diskaddr(blockno);
+	if((r = syscall_mem_alloc(0, va, PTE_V | PTE_R)) < 0) {
+		return r;
+	}
+	return 0;
 }
 
 // Overview:
@@ -77,11 +91,18 @@ unmap_block(u_int blockno)
 	int r;
 
 	// Step 1: check if this block is mapped.
+	if(!block_is_mapped(blockno)) {
+		return;
+	}
 
 	// Step 2: if this block is used(not free) and dirty, it needs to be synced to disk,
 	// can't be unmap directly.
+	if(block_is_dirty(blockno)) {
+		return;	// TODO or what?
+	}
 
 	// Step 3: use `syscall_mem_unmap` to unmap corresponding virtual memory.
+	syscall_mem_unmap(0, diskaddr(blockno));
 
 	// Step 4: validate result of this unmap operation.
 	user_assert(!block_is_mapped(blockno));
@@ -527,15 +548,25 @@ dir_lookup(struct File *dir, char *name, struct File **file)
 	struct File *f;
 
 	// Step 1: Calculate nblock: how many blocks this dir have.
-
+	nblock = dir->f_size/BY2BLK;
 	for (i = 0; i < nblock; i++) {
 		// Step 2: Read the i'th block of the dir.
+		if((r = file_get_block(dir, i, &blk)) < 0) {
+			return r;
+		}
+
+		f = blk;
 		// Hint: Use file_get_block.
-
-
 		// Step 3: Find target file by file name in all files on this block.
+
 		// If we find the target file, set the result to *file and set f_dir field.
-		
+		for(j = 0; j < FILE2BLK; ++j) {
+			if(strcmp(f[j].f_name, name) == 0) {
+				*file = f + j;
+				(*file)->f_dir = dir;
+				return 0;
+			}
+		}
 	}
 
 	return -E_NOT_FOUND;

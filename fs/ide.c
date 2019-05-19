@@ -28,12 +28,15 @@ ide_read(u_int diskno, u_int secno, void *dst, u_int nsecs)
 	int offset_begin = secno * 0x200;
 	int offset_end = offset_begin + nsecs * 0x200;
 	int offset = 0;
+	int addr = 0;
 	int a = 0;
+	//writef("ide read[%d, %d]\n", offset_begin, offset_end);
 
 	while (offset_begin + offset < offset_end) {
 		// Your code here
 		syscall_write_dev(&diskno, 0x13000010, sizeof(u_int));
-		syscall_write_dev(&offset, 0x13000000, sizeof(u_int));
+		addr = offset+offset_begin;
+		syscall_write_dev(&addr, 0x13000000, sizeof(u_int));
 		a = 0;
 		syscall_write_dev(&a, 0x13000020, sizeof(int));
 		syscall_read_dev(&a, 0x13000030, sizeof(int));
@@ -69,12 +72,14 @@ ide_write(u_int diskno, u_int secno, void *src, u_int nsecs)
 	int offset_begin = secno * BY2SECT;
 	int offset_end = (secno + nsecs) * BY2SECT;
 	int offset = 0;
+	int addr = 0;
 	int a;
 	writef("diskno: %d\n", diskno);
 	while (offset_begin + offset < offset_end) {
 		// copy data from source array to disk buffer.
 		syscall_write_dev(&diskno, 0x13000010, sizeof(u_int));
-		syscall_write_dev(&offset, 0x13000000, sizeof(u_int));
+		addr = offset_begin+offset;
+		syscall_write_dev(&addr, 0x13000000, sizeof(u_int));
 		syscall_write_dev(src + offset, 0x13004000, BY2SECT);
 		a = 1;
 		syscall_write_dev(&a, 0x13000020, sizeof(int));
@@ -82,6 +87,7 @@ ide_write(u_int diskno, u_int secno, void *src, u_int nsecs)
 		if(a == 0) {
 			user_panic("ide_write error\n");
 		}
+		offset += BY2SECT;
 	}
 }
 
