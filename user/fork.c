@@ -86,29 +86,29 @@ pgfault(u_int va)
 	//	writef("fork.c:pgfault():\t va:%x\n",va);
     
     //map the new page at a temporary place
-	tmp = (*vpt)+(va>>12);
+	tmp = (u_int *)(*vpt)+(va>>12);
 	//writef("before: va %x -> pa %x\n", va, *tmp);
 	if(!(*tmp & PTE_COW)) {
 		user_panic("no pte_cow\n");
 	}
 
-	tmp = USTACKTOP;
-	if(syscall_mem_alloc(0, tmp, PTE_V | PTE_R) < 0) {
+	tmp = (u_int *)USTACKTOP;
+	if(syscall_mem_alloc(0, (u_int)tmp, PTE_V | PTE_R) < 0) {
 		return;
 	}
 
 	//copy the content
-	user_bcopy(ROUNDDOWN(va, BY2PG), tmp, BY2PG);
+	user_bcopy((void *)ROUNDDOWN(va, BY2PG), (void *)tmp, BY2PG);
 	
     //map the page on the appropriate place
-	if(syscall_mem_map(0, tmp, 0, ROUNDDOWN(va, BY2PG), PTE_V | PTE_R) < 0) {
+	if(syscall_mem_map(0, (u_int)tmp, 0, (u_int)ROUNDDOWN(va, BY2PG), PTE_V | PTE_R) < 0) {
 		return;
 	}
 
 	//writef("after: va %x -> pa %x\n", va, *((*vpt)+(va>>12)));
 	
     //unmap the temporary place
-	syscall_mem_unmap(0, tmp);
+	syscall_mem_unmap(0, (u_int)tmp);
 	
 }
 

@@ -88,7 +88,7 @@ map_block(u_int blockno)
 void
 unmap_block(u_int blockno)
 {
-	int r;
+	//int r;
 
 	// Step 1: check if this block is mapped.
 	if(!block_is_mapped(blockno)) {
@@ -563,7 +563,7 @@ dir_lookup(struct File *dir, char *name, struct File **file)
 
 		// If we find the target file, set the result to *file and set f_dir field.
 		for(j = 0; j < FILE2BLK; ++j) {
-			if(strcmp(f[j].f_name, name) == 0) {
+			if(strcmp((char *)f[j].f_name, name) == 0) {
 				*file = f + j;
 				(*file)->f_dir = dir;
 				return 0;

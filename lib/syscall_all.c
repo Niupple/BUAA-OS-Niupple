@@ -428,7 +428,7 @@ int sys_ipc_can_send(int sysno, u_int envid, u_int value, u_int srcva,
 	//printf("in sys_ipc_can_send:\n");
 	int r;
 	struct Env *e;
-	struct Page *p;
+	//struct Page *p;
 	
 	if(srcva >= UTOP) {
 		return -E_INVAL;

@@ -272,11 +272,11 @@ static int load_icode_mapper(u_long va, u_int32_t sgsize,
 		r = bin_size-i+offset;
 		if(i == 0) {
 			//printf("ready to start copying %x, %x\n", bin, page2kva(p)+offset);
-			bcopy(bin, page2kva(p)+offset, MIN(BY2PG-offset, bin_size));
+			bcopy((void *)bin, (void *)page2kva(p)+offset, MIN(BY2PG-offset, bin_size));
 		} else if(BY2PG <= r) {
-			bcopy(bin+i-offset, page2kva(p), BY2PG);
+			bcopy((void *)bin+i-offset, (void *)page2kva(p), BY2PG);
 		} else {
-			bcopy(bin+i-offset, page2kva(p), r);
+			bcopy((void *)bin+i-offset, (void *)page2kva(p), r);
 			//bzero(va+bin_size, MIN(sgsize-bin_size, BY2PG-bin_size+i));
 		}
 		//printf("one page copyed\n");
@@ -322,7 +322,7 @@ load_icode(struct Env *e, u_char *binary, u_int size)
 	struct Page *p = NULL;
 	u_long entry_point;
 	u_long r;
-	u_long perm;
+	//u_long perm;
 
 	/*Step 1: alloc a page. */
 	if(page_alloc(&p)) {
@@ -500,7 +500,7 @@ env_run(struct Env *e)
 
 	/*Step 3: Use lcontext() to switch to its address space. */
 	//printf("e->env_pgdir = %x\n", e->env_pgdir);
-	lcontext(e->env_pgdir);
+	lcontext((u_int)e->env_pgdir);
 	//printf("lcontext finished\n");
 
 	/*Step 4: Use env_pop_tf() to restore the environment's

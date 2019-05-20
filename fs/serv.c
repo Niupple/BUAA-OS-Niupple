@@ -211,7 +211,7 @@ serve_remove(u_int envid, struct Fsreq_remove *rq)
 	path[MAXPATHLEN-1] = 0;
 
 	// Step 2: Remove file from file system and response to user-level process.
-	if((r = file_remove(path)) < 0) {
+	if((r = file_remove((char *)path)) < 0) {
 		ipc_send(envid, r, 0, 0);
 		return;
 	}

@@ -33,6 +33,7 @@ void fs_sync(void);
 extern u_int *bitmap;
 int map_block(u_int);
 int alloc_block(void);
+void write_block(u_int);
 
 /* test.c */
 void fs_test(void);

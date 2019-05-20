@@ -250,7 +250,7 @@ page_alloc(struct Page **pp)
 
     /* Step 2: Initialize this page.
      * Hint: use `bzero`. */
-	bzero(page2kva(ppage_temp), BY2PG);
+	bzero((void *)page2kva(ppage_temp), BY2PG);
 	*pp = ppage_temp;
 	/*++ppage_temp->pp_ref;*/
 	return 0;

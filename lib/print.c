@@ -45,16 +45,16 @@ lp_Print(void (*output)(void *, char *, int),
 
     char c;
     char *s;
-    long int num;
+    long int num = 0;
 
-    int longFlag;
-    int negFlag;
-    int width;
-    int prec;
-    int ladjust;
-    char padc;
+    int longFlag = 0;
+    int negFlag = 0;
+    int width = 0;
+    int prec = 0;
+    int ladjust = 0;
+    char padc = 0;
 
-    int length;
+    int length = 0;
 	int state = 0;
 
     for(; *fmt; ++fmt) {
