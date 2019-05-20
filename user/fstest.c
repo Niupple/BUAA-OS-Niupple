@@ -16,6 +16,7 @@ void umain()
 	writef("%s\n", buf);
 	*/
 
+	/*
 	if ((r = open("/newmotd", O_RDWR)) < 0) {
 		user_panic("open /newmotd: %d", r);
 	}
@@ -62,6 +63,44 @@ void umain()
 		user_panic("close /newmotd: %d", r);
 	}		
 	writef("file rewrite is good\n");
+	*/
+
+	//link test
+	if ((r = open("/motd.lnk", O_RDWR)) < 0) {
+		user_panic("link open error\n");
+	}
+	fdnum = r;
+	writef("link open is good\n");
+	if ((n = read(fdnum, buf, 511)) < 0) {
+		user_panic("link read error\n");
+	}
+	buf[511] = '\0';
+	writef("%s\n", buf);
+	seek(fdnum, 0);
+	if ((r = write(fdnum, msg, strlen(msg)+1)) < 0) {
+		user_panic("write link error\n");
+	}
+	if ((r = close(fdnum)) < 0) {
+		user_panic("link close error\n");
+	}
+
+	if ((r = open("/motd", O_RDONLY)) < 0) {
+		user_panic("motd reopen error\n");
+	}
+	fdnum = r;
+	writef("open again\n");
+	if((n = read(fdnum, buf, 511)) < 0) {
+		user_panic("motd reread error\n");
+	}
+	if(strcmp(buf, msg) != 0) {
+		user_panic("rewrite failed\n");
+	}
+	writef("link rewrite is good\n");
+	if((r = close(fdnum)) < 0) {
+		user_panic("motd close failed\n");
+	}
+
+	//remove
 	if((r = remove("/newmotd"))<0){
 		user_panic("remove /newmotd: %d",r);
 	}

@@ -233,6 +233,7 @@ void write_file(struct File *dirf, const char *path) {
     uint8_t buffer[n+1], *dist;
     struct File *target = create_file(dirf);
     int fd = open(path, O_RDONLY);
+	int len;
     
     // Get file name with no path prefix.
     const char *fname = strrchr(path, '/');	//find the last ocurrence of '/', return NULL if not found
@@ -243,7 +244,12 @@ void write_file(struct File *dirf, const char *path) {
     strcpy(target->f_name, fname);	//name after the last '/' is the file name
     
     target->f_size = lseek(fd, 0, SEEK_END);
-    target->f_type = FTYPE_REG;
+	len = strlen(path);
+	if(len > 4 && strcmp(path+len-4, ".lnk") == 0) {
+		target->f_type = FTYPE_SYML;
+	} else {
+		target->f_type = FTYPE_REG;
+	}
     
     // Start reading file.
     lseek(fd, 0, SEEK_SET);

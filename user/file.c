@@ -17,6 +17,14 @@ struct Dev devfile = {
 	.dev_stat =	file_stat,
 };
 
+static int
+islink(const char *path) {
+	int len = strlen(path);
+	if(len > 4 && strcmp(path+len-4, ".lnk") == 0) {
+		return 1;
+	}
+	return 0;
+}
 
 // Overview:
 //	Open a file (or directory).
@@ -31,8 +39,10 @@ open(const char *path, int mode)
 	struct Filefd *ffd;
 	u_int size, fileid;
 	int r;
+	int len;
 	u_int va;
 	u_int i;
+	char target[MAXPATHLEN];
 
 	// Step 1: Alloc a new Fd, return error code when fail to alloc.
 	// Hint: Please use fd_alloc.
@@ -45,6 +55,7 @@ open(const char *path, int mode)
 		return r;
 	}
 
+
 	// Step 3: Set the start address storing the file's content. Set size and fileid correctly.
 	// Hint: Use fd2data to get the start address.
 	va = fd2data(fd);
@@ -54,8 +65,41 @@ open(const char *path, int mode)
 	fileid = ffd->f_fileid;
 	// Step 4: Map the file content into memory.
 
+	if(ffd->f_file.f_type == FTYPE_SYML) {
+		//writef("it is a link!\n");
+		for(i = 0; i < size; i += BY2PG) {
+			if((r = fsipc_map(fileid, i, va+i)) < 0) {
+				return r;
+			}
+		}
+		user_bcopy(va, target, MAXPATHLEN);
+		target[MAXPATHLEN-1] = '\0';
+		len = strlen(target);
+		while(len > 0 && (target[len-1] == '\n' || target[len-1] == '\r')) {
+			target[--len] = '\0';
+		}
+		//writef("link target is $%s$\n", target);
+		if((r = file_close(fd)) < 0) {
+			writef(".lnk close failed\n");
+			return r;
+		}
+		if((r = fd_alloc(&fd)) < 0) {
+			return r;
+		}
+		if((r = fsipc_open(target, mode, fd)) < 0) {
+			writef("link open failed\n");
+			return r;
+		}
+		va = fd2data(fd);
+		// It is ok to downcast directly, because in serv.c, fd has been set as struct Filedfd
+		ffd = (struct Filefd *)fd;
+		size = ffd->f_file.f_size;
+		fileid = ffd->f_fileid;
+	}
+
 	for(i = 0; i < size; i += BY2PG) {
 		if((r = fsipc_map(fileid, i, va+i)) < 0) {
+			writef("mapping error\n");
 			return r;
 		}
 	}

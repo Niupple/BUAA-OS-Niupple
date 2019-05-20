@@ -710,6 +710,7 @@ walk_path(char *path, struct File **pdir, struct File **pfile, char *lastelem)
 int
 file_open(char *path, struct File **file)
 {
+	//writef("opening $%s$\n", path);
 	return walk_path(path, 0, file, 0);
 }
 

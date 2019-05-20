@@ -22,7 +22,7 @@ FSLIB :=	fs.o \
 		ide.o \
 		test.o
 
-FSIMGFILES := motd newmotd
+FSIMGFILES := motd newmotd motd.lnk
 
 CFLAGS += -nostdlib -static
 
