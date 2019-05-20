@@ -280,3 +280,50 @@ sync(void)
 	return fsipc_sync();
 }
 
+int
+get_checksum(const char *path)
+{
+	int num; 
+	struct Fd *fd;
+	struct Filefd *ffd;
+	u_int size, fileid;
+	int r;
+	u_int va;
+	u_int i, j;
+	u_char tmp;
+	u_char ans = 0;
+
+	if((num = open(path, O_RDONLY)) < 0) {
+		return num;
+	}
+	fd = num2fd(num);
+	va = fd2data(fd);
+	ffd = (struct Filefd *)fd;
+	size = ffd->f_file.f_size;
+	fileid = ffd->f_fileid;
+
+	for(i = 0; i < size; i += BY2PG) {
+		tmp = 0;
+		for(j = 0; j < BY2PG && i+j < size; ++j) {
+			tmp += *((u_char *)va+i+j);
+		}
+		ans ^= (~tmp);
+	}
+	ffd->f_file.f_checksum = ans;
+
+	return num;
+}
+
+/*
+void
+print_cs(int num)
+{
+	struct Fd *fd;
+	struct Filefd *ffd;
+
+	fd = num2fd(num);
+	ffd = (struct Filefd *)fd;
+	writef("checksum of %d is %d\n", num, ffd->f_file.f_checksum);
+}
+*/
+

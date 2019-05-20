@@ -31,9 +31,10 @@ struct File {
 	u_int f_type;			// file type
 	u_int f_direct[NDIRECT];
 	u_int f_indirect;
+	u_int f_checksum;
 
 	struct File *f_dir;		// the pointer to the dir where this file is in, valid only in memory.
-	u_char f_pad[BY2FILE - MAXNAMELEN - 4 - 4 - NDIRECT * 4 - 4 - 4]; // to make sizeof(File) aligned to BY2FILE
+	u_char f_pad[BY2FILE - MAXNAMELEN - 4 - 4 - NDIRECT * 4 - 4 - 4 - 4]; // to make sizeof(File) aligned to BY2FILE
 };
 
 #define FILE2BLK	(BY2BLK/sizeof(struct File))
@@ -62,6 +63,7 @@ struct Super {
 #define FSREQ_DIRTY	5
 #define FSREQ_REMOVE	6
 #define FSREQ_SYNC	7
+#define FSREQ_CHECKSUM 233
 
 struct Fsreq_open {
 	char req_path[MAXPATHLEN];
