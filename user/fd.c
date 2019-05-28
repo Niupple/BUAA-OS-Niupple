@@ -45,6 +45,7 @@ dev_lookup(int dev_id, struct Dev **dev)
 int
 fd_alloc(struct Fd **fd)
 {
+	//writef("fd_alloc exec\n");
 	// Find the smallest i from 0 to MAXFD-1 that doesn't have
 	// its fd page mapped.  Set *fd to the fd page virtual address.
 	// (Do not allocate a page.  It is up to the caller to allocate
@@ -125,11 +126,18 @@ close(int fdnum)
 
 	if ((r = fd_lookup(fdnum, &fd)) < 0
 		||  (r = dev_lookup(fd->fd_dev_id, &dev)) < 0) {
+		//writef("cannot find the dev or the fd\n");
 		return r;
 	}
+	//writef("dev id = %d\n", fd->fd_dev_id);
 
 	r = (*dev->dev_close)(fd);
 	fd_close(fd);
+	/*
+	if(r) {
+		writef("dev_close failed\n");
+	}
+	*/
 	return r;
 }
 

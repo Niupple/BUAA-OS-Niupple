@@ -67,6 +67,8 @@ void syscall_ipc_recv(u_int dstva);
 int syscall_cgetc();
 int syscall_write_dev(u_int va,u_int dev,u_int offset);
 int syscall_read_dev(u_int va,u_int dev,u_int offset);
+int syscall_load_icode(u_int envid, u_char *binary, u_int size);
+
 
 
 // string.c

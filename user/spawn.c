@@ -112,6 +112,8 @@ int spawn(char *prog, char **argv)
 	int fd;
 	u_int child_envid;
 	int size, text_start;
+	struct Fd *fdes;
+	struct Filefd *ffd;
 	u_int i, *blk;
 	u_int esp;
 	Elf32_Ehdr* elf;
@@ -119,13 +121,33 @@ int spawn(char *prog, char **argv)
 	// Note 0: some variable may be not used,you can cancel them as you like
 	// Step 1: Open the file specified by `prog` (prog is the path of the program)
 	if((r=open(prog, O_RDONLY))<0){
-		user_panic("spawn ::open line 102 RDONLY wrong !\n");
+		writef("spawn ::open line 102 RDONLY wrong !\n");
 		return r;
 	}
+	fd = r;
 	// Your code begins here
 	// Before Step 2 , You had better check the "target" spawned is a execute bin 
+	size = strlen(prog);
+	if(!(prog[size-1] == 'b' && prog[size-2] == '.')) {
+		return -E_INVAL;
+	}
+	if((r = syscall_env_alloc()) < 0) {
+		return r;
+	}
+	child_envid = r;
 	// Step 2: Allocate an env (Hint: using syscall_env_alloc())
+	if((r = init_stack(child_envid, argv, &esp)) < 0) {
+		return r;
+	}
 	// Step 3: Using init_stack(...) to initialize the stack of the allocated env
+	//TODO
+	fdes = num2fd(fd);
+	ffd = (struct Filefd *)fdes;
+	size = ffd->f_file.f_size;
+	blk = fd2data(fdes);
+	if((r = syscall_load_icode(child_envid, blk, size)) < 0) {
+		return r;
+	}
 	// Step 3: Map file's content to new env's text segment
 	//        Hint 1: what is the offset of the text segment in file? try to use objdump to find out.
 	//        Hint 2: using read_map(...)
@@ -167,6 +189,7 @@ int spawn(char *prog, char **argv)
 					user_panic("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 					return r;
 				}
+				//writef("sharing %x\n", va);
 			}
 		}
 	}

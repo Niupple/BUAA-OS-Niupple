@@ -212,6 +212,7 @@ env_alloc(struct Env **new, u_int parent_id)
 	e->env_id = mkenvid(e);
 	e->env_parent_id = parent_id;
 	e->env_status = ENV_RUNNABLE;	//why not runnable?TODO
+	e->env_runs = 0;
 
 	/*Step 4: focus on initializing env_tf structure, located at this new Env. 
 	 * especially the sp register,CPU status. */
@@ -309,6 +310,7 @@ static int load_icode_mapper(u_long va, u_int32_t sgsize,
  *  You may use these :
  *      page_alloc, page_insert, page2kva , e->env_pgdir and load_elf.
  */
+
 	static void
 load_icode(struct Env *e, u_char *binary, u_int size)
 {
@@ -352,6 +354,19 @@ load_icode(struct Env *e, u_char *binary, u_int size)
 	e->env_tf.pc = entry_point;
 }
 
+void
+load_icode_shell(struct Env *e, u_char *binary, u_int size) {
+	u_int entry_point;
+	if(load_elf(binary, size, &entry_point, e, load_icode_mapper) < 0) {
+		//printf("load_elf failed\n");
+		return;
+	}
+	//printf("load finished\n");
+
+	/***Your Question Here***/
+	/*Step 4:Set CPU's PC register as appropriate value. */
+	e->env_tf.pc = entry_point;
+}
 /* Overview:
  *  Allocates a new env with env_alloc, loads the named elf binary into
  *  it with load_icode and then set its priority value. This function is
@@ -502,6 +517,7 @@ env_run(struct Env *e)
 	//printf("e->env_pgdir = %x\n", e->env_pgdir);
 	lcontext((u_int)e->env_pgdir);
 	//printf("lcontext finished\n");
+	curenv->env_runs++;
 
 	/*Step 4: Use env_pop_tf() to restore the environment's
 	 * environment   registers and drop into user mode in the

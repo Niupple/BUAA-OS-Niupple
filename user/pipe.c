@@ -85,12 +85,16 @@ _pipeisclosed(struct Fd *fd, struct Pipe *p)
 	// everybody left is what fd is.  So the other end of
 	// the pipe is closed.
 	int pfd,pfp,runs;
-	
 
+	do {
+		runs = env->env_runs;
+		pfd = pageref(fd);
+		pfp = pageref(p);
+	} while(runs != env->env_runs);
 
+	return pfd == pfp;
 
-	user_panic("_pipeisclosed not implemented");
-//	return 0;
+	//user_panic("_pipeisclosed not implemented");
 }
 
 int
@@ -109,6 +113,7 @@ pipeisclosed(int fdnum)
 static int
 piperead(struct Fd *fd, void *vbuf, u_int n, u_int offset)
 {
+	//writef("reading %x at %d for %d\n", vbuf, offset, n);
 	// Your code here.  See the lab text for a description of
 	// what piperead needs to do.  Write a loop that 
 	// transfers one byte at a time.  If you decide you need
@@ -121,15 +126,25 @@ piperead(struct Fd *fd, void *vbuf, u_int n, u_int offset)
 	struct Pipe *p;
 	char *rbuf;
 	
+	p = (struct Pipe *)fd2data(fd);
+	for(i = 0; i < n; ++i) {
+		if(_pipeisclosed(fd, p) && p->p_wpos == p->p_rpos) {
+			return i;
+		}
+		while(p->p_wpos == p->p_rpos) {
+			//writef("[%d, %d]empty for read\n", p->p_wpos, p->p_rpos);
+			syscall_yield();
+		}
+		((char *)vbuf)[i] = p->p_buf[p->p_rpos++];
+	}
 
-
-	user_panic("piperead not implemented");
-//	return -E_INVAL;
+	return n;
 }
 
 static int
 pipewrite(struct Fd *fd, const void *vbuf, u_int n, u_int offset)
 {
+	//writef("writing %x at %d for %d\n", vbuf, offset, n);
 	// Your code here.  See the lab text for a description of what 
 	// pipewrite needs to do.  Write a loop that transfers one byte
 	// at a time.  Unlike in read, it is not okay to write only some
@@ -140,12 +155,19 @@ pipewrite(struct Fd *fd, const void *vbuf, u_int n, u_int offset)
 	int i;
 	struct Pipe *p;
 	char *wbuf;
-	
 
-//	return -E_INVAL;
-	
-	
-	user_panic("pipewrite not implemented");
+	p = (struct Pipe *)fd2data(fd);
+	for(i = 0; i < n; ++i) {
+		if(_pipeisclosed(fd, p)) {
+			return 0;
+		}
+		while(p->p_wpos == p->p_rpos + BY2PIPE) {
+			//writef("[%d, %d]full for write\n", p->p_wpos, p->p_rpos);
+			syscall_yield();
+		}
+		wbuf = &p->p_buf[p->p_wpos++];
+		*wbuf = ((char *)vbuf)[i];
+	}
 
 	return n;
 }

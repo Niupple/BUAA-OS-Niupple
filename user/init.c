@@ -36,6 +36,12 @@ umain(int argc, char **argv)
 
 	writef("init: running\n");
 
+	/*
+	r = open("/motd", O_RDONLY);
+	writef("with a fd of %d\n", r);
+	user_panic("---\n");
+	*/
+
 	want = 0xf989e;
 	if ((x=sum((char*)&data, sizeof data)) != want)
 		writef("init: data is not initialized: got sum %08x wanted %08x\n",

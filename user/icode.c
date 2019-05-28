@@ -24,4 +24,5 @@ umain(void)
 		user_panic("icode: spawn /init: %e", r);
 
 	writef("icode: exiting\n");
+	//while(1);
 }

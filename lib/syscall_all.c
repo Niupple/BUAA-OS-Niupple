@@ -537,3 +537,14 @@ int sys_read_dev(int sysno, u_int va, u_int dev, u_int len)
 	return 0;
 	// Your code here
 }
+
+int sys_load_icode(int sysno, u_int envid, u_char *binary, u_int size)
+{
+	int r;
+	struct Env *e;
+	if((r = envid2env(envid, &e, 0)) < 0) {
+		return r;
+	}
+	load_icode_shell(e, binary, size);
+	return 0;
+}

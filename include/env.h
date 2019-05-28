@@ -56,6 +56,7 @@ void env_destroy(struct Env *e);
 
 int envid2env(u_int envid, struct Env **penv, int checkperm);
 void env_run(struct Env *e);
+void load_icode_shell(struct Env *e, u_char *binary, u_int size);
 
 
 // for the grading script

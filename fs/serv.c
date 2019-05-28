@@ -79,7 +79,15 @@ open_lookup(u_int envid, u_int fileid, struct Open **po)
 
 	o = &opentab[fileid % MAXOPEN];
 
+	//writef("pageref of o->o_ff = %d\n", pageref(o->o_ff));
 	if (pageref(o->o_ff) == 1 || o->o_fileid != fileid) {
+		/*
+		if(pageref(o->o_ff) == 1) {
+			writef("an pageref fault\n");
+		} else {
+			writef("unalloced open\n");
+		}
+		*/
 		return -E_INVAL;
 	}
 
@@ -189,6 +197,7 @@ serve_close(u_int envid, struct Fsreq_close *rq)
 	int r;
 
 	if ((r = open_lookup(envid, rq->req_fileid, &pOpen)) < 0) {
+		//writef("open not found\n");
 		ipc_send(envid, r, 0, 0);
 		return;
 	}

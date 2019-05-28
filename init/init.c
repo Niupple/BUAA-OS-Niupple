@@ -21,7 +21,9 @@ void mips_init()
 	
 	//ENV_CREATE(user_fktest);
 	//ENV_CREATE(user_pt1);
-	ENV_CREATE(user_idle);
+	//ENV_CREATE(user_idle);
+	//ENV_CREATE(user_bsstest);
+	ENV_CREATE(user_icode);
 	ENV_CREATE(fs_serv);
 	//ENV_CREATE(user_fktest);
 	//ENV_CREATE(user_pingpong);
@@ -29,7 +31,6 @@ void mips_init()
 	//ENV_CREATE(user_testspawn);
 	//ENV_CREATE(user_testpipe);
 	//ENV_CREATE(user_testpiperace);
-	ENV_CREATE(user_icode);
 	trap_init();
 	kclock_init();
 	//env_run(&envs[0]);
