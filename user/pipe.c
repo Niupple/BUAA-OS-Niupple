@@ -158,7 +158,7 @@ pipewrite(struct Fd *fd, const void *vbuf, u_int n, u_int offset)
 
 	p = (struct Pipe *)fd2data(fd);
 	for(i = 0; i < n; ++i) {
-		if(_pipeisclosed(fd, p)) {
+		if(_pipeisclosed(fd, p) && p->p_wpos == p->p_rpos + BY2PIPE) {
 			return 0;
 		}
 		while(p->p_wpos == p->p_rpos + BY2PIPE) {

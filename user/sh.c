@@ -113,6 +113,10 @@ again:
 		case '>':
 			// Your code here -- open t for writing,
 			// dup it onto fd 1, and then close the fd you got.
+			if(gettoken(0, &t) != 'w'){
+				writef("syntax error: < not followed by word\n");
+				exit();
+			}
 			fdnum = open(t, O_WRONLY);
 			dup(fdnum, 1);
 			close(fdnum);
@@ -256,13 +260,13 @@ umain(int argc, char **argv)
 		interactive = iscons(0);
 	for(;;){
 		if (interactive)
-			fwritef(1, "\n$ ");
+			writef("\n$ ");
 		readline(buf, sizeof buf);
 		
 		if (buf[0] == '#')
 			continue;
 		if (echocmds)
-			fwritef(1, "# %s\n", buf);
+			writef("# %s\n", buf);
 		if ((r = fork()) < 0)
 			user_panic("fork: %e", r);
 		if (r == 0) {
