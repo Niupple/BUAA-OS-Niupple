@@ -185,6 +185,7 @@ static int
 pipeclose(struct Fd *fd)
 {
 	syscall_mem_unmap(0, fd);
+	//syscall_yield();
 	syscall_mem_unmap(0, fd2data(fd));
 	return 0;
 }
