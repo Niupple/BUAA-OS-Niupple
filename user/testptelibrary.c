@@ -8,14 +8,17 @@ void childofspawn(void);
 
 void umain (int argc, char **argv)
 {
+	//writef("hello, i'm testptelibrary\n");
     int r;
     if(argc!=0)
         childofspawn();
 
     if((r=syscall_mem_alloc(0,TMPVA,PTE_R|PTE_V|PTE_LIBRARY))<0)
         user_panic("syscall error!");
+	//writef("forking\n");
     if((r=fork())<0)
         user_panic("fork: %d",r);
+	//writef("forked\n");
     if(r==0){
         strcpy(TMPVA,msg);
         exit(); 

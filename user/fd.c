@@ -131,6 +131,10 @@ close(int fdnum)
 	}
 	//writef("dev id = %d\n", fd->fd_dev_id);
 
+	r = (*dev->dev_close)(fd);
+	//syscall_yield();
+	fd_close(fd);
+	/*
 	if(fd->fd_dev_id != devfile.dev_id) {
 		//syscall_yield();
 		fd_close(fd);
@@ -140,6 +144,7 @@ close(int fdnum)
 		//syscall_yield();
 		fd_close(fd);
 	}
+	*/
 	/*
 	if(r) {
 		writef("dev_close failed\n");
