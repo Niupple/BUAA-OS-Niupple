@@ -104,21 +104,30 @@ again:
 				writef("syntax error: < not followed by word\n");
 				exit();
 			}
+			writef("redirection of input to $%s$\n", t);
 			// Your code here -- open t for reading,
 			// dup it onto fd 0, and then close the fd you got.
 			fdnum = open(t, O_RDONLY);
-			dup(fdnum, 0);
+			if((r = dup(fdnum, 0)) < 0) {
+				user_panic("fail when dup in %d", __LINE__);
+			}
 			close(fdnum);
 			break;
 		case '>':
 			// Your code here -- open t for writing,
 			// dup it onto fd 1, and then close the fd you got.
 			if(gettoken(0, &t) != 'w'){
-				writef("syntax error: < not followed by word\n");
+				writef("syntax error: > not followed by word\n");
 				exit();
 			}
-			fdnum = open(t, O_WRONLY);
-			dup(fdnum, 1);
+			writef("redirection of output to $%s$\n", t);
+			if((r = open(t, O_WRONLY)) < 0) {
+				writef("fail to open %s O_WRONLY\n", t);
+			}
+			fdnum = r;
+			if((r = dup(fdnum, 1)) < 0) {
+				user_panic("fail when dup in %d", __LINE__);
+			}
 			close(fdnum);
 			break;
 		case '|':
@@ -142,14 +151,18 @@ again:
 				user_panic("oops, please contact " __FILE__ " to fix itself\n");
 			}
 			if(r == 0) {
-				dup(p[0], 0);
+				if((r = dup(p[0], 0)) < 0) {
+					user_panic("fail when dup in %d", __LINE__);
+				}
 				close(p[0]);
 				close(p[1]);
 				goto again;
 			} else {
-				dup(p[1], 1);
-				close(p[1]);
+				if((r = dup(p[1], 1)) < 0) {
+					user_panic("fail when dup in %d", __LINE__);
+				}
 				close(p[0]);
+				close(p[1]);
 				rightpipe = r;
 				goto runit;
 			}
@@ -229,11 +242,13 @@ umain(int argc, char **argv)
 	int r, interactive, echocmds;
 	interactive = '?';
 	echocmds = 0;
+	/*
 	writef("\n:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n");
 	writef("::                                                         ::\n");
 	writef("::              Super Shell  V0.0.0_1                      ::\n");
 	writef("::                                                         ::\n");
 	writef(":::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n");
+	*/
 	ARGBEGIN{
 	case 'd':
 		debug++;

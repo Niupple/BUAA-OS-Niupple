@@ -131,7 +131,7 @@ close(int fdnum)
 	}
 	//writef("dev id = %d\n", fd->fd_dev_id);
 
-	if(fd->fd_dev_id == devpipe.dev_id) {
+	if(fd->fd_dev_id != devfile.dev_id) {
 		//syscall_yield();
 		fd_close(fd);
 		r = (*dev->dev_close)(fd);
@@ -166,6 +166,7 @@ dup(int oldfdnum, int newfdnum)
 	struct Fd *oldfd, *newfd;
 
 	if ((r = fd_lookup(oldfdnum, &oldfd)) < 0) {
+		writef("fail to lookup the oldfd\n");
 		return r;
 	}
 
@@ -182,6 +183,7 @@ dup(int oldfdnum, int newfdnum)
 				// should be no error here -- pd is already allocated
 				if ((r = syscall_mem_map(0, ova + i, 0, nva + i,
 										 pte & (PTE_V | PTE_R | PTE_LIBRARY))) < 0) {
+					writef("fail when duplicating data\n");
 					goto err;
 				}
 			}
@@ -190,6 +192,7 @@ dup(int oldfdnum, int newfdnum)
 
 	if ((r = syscall_mem_map(0, (u_int)oldfd, 0, (u_int)newfd,
 							 ((*vpt)[VPN(oldfd)]) & (PTE_V | PTE_R | PTE_LIBRARY))) < 0) {
+		writef("fail when duplicating fd\n");
 		goto err;
 	}
 

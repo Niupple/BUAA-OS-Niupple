@@ -29,7 +29,9 @@ USERAPPS :=  $(user_dir)/num.b  \
 			 $(user_dir)/ls.b \
 			 $(user_dir)/sh.b  \
 			 $(user_dir)/cat.b \
-		 $(user_dir)/testptelibrary.b
+			 $(user_dir)/testptelibrary.b\
+			 $(user_dir)/inputfile\
+			 $(user_dir)/outputfile
 
 
 FSIMGFILES := motd newmotd $(user_dir)/testarg.b $(user_dir)/init.b $(USERAPPS)
