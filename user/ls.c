@@ -11,6 +11,8 @@ ls(char *path, char *prefix)
 	int r;
 	struct Stat st;
 
+	//writef("lsing in %s\n", path);
+
 	if ((r=stat(path, &st)) < 0)
 		user_panic("stat %s: %e", path, r);
 	if (st.st_isdir && !flag['d'])
@@ -49,11 +51,14 @@ ls1(char *prefix, u_int isdir, u_int size, char *name)
 		else
 			sep = "";
 		fwritef(1,  "%s%s", prefix, sep);
+		//writef("%s%s", prefix, sep);
 	}
 	fwritef(1,  "%s", name);
+	//writef("%s", name);
 	if(flag['F'] && isdir)
 		fwritef(1,  "/");
 	fwritef(1,  " ");
+	//writef(" ");
 }
 
 void
@@ -68,6 +73,7 @@ umain(int argc, char **argv)
 {
 	int i;
 
+	//writef("ls.c started %d\n", argc);
 	ARGBEGIN{
 	default:
 		usage();

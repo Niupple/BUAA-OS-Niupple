@@ -91,6 +91,7 @@ _pipeisclosed(struct Fd *fd, struct Pipe *p)
 		pfd = pageref(fd);
 		pfp = pageref(p);
 	} while(runs != env->env_runs);
+	//writef("got %d - %d\n", pfd, pfp);
 
 	return pfd == pfp;
 
@@ -127,11 +128,12 @@ piperead(struct Fd *fd, void *vbuf, u_int n, u_int offset)
 	char *rbuf;
 	
 	p = (struct Pipe *)fd2data(fd);
+	//writef("[%d] piperead\n", fd2num(fd));
 	for(i = 0; i < n; ++i) {
-		if(_pipeisclosed(fd, p) && p->p_wpos == p->p_rpos) {
-			return i;
-		}
 		while(p->p_wpos == p->p_rpos) {
+			if(_pipeisclosed(fd, p)) {
+				return i;
+			}
 			//writef("[%d, %d]empty for read\n", p->p_wpos, p->p_rpos);
 			syscall_yield();
 		}
@@ -159,15 +161,17 @@ pipewrite(struct Fd *fd, const void *vbuf, u_int n, u_int offset)
 	p = (struct Pipe *)fd2data(fd);
 	for(i = 0; i < n; ++i) {
 		if(_pipeisclosed(fd, p) && p->p_wpos == p->p_rpos + BY2PIPE) {
+			//writef("pipe full and closed\n");
 			return 0;
 		}
 		while(p->p_wpos == p->p_rpos + BY2PIPE) {
 			//writef("[%d, %d]full for write\n", p->p_wpos, p->p_rpos);
 			syscall_yield();
 		}
-		wbuf = &p->p_buf[p->p_wpos++];
-		*wbuf = ((char *)vbuf)[i];
+		//writef("[%d] writing $%c$\n", fd2num(fd), ((char*)vbuf)[i]);
+		p->p_buf[p->p_wpos++] = ((char *)vbuf)[i];
 	}
+	//writef("pipe ended, [%d/%d]\n", p->p_rpos, p->p_wpos);
 
 	return n;
 }

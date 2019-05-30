@@ -81,7 +81,7 @@ void
 runcmd(char *s)
 {
 	char *argv[MAXARGS], *t;
-	int argc, c, i, r, p[2], fd, rightpipe;
+	int argc, c, i, r, p[2], fd, rightpipe, pid;
 	int fdnum;
 	rightpipe = 0;
 	gettoken(s, 0);
@@ -89,6 +89,7 @@ again:
 	argc = 0;
 	for(;;){
 		c = gettoken(0, &t);
+		rightpipe = 0;
 		switch(c){
 		case 0:
 			goto runit;
@@ -146,11 +147,14 @@ again:
 			//		set "rightpipe" to the child envid
 			//		goto runit, to execute this piece of the pipeline
 			//			and then wait for the right side to finish
-			pipe(p);
+			if((r = pipe(p)) < 0) {
+				user_panic("pipe open failed\n");
+			}
 			if((r = fork()) < 0) {
 				user_panic("oops, please contact " __FILE__ " to fix itself\n");
 			}
-			if(r == 0) {
+			rightpipe = r;
+			if(rightpipe == 0) {
 				if((r = dup(p[0], 0)) < 0) {
 					user_panic("fail when dup in %d", __LINE__);
 				}
@@ -161,9 +165,8 @@ again:
 				if((r = dup(p[1], 1)) < 0) {
 					user_panic("fail when dup in %d", __LINE__);
 				}
-				close(p[0]);
 				close(p[1]);
-				rightpipe = r;
+				close(p[0]);
 				goto runit;
 			}
 			break;
@@ -187,12 +190,16 @@ runit:
 		writef("spawn %s: %e\n", argv[0], r);
 	close_all();
 	if (r >= 0) {
-		if (debug) writef("[%08x] WAIT %s %08x\n", env->env_id, argv[0], r);
+		//if (debug) 
+			//writef("[%08x] WAIT %s %08x\n", env->env_id, argv[0], r);
 		wait(r);
+			//writef("[%08x] WAITED %s %08x\n", env->env_id, argv[0], r);
 	}
 	if (rightpipe) {
-		if (debug) writef("[%08x] WAIT right-pipe %08x\n", env->env_id, rightpipe);
+		//if (debug) 
+			//writef("[%08x] WAIT right-pipe %08x\n", env->env_id, rightpipe);
 		wait(rightpipe);
+			//writef("[%08x] WAITED right-pipe %08x\n", env->env_id, rightpipe);
 	}
 
 	exit();
@@ -275,13 +282,13 @@ umain(int argc, char **argv)
 		interactive = iscons(0);
 	for(;;){
 		if (interactive)
-			writef("\n$ ");
+			fwritef(1, "\n$ ");
 		readline(buf, sizeof buf);
 		
 		if (buf[0] == '#')
 			continue;
 		if (echocmds)
-			writef("# %s\n", buf);
+			fwritef(1, "# %s\n", buf);
 		if ((r = fork()) < 0)
 			user_panic("fork: %e", r);
 		if (r == 0) {

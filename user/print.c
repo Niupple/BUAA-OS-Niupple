@@ -38,6 +38,7 @@ user_lp_Print(void (*output)(void *, char *, int),
        (*output)(arg, (char*)user_theFatalMsg, sizeof(user_theFatalMsg)-1); for(;;); \
     } else { \
       (*output)(arg, s, l); \
+		(arg)+=(l);\
     } \
   }
     
