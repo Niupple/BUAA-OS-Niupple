@@ -32,6 +32,9 @@ all: $(modules) vmlinux
 test: clean all
 	/OSLAB/gxemul -E testmips -C R3000 -M 64 $(vmlinux_elf)
 
+run: all
+	/OSLAB/gxemul -E testmips -C R3000 -M 64 $(vmlinux_elf)
+
 vmlinux: $(modules)
 	$(LD) -o $(vmlinux_elf) -N -T $(link_script) $(objects)
 

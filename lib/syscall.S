@@ -72,3 +72,11 @@ sys_call_table:                         // Syscall Table
     .word sys_ipc_can_send
     .word sys_ipc_recv
     .word sys_cgetc
+	.word sys_thread_create
+	.word sys_thread_cancel
+	.word sys_thread_finish
+	.word sys_thread_self
+	.word sys_thread_destroy
+	.word sys_sem_trywait
+	.word sys_sem_wait
+	.word sys_sem_post

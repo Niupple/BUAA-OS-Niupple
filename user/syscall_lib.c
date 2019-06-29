@@ -1,5 +1,7 @@
 #include "lib.h"
 #include <unistd.h>
+#include <thread.h>
+#include <semaphore.h>
 #include <mmu.h>
 #include <env.h>
 #include <trap.h>
@@ -86,4 +88,53 @@ int
 syscall_cgetc()
 {
 	return msyscall(SYS_cgetc, 0, 0, 0, 0, 0);
+}
+
+int
+syscall_thread_create(void *(*setup_routine)(void *), void *arg, void (*ras)(void *(*)(void *), void *))
+{
+	writef("in syscall routine = %x, arg = %x, ras = %x\n", setup_routine, arg, ras);
+	return msyscall(SYS_thread_create, setup_routine, arg, ras, 0, 0);
+}
+
+int
+syscall_thread_cancel(pthread_t tid)
+{
+	return msyscall(SYS_thread_cancel, tid, 0, 0, 0, 0);
+}
+
+void
+syscall_thread_finish(pthread_t thread)
+{
+	return msyscall(SYS_thread_finish, thread, 0, 0, 0, 0);
+}
+
+pthread_t
+syscall_thread_self(void)
+{
+	return msyscall(SYS_thread_self, 0, 0, 0, 0, 0);
+}
+
+int
+syscall_thread_destroy(pthread_t thread)
+{
+	return msyscall(SYS_thread_destroy, thread, 0, 0, 0, 0);
+}
+
+int
+syscall_sem_trywait(sem_t *sem)
+{
+	return msyscall(SYS_sem_trywait, sem, 0, 0, 0, 0);
+}
+
+int
+syscall_sem_wait(sem_t *sem)
+{
+	return msyscall(SYS_sem_wait, sem, 0, 0, 0, 0);
+}
+
+int
+syscall_sem_post(sem_t *sem)
+{
+	return msyscall(SYS_sem_post, sem, 0, 0, 0, 0);
 }

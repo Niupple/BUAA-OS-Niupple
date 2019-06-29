@@ -71,10 +71,19 @@
  o                      +----------------------------+------------0x7f3f f000    |
  o                      |       Invalid memory       |     BY2PG                 |
  o      USTACKTOP ----> +----------------------------+------------0x7f3f e000    |
- o                      |     normal user stack      |     BY2PG                 |
+ o                      |     normal user stacks     |     BY2PG                 |
  o                      +----------------------------+------------0x7f3f d000    |
  a                      |                            |                           |
  a                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~                           |
+ a                      .                            .                           |
+ a                      .                            .                           |
+ o                      +----------------------------+------------0x7f00 0000    |
+ o                      |     normal user stacks     |     64 MB                 |
+ o     USTACKBASE ----> +----------------------------+------------0x7b00 0000    |
+ o                      |     user exception stack   |   2*BY2PG                 |
+ o    UXSTACKBASE ----> +----------------------------+------------0x7aff e000    |
+ o                      |         THRDS              |   4*BY2PG                 |
+ o          THRDS ----> +----------------------------+------------0x7aff a000    |
  a                      .                            .                           |
  a                      .                            .                         kuseg
  a                      .                            .                           |
@@ -104,6 +113,11 @@
 #define USTACKTOP (UTOP - 2*BY2PG)
 #define UTEXT 0x00400000
 
+#define THRDS 0x7affa000
+#define UXSTACKBASE (THRDS + 4*BY2PG)
+#define USTACKBASE (UXSTACKBASE + 2*BY2PG)
+
+#define UTHRD(idx) ((THRDS) + (idx) * 256)
 
 #define E_UNSPECIFIED	1	// Unspecified or unknown problem
 #define E_BAD_ENV       2       // Environment doesn't exist or otherwise

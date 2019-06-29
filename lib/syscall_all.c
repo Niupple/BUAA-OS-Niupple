@@ -1,8 +1,11 @@
 #include "../drivers/gxconsole/dev_cons.h"
 #include <mmu.h>
 #include <env.h>
+#include <thread.h>
+#include <semaphore.h>
 #include <printf.h>
 #include <pmap.h>
+#include <error.h>
 #include <sched.h>
 
 extern char *KERNEL_SP;
@@ -286,18 +289,24 @@ int sys_env_alloc(void)
 	// Your code here.
 	int r;
 	struct Env *e;
+	struct Thrd *t;
 
 	if((r = env_alloc(&e, curenv->env_id)) < 0) {
 		return r;
 	}
 
-	bcopy((void *)KERNEL_SP - sizeof(struct Trapframe), (void *)&e->env_tf, sizeof(struct Trapframe));
+	//bcopy((void *)KERNEL_SP - sizeof(struct Trapframe), (void *)&e->env_tf, sizeof(struct Trapframe));
 	//printf("epc = %d\n", ((struct Trapframe *)(KERNEL_SP-sizeof(struct Trapframe)))->cp0_epc);
-	e->env_pri = curenv->env_pri;
-	e->env_status = ENV_NOT_RUNNABLE;
-	e->env_tf.regs[2] = 0;	//v0 = 0
-	e->env_tf.pc = e->env_tf.cp0_epc;
-	LIST_INSERT_HEAD(&env_sched_list[0], e, env_sched_link);
+	t = id2thrd(0, e);
+	//e->env_pri = curenv->env_pri;
+	t->thrd_pri = curthrd->thrd_pri;
+	//e->env_status = ENV_NOT_RUNNABLE;
+	t->thrd_status = THRD_NOT_RUNNABLE;
+	//e->env_tf.regs[2] = 0;	//v0 = 0
+	t->thrd_tf.regs[2] = 0;
+	//e->env_tf.pc = e->env_tf.cp0_epc;
+	t->thrd_tf.pc = t->thrd_tf.cp0_epc;
+	LIST_INSERT_HEAD(&thrd_sched_list[0], t, thrd_sched_link);
 
 	return e->env_id;
 	//	panic("sys_env_alloc not implemented");
@@ -456,3 +465,112 @@ int sys_ipc_can_send(int sysno, u_int envid, u_int value, u_int srcva,
 	return 0;
 }
 
+int
+sys_thread_create(int sysno, void *(*setup_routine)(void *), void *arg, void (*ras)(void *(*)(void *), void *))
+{
+	printf("routine = %x, arg = %x, ras = %x\n", setup_routine, arg, ras);
+	struct Thrd *t;
+	int r;
+
+	if ((r = thrd_alloc(&t, curenv)) < 0) {
+		return r;
+	}
+	t->thrd_pri = curthrd->thrd_pri;
+	//t->thrd_status = THRD_NOT_RUNNABLE;
+	t->thrd_tf.regs[2] = 0;
+	t->thrd_tf.regs[4] = setup_routine;
+	t->thrd_tf.regs[5] = arg;
+	t->thrd_tf.pc = ras;
+	printf("pc = %x\n", t->thrd_tf.pc);
+	LIST_INSERT_HEAD(&thrd_sched_list[0], t, thrd_sched_link);
+
+	return t->thrd_id;
+}
+
+int
+sys_thread_cancel(int sysno, pthread_t tid)
+{
+	struct Thrd *t;
+	int r;
+
+	if((r = kthrdid2thrd(tid, &t)) < 0) {
+		return r;
+	}
+	t->thrd_retval = PTHREAD_CANCELED;
+	thrd_finish(t);
+	//thrd_destroy(t);
+	return 0;
+}
+
+void
+sys_thread_finish(int sysno, pthread_t thread)
+{
+	//printf("sys_thread_finish(%d)\n", thread);
+	struct Thrd *t;
+	int r;
+	if((r = kthrdid2thrd(thread, &t)) < 0) {
+		printf("fail when fetching tcb\n");
+		return;
+	}
+	//printf("in thread_finish\n");
+	thrd_finish(t);
+}
+
+pthread_t
+sys_thread_self(void)
+{
+	return curthrd->thrd_id;
+}
+
+int
+sys_thread_destroy(int sysno, pthread_t thread)
+{
+	//printf("sys_thread_destroy(%d)\n", thread);
+	struct Thrd *t;
+	int r;
+
+	if((r = kthrdid2thrd(thread, &t)) < 0) {
+		printf("wrong id\n");
+		return r;
+	}
+	thrd_destroy(t);
+	return 0;
+}
+
+int
+sys_sem_trywait(int sysno, sem_t *sem)
+{
+	if (sem->status != SEMA_USING) {
+		return -E_INVAL;
+	}
+	if (sem->count == 0) {
+		return -E_AGAIN;
+	}
+	--sem->count;
+	return 0;
+}
+
+int
+sys_sem_wait(int sysno, sem_t *sem)
+{
+	if (sem->status != SEMA_USING) {
+		return -E_INVAL;
+	}
+	if (sem->count == 0) {
+		//printf("waiting\n");
+		sched_yield();
+	}
+	--sem->count;
+	return 0;
+}
+
+int
+sys_sem_post(int sysno, sem_t *sem)
+{
+	if (sem->status != SEMA_USING) {
+		return -E_INVAL;
+	}
+	++sem->count;
+	//printf("posted, %d\n", sem->count);
+	return 0;
+}

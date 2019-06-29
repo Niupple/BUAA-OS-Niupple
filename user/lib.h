@@ -6,6 +6,8 @@
 #include <trap.h>
 #include <env.h>
 #include <args.h>
+#include <thread.h>
+#include <semaphore.h>
 #include <unistd.h>
 /////////////////////////////////////////////////////head
 extern void umain();
@@ -65,6 +67,13 @@ void syscall_panic(char *msg);
 int syscall_ipc_can_send(u_int envid, u_int value, u_int srcva, u_int perm);
 void syscall_ipc_recv(u_int dstva);
 int syscall_cgetc();
+int syscall_thread_create(void *(*setup_routine)(void *), void *arg, void (*ras)(void *(*)(void *), void *));
+int syscall_thread_cancel(pthread_t tid);
+void syscall_thread_finish(pthread_t thread);
+pthread_t syscall_thread_self(void);
+int syscall_sem_trywait(sem_t *);
+int syscall_sem_wait(sem_t *);
+int syscall_sem_post(sem_t *);
 
 // string.c
 int strlen(const char *s);
@@ -124,6 +133,24 @@ int	read_map(int fd, u_int offset, void **blk);
 int	delete(const char *path);
 int	ftruncate(int fd, u_int size);
 int	sync(void);
+
+//pthread.c
+pthread_t pthread_self(void);
+void run_and_sleep(void *(*start_routine)(void *), void *arg);
+int pthread_create(pthread_t *pid, void *attr, void *(*setup_routine)(void *), void *arg);
+int pthread_cancel(pthread_t pid);
+void pthread_testcancel(void);
+void pthread_exit(void *retval);
+int pthread_join(pthread_t thread, void **retval);
+int pthread_detach(pthread_t thread);
+
+//semaphore.c
+int sem_init(sem_t *sem, int unused, unsigned value);
+int sem_getvalue(sem_t *sem, int *ret);
+int sem_trywait(sem_t *sem);
+int sem_wait(sem_t *sem);
+int sem_post(sem_t *sem);
+int sem_destroy(sem_t *sem);
 
 #define user_assert(x)	\
 	do {	if (!(x)) user_panic("assertion failed: %s", #x); } while (0)

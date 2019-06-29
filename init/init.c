@@ -4,6 +4,7 @@
 #include <printf.h>
 #include <kclock.h>
 #include <trap.h>
+#include <thread.h>
 
 extern char aoutcode[];
 extern char boutcode[];
@@ -18,8 +19,10 @@ void mips_init()
 	
 	env_init();
 	
+	printf("sizeof Thrd = %d\n", sizeof(struct Thrd));
+	printf("sizeof Env = %d\n", sizeof(struct Env));
 	//ENV_CREATE(user_fktest);
-	ENV_CREATE(user_pingpong);
+	ENV_CREATE(user_mytest);
 	
     trap_init();
 	printf("pretests finished\n");

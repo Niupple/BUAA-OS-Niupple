@@ -43,5 +43,6 @@ umain(void)
 			return;
 		}
 	}
+	exit(0);
 }
 

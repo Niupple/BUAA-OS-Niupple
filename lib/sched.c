@@ -1,4 +1,5 @@
 #include <env.h>
+#include <thread.h>
 #include <pmap.h>
 #include <printf.h>
 
@@ -11,11 +12,13 @@
  * Hints:
  *  The variable which is for counting should be defined as 'static'.
  */
-void sched_yield(void)
+/*
+void sched_yield_old(void)
 {
 	static int nowat = 0;
 	static int counter = 0;
 	struct Env *e = curenv;
+	struct Thrd *t = curthrd;
 	if(e) {
 		//printf("yielding of %d\n", curenv->env_id);
 		if(e->env_status == ENV_RUNNABLE && ++counter < e->env_pri) {
@@ -43,14 +46,44 @@ void sched_yield(void)
 		assert(e->env_status == ENV_RUNNABLE);
 		break;
 	}
-	//printf("running %d\n", e->env_id);
-
-	/*
-	//if(e->env_id == 4097) {
-	Pte *ppt;
-	pgdir_walk(e->env_pgdir, 0x4000c8, 0, &ppt);
-	printf("id = %d, pgwalk = %x\n", e->env_id, *ppt);
-	//}
-	*/
 	env_run(e);
+}
+*/
+
+void sched_yield(void)
+{
+	//printf("in sched_yield\n");
+	static int nowat = 0;
+	static int counter = 0;
+	struct Thrd *t = curthrd;
+	if(t) {
+		//printf("yielding of %d\n", curenv->env_id);
+		if((t->thrd_status & THRD_RUN_MASK) == THRD_RUNNABLE && ++counter < t->thrd_pri) {
+			thrd_run(t);
+			return;
+		}
+		LIST_REMOVE(t, thrd_sched_link);
+		LIST_INSERT_HEAD(&thrd_sched_list[nowat^1], t, thrd_sched_link);
+	}
+	while(1) {
+		//printf("looking for runnable\n");
+		while(!LIST_EMPTY(&thrd_sched_list[nowat]) &&
+			((LIST_FIRST(&thrd_sched_list[nowat])->thrd_status & THRD_RUN_MASK) == THRD_NOT_RUNNABLE)) {
+			//printf("not runnable\n");
+			t = LIST_FIRST(&thrd_sched_list[nowat]);
+			LIST_REMOVE(t, thrd_sched_link);
+			LIST_INSERT_HEAD(&thrd_sched_list[nowat^1], t, thrd_sched_link);
+		}
+		if (LIST_EMPTY(&thrd_sched_list[nowat])) {
+			nowat ^= 1;
+			continue;
+		}
+		//printf("found a runnable, %d\n", nowat);
+		counter = 0;
+		t = LIST_FIRST(&thrd_sched_list[nowat]);
+		//printf("checking %x\n", t);
+		assert((t->thrd_status & THRD_RUN_MASK) == THRD_RUNNABLE);
+		break;
+	}
+	thrd_run(t);
 }

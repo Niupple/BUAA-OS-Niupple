@@ -20,7 +20,9 @@ USERLIB := printf.o \
 		pipe.o \
 		fsipc.o \
 		console.o \
-		fprintf.o
+		fprintf.o \
+		pthread.o \
+		semaphore.o
 
 CFLAGS += -nostdlib -static
 

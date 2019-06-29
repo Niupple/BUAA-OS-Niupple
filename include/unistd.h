@@ -20,4 +20,13 @@
 #define SYS_ipc_can_send		((__SYSCALL_BASE ) + (12 ) )
 #define SYS_ipc_recv		((__SYSCALL_BASE ) + (13 ) )
 #define SYS_cgetc			((__SYSCALL_BASE ) + (14 ) )
+#define SYS_thread_create	((__SYSCALL_BASE ) + (15 ) )
+#define SYS_thread_cancel	((__SYSCALL_BASE ) + (16 ) )
+#define SYS_thread_finish	((__SYSCALL_BASE ) + (17 ) )
+#define SYS_thread_self		((__SYSCALL_BASE ) + (18 ) )
+#define SYS_thread_destroy	((__SYSCALL_BASE ) + (19 ) )
+#define SYS_sem_trywait		((__SYSCALL_BASE ) + (20 ) )
+#define SYS_sem_wait		((__SYSCALL_BASE ) + (21 ) )
+#define SYS_sem_post		((__SYSCALL_BASE ) + (22 ) )
+
 #endif

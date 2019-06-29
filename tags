@@ -170,50 +170,53 @@ ELFMAG3	readelf/kerelf.h	94;"	d
 END	include/asm-mips3k/asm.h	35;"	d
 END	include/asm/asm.h	35;"	d
 ENVX	include/env.h	13;"	d
-ENV_CREATE	include/env.h	74;"	d
-ENV_CREATE2	include/env.h	62;"	d
-ENV_CREATE_PRIORITY	include/env.h	67;"	d
+ENV_CREATE	include/env.h	79;"	d
+ENV_CREATE2	include/env.h	67;"	d
+ENV_CREATE_PRIORITY	include/env.h	72;"	d
 ENV_FREE	include/env.h	17;"	d
 ENV_NOT_RUNNABLE	include/env.h	19;"	d
 ENV_RUNNABLE	include/env.h	18;"	d
 EXPORT	include/asm/asm.h	39;"	d
+E_AGAIN	include/semaphore.h	15;"	d
 E_BAD_ENV	include/error.h	8;"	d
-E_BAD_ENV	include/mmu.h	109;"	d
-E_BAD_PATH	include/error.h	20;"	d
-E_BAD_PATH	include/mmu.h	121;"	d
-E_FILE_EXISTS	include/error.h	21;"	d
-E_FILE_EXISTS	include/mmu.h	122;"	d
-E_INVAL	include/error.h	10;"	d
-E_INVAL	include/mmu.h	111;"	d
-E_IPC_NOT_RECV	include/error.h	14;"	d
-E_IPC_NOT_RECV	include/mmu.h	115;"	d
-E_MAX_OPEN	include/error.h	18;"	d
-E_MAX_OPEN	include/mmu.h	119;"	d
-E_NOT_EXEC	include/error.h	22;"	d
-E_NOT_EXEC	include/mmu.h	123;"	d
-E_NOT_FOUND	include/error.h	19;"	d
-E_NOT_FOUND	include/mmu.h	120;"	d
-E_NO_DISK	include/error.h	17;"	d
-E_NO_DISK	include/mmu.h	118;"	d
-E_NO_FREE_ENV	include/error.h	12;"	d
-E_NO_FREE_ENV	include/mmu.h	113;"	d
-E_NO_MEM	include/error.h	11;"	d
-E_NO_MEM	include/mmu.h	112;"	d
+E_BAD_ENV	include/mmu.h	123;"	d
+E_BAD_PATH	include/error.h	22;"	d
+E_BAD_PATH	include/mmu.h	135;"	d
+E_BAD_THRD	include/error.h	9;"	d
+E_FILE_EXISTS	include/error.h	23;"	d
+E_FILE_EXISTS	include/mmu.h	136;"	d
+E_INVAL	include/error.h	11;"	d
+E_INVAL	include/mmu.h	125;"	d
+E_IPC_NOT_RECV	include/error.h	16;"	d
+E_IPC_NOT_RECV	include/mmu.h	129;"	d
+E_MAX_OPEN	include/error.h	20;"	d
+E_MAX_OPEN	include/mmu.h	133;"	d
+E_NOT_EXEC	include/error.h	24;"	d
+E_NOT_EXEC	include/mmu.h	137;"	d
+E_NOT_FOUND	include/error.h	21;"	d
+E_NOT_FOUND	include/mmu.h	134;"	d
+E_NO_DISK	include/error.h	19;"	d
+E_NO_DISK	include/mmu.h	132;"	d
+E_NO_FREE_ENV	include/error.h	13;"	d
+E_NO_FREE_ENV	include/mmu.h	127;"	d
+E_NO_FREE_THRD	include/error.h	14;"	d
+E_NO_MEM	include/error.h	12;"	d
+E_NO_MEM	include/mmu.h	126;"	d
 E_UNSPECIFIED	include/error.h	7;"	d
-E_UNSPECIFIED	include/mmu.h	108;"	d
+E_UNSPECIFIED	include/mmu.h	122;"	d
 Elf32_Addr	include/kerelf.h	/^typedef uint32_t Elf32_Addr;$/;"	t
 Elf32_Addr	readelf/kerelf.h	/^typedef uint32_t Elf32_Addr;$/;"	t
-Elf32_Ehdr	include/kerelf.h	/^} Elf32_Ehdr;$/;"	t	typeref:struct:__anon1
-Elf32_Ehdr	readelf/kerelf.h	/^} Elf32_Ehdr;$/;"	t	typeref:struct:__anon3
+Elf32_Ehdr	include/kerelf.h	/^} Elf32_Ehdr;$/;"	t	typeref:struct:__anon2
+Elf32_Ehdr	readelf/kerelf.h	/^} Elf32_Ehdr;$/;"	t	typeref:struct:__anon4
 Elf32_Half	include/kerelf.h	/^typedef uint16_t Elf32_Half;$/;"	t
 Elf32_Half	readelf/kerelf.h	/^typedef uint16_t Elf32_Half;$/;"	t
 Elf32_Off	include/kerelf.h	/^typedef uint32_t Elf32_Off;$/;"	t
 Elf32_Off	readelf/kerelf.h	/^typedef uint32_t Elf32_Off;$/;"	t
-Elf32_Phdr	include/kerelf.h	/^} Elf32_Phdr;$/;"	t	typeref:struct:__anon2
-Elf32_Phdr	readelf/kerelf.h	/^} Elf32_Phdr;$/;"	t	typeref:struct:__anon5
+Elf32_Phdr	include/kerelf.h	/^} Elf32_Phdr;$/;"	t	typeref:struct:__anon3
+Elf32_Phdr	readelf/kerelf.h	/^} Elf32_Phdr;$/;"	t	typeref:struct:__anon6
 Elf32_Section	include/kerelf.h	/^typedef uint16_t Elf32_Section;$/;"	t
 Elf32_Section	readelf/kerelf.h	/^typedef uint16_t Elf32_Section;$/;"	t
-Elf32_Shdr	readelf/kerelf.h	/^}Elf32_Shdr;$/;"	t	typeref:struct:__anon4
+Elf32_Shdr	readelf/kerelf.h	/^}Elf32_Shdr;$/;"	t	typeref:struct:__anon5
 Elf32_Sword	include/kerelf.h	/^typedef	int32_t  Elf32_Sword;$/;"	t
 Elf32_Sword	readelf/kerelf.h	/^typedef int32_t  Elf32_Sword;$/;"	t
 Elf32_Sxword	include/kerelf.h	/^typedef	int64_t  Elf32_Sxword;$/;"	t
@@ -261,12 +264,12 @@ INDEX2FD	user/fd.c	12;"	d	file:
 IO_RTC	include/kclock.h	5;"	d
 IsDigit	lib/print.c	15;"	d	file:
 IsDigit	user/print.c	15;"	d	file:
-KADDR	include/mmu.h	156;"	d
-KERNBASE	include/mmu.h	89;"	d
+KADDR	include/mmu.h	170;"	d
+KERNBASE	include/mmu.h	98;"	d
 KERNEL_SP	lib/env_asm.S	/^KERNEL_SP:$/;"	l
 KERNEL_STACK	boot/start.S	/^KERNEL_STACK:$/;"	l
-KSTACKTOP	include/mmu.h	92;"	d
-KSTKSIZE	include/mmu.h	93;"	d
+KSTACKTOP	include/mmu.h	101;"	d
+KSTKSIZE	include/mmu.h	102;"	d
 LD	include.mk	/^LD			  := $(CROSS_COMPILE)ld$/;"	m
 LEAF	include/asm-mips3k/asm.h	14;"	d
 LEAF	include/asm/asm.h	14;"	d
@@ -285,13 +288,15 @@ LIST_INSERT_TAIL	include/queue.h	159;"	d
 LIST_NEXT	include/queue.h	177;"	d
 LIST_REMOVE	include/queue.h	183;"	d
 LOG2NENV	include/env.h	11;"	d
+LOG2NTHRD	include/thread.h	40;"	d
 LP_MAX_BUF	include/print.h	18;"	d
-MAXERROR	include/error.h	24;"	d
-MAXERROR	include/mmu.h	125;"	d
+MAXERROR	include/error.h	26;"	d
+MAXERROR	include/mmu.h	139;"	d
 MAXFD	user/fd.c	8;"	d	file:
 MAXFILESIZE	include/fs.h	24;"	d
 MAXNAMELEN	include/fs.h	15;"	d
 MAXPATHLEN	include/fs.h	18;"	d
+MAX_THREAD	include/thread.h	10;"	d
 MIN	include/types.h	33;"	d
 MIN	readelf/types.h	33;"	d
 NDIRECT	include/fs.h	21;"	d
@@ -301,20 +306,21 @@ NESTED	include/asm/asm.h	24;"	d
 NINDIRECT	include/fs.h	22;"	d
 NOFOUND	mm/tlb_asm.S	/^NOFOUND:$/;"	l
 NOPAGE	lib/genex.S	/^NOPAGE:$/;"	l
+NTHRD	include/thread.h	41;"	d
 NULL	include/types.h	8;"	d
 NULL	readelf/types.h	8;"	d
 NoCOW	lib/genex.S	/^NoCOW:$/;"	l
 OUTPUT	lib/print.c	36;"	d	file:
 OUTPUT	user/print.c	36;"	d	file:
-O_ACCMODE	user/lib.h	135;"	d
-O_CREAT	user/lib.h	137;"	d
-O_EXCL	user/lib.h	139;"	d
-O_MKDIR	user/lib.h	140;"	d
-O_RDONLY	user/lib.h	132;"	d
-O_RDWR	user/lib.h	134;"	d
-O_TRUNC	user/lib.h	138;"	d
-O_WRONLY	user/lib.h	133;"	d
-PADDR	include/mmu.h	147;"	d
+O_ACCMODE	user/lib.h	162;"	d
+O_CREAT	user/lib.h	164;"	d
+O_EXCL	user/lib.h	166;"	d
+O_MKDIR	user/lib.h	167;"	d
+O_RDONLY	user/lib.h	159;"	d
+O_RDWR	user/lib.h	161;"	d
+O_TRUNC	user/lib.h	165;"	d
+O_WRONLY	user/lib.h	160;"	d
+PADDR	include/mmu.h	161;"	d
 PDMAP	include/mmu.h	17;"	d
 PDSHIFT	include/mmu.h	19;"	d
 PDX	include/mmu.h	20;"	d
@@ -338,6 +344,7 @@ PTE_LIBRARY	include/mmu.h	41;"	d
 PTE_R	include/mmu.h	37;"	d
 PTE_UC	include/mmu.h	40;"	d
 PTE_V	include/mmu.h	36;"	d
+PTHREAD_CANCELED	include/thread.h	78;"	d
 PTX	include/mmu.h	21;"	d
 PT_DYNAMIC	include/kerelf.h	113;"	d
 PT_DYNAMIC	readelf/kerelf.h	130;"	d
@@ -377,6 +384,12 @@ ROUND	readelf/types.h	46;"	d
 ROUNDDOWN	include/types.h	47;"	d
 ROUNDDOWN	readelf/types.h	47;"	d
 SAVE_ALL	lib/genex.S	/^SAVE_ALL$/;"	l
+SEMAPHORE_H	include/semaphore.h	2;"	d
+SEMA_FREE	include/semaphore.h	11;"	d
+SEMA_MAXVAL	include/semaphore.h	13;"	d
+SEMA_USING	include/semaphore.h	12;"	d
+STACKTOP	include/thread.h	44;"	d
+STACK_SIZE	include/thread.h	11;"	d
 STATUSF_IP4	include/asm/cp0regdef.h	40;"	d
 STATUS_CU0	include/asm/cp0regdef.h	41;"	d
 STATUS_KUC	include/asm/cp0regdef.h	42;"	d
@@ -391,9 +404,17 @@ SYS_mem_map	include/unistd.h	14;"	d
 SYS_mem_unmap	include/unistd.h	15;"	d
 SYS_panic	include/unistd.h	19;"	d
 SYS_putchar	include/unistd.h	8;"	d
+SYS_sem_post	include/unistd.h	30;"	d
+SYS_sem_trywait	include/unistd.h	28;"	d
+SYS_sem_wait	include/unistd.h	29;"	d
 SYS_set_env_status	include/unistd.h	17;"	d
 SYS_set_pgfault_handler	include/unistd.h	12;"	d
 SYS_set_trapframe	include/unistd.h	18;"	d
+SYS_thread_cancel	include/unistd.h	24;"	d
+SYS_thread_create	include/unistd.h	23;"	d
+SYS_thread_destroy	include/unistd.h	27;"	d
+SYS_thread_finish	include/unistd.h	25;"	d
+SYS_thread_self	include/unistd.h	26;"	d
 SYS_yield	include/unistd.h	10;"	d
 Stat	user/fd.h	/^struct Stat {$/;"	s
 Super	include/fs.h	/^struct Super {$/;"	s
@@ -440,8 +461,35 @@ TF_REG8	include/trap.h	69;"	d
 TF_REG9	include/trap.h	70;"	d
 TF_SIZE	include/trap.h	109;"	d
 TF_STATUS	include/trap.h	97;"	d
-TIMESTACK	include/mmu.h	102;"	d
-TRUP	include/mmu.h	167;"	d
+THRDS	include/mmu.h	116;"	d
+THRDX	include/thread.h	42;"	d
+THRD_CANCELING	include/thread.h	33;"	d
+THRD_CANCEL_ASYNC	include/thread.h	29;"	d
+THRD_CANCEL_DEFER	include/thread.h	28;"	d
+THRD_CANCEL_DISABLE	include/thread.h	25;"	d
+THRD_CANCEL_ENABLE	include/thread.h	24;"	d
+THRD_CANING_BASE	include/thread.h	31;"	d
+THRD_CANING_MASK	include/thread.h	34;"	d
+THRD_CANST_BASE	include/thread.h	23;"	d
+THRD_CANST_MASK	include/thread.h	26;"	d
+THRD_CANTP_BASE	include/thread.h	27;"	d
+THRD_CANTP_MASK	include/thread.h	30;"	d
+THRD_DETACHED	include/thread.h	21;"	d
+THRD_FREE	include/thread.h	15;"	d
+THRD_JOINABLE	include/thread.h	20;"	d
+THRD_JOIN_BASE	include/thread.h	19;"	d
+THRD_JOIN_MASK	include/thread.h	22;"	d
+THRD_NOT_CANCELING	include/thread.h	32;"	d
+THRD_NOT_RUNNABLE	include/thread.h	17;"	d
+THRD_RUNNABLE	include/thread.h	16;"	d
+THRD_RUN_BASE	include/thread.h	14;"	d
+THRD_RUN_MASK	include/thread.h	18;"	d
+THRD_SCHED_BASE	include/thread.h	35;"	d
+THRD_SCHED_FINISHED	include/thread.h	37;"	d
+THRD_SCHED_MASK	include/thread.h	38;"	d
+THRD_SCHED_RUN	include/thread.h	36;"	d
+TIMESTACK	include/mmu.h	111;"	d
+TRUP	include/mmu.h	181;"	d
 T_ALIGN	include/trap.h	22;"	d
 T_BOUND	include/trap.h	10;"	d
 T_BRKPT	include/trap.h	8;"	d
@@ -461,21 +509,26 @@ T_SEGNP	include/trap.h	16;"	d
 T_STACK	include/trap.h	17;"	d
 T_SYSCALL	include/trap.h	28;"	d
 T_TSS	include/trap.h	15;"	d
+Thrd	include/thread.h	/^struct Thrd {$/;"	s
 Trapframe	include/trap.h	/^struct Trapframe { \/\/lr:need to be modified(reference to linux pt_regs) TODO$/;"	s
-UENVS	include/mmu.h	98;"	d
-ULIM	include/mmu.h	94;"	d
+UENVS	include/mmu.h	107;"	d
+ULIM	include/mmu.h	103;"	d
 UNISTD_H	include/unistd.h	2;"	d
-UPAGES	include/mmu.h	97;"	d
-USED	user/lib.h	18;"	d
+UPAGES	include/mmu.h	106;"	d
+USED	user/lib.h	20;"	d
 USERLIB	user/Makefile	/^USERLIB := printf.o \\$/;"	m
-USTACKTOP	include/mmu.h	104;"	d
-UTEXT	include/mmu.h	105;"	d
-UTOP	include/mmu.h	100;"	d
-UVPT	include/mmu.h	96;"	d
-UXSTACKTOP	include/mmu.h	101;"	d
+USTACKBASE	include/mmu.h	118;"	d
+USTACKTOP	include/mmu.h	113;"	d
+UTEXT	include/mmu.h	114;"	d
+UTHRD	include/mmu.h	120;"	d
+UTOP	include/mmu.h	109;"	d
+UVPT	include/mmu.h	105;"	d
+UXSTACKBASE	include/mmu.h	117;"	d
+UXSTACKTOP	include/mmu.h	110;"	d
 VA2PFN	include/mmu.h	28;"	d
 VPN	include/mmu.h	26;"	d
-VPT	include/mmu.h	91;"	d
+VPT	include/mmu.h	100;"	d
+XSTACK_SIZE	include/thread.h	12;"	d
 _ARGSET	include/args.h	5;"	d
 _ARGUSED	include/args.h	6;"	d
 _ENV_H_	include/env.h	4;"	d
@@ -488,7 +541,9 @@ _KER_ELF_H	include/kerelf.h	22;"	d
 _KER_ELF_H	readelf/kerelf.h	22;"	d
 _MMU_H_	include/mmu.h	2;"	d
 _PMAP_H_	include/pmap.h	2;"	d
+_SIZE_THRD_	include/thread.h	8;"	d
 _SYS_QUEUE_H_	include/queue.h	2;"	d
+_THREAD_H_	include/thread.h	4;"	d
 _TRAP_H_	include/trap.h	2;"	d
 _USER_FD_H_	user/fd.h	2;"	d
 __ASM_MIPS_REGDEF_H	include/asm-mips3k/regdef.h	10;"	d
@@ -518,7 +573,7 @@ alloc	mm/pmap.c	/^static void *alloc(u_int n, u_int align, int clear)$/;"	f	file
 and	lib/genex.S	/^and	t0, t2$/;"	l
 andi	lib/genex.S	/^andi	t1, t0, STATUSF_IP4$/;"	l
 aoutcode	init/code.c	/^char aoutcode[]={0x7f,0x45,0x4c,0x46,0x1,0x2,0x1,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x2,0x0,0x8,0x0,0x0,0x0,0x1,0x0,0x40,0x0,0xb0,0x0,0x0,0x0,0x34,0x0,0x0,0xf,0xb0,0x50,0x0,0x10,0x1,0x0,$/;"	v
-assert	include/mmu.h	164;"	d
+assert	include/mmu.h	178;"	d
 basemem	mm/pmap.c	/^u_long basemem;          \/* Amount of base memory(in bytes) *\/$/;"	v
 bcopy	init/init.c	/^void bcopy(const void *src, void *dst, size_t len)$/;"	f
 binary_user_A_size	init/code_a.c	/^unsigned int binary_user_A_size = 5298;$/;"	v
@@ -532,22 +587,26 @@ boot_pgdir	mm/pmap.c	/^Pde *boot_pgdir;$/;"	v
 boot_pgdir_walk	mm/pmap.c	/^static Pte *boot_pgdir_walk(Pde *pgdir, u_long va, int create)$/;"	f	file:
 boutcode	init/code.c	/^char boutcode[]={0x7f,0x45,0x4c,0x46,0x1,0x2,0x1,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x2,0x0,0x8,0x0,0x0,0x0,0x1,0x0,0x40,0x0,0xb0,0x0,0x0,0x0,0x34,0x0,0x0,0xf,0xb0,0x50,0x0,0x10,0x1,0x0,$/;"	v
 bzero	init/init.c	/^void bzero(void *b, size_t len)$/;"	f
+cancel_test	user/mytest.c	/^void cancel_test() {$/;"	f
 close	user/fd.c	/^close(int fdnum)$/;"	f
 close_all	user/fd.c	/^close_all(void)$/;"	f
 cons_close	user/console.c	/^cons_close(struct Fd *fd)$/;"	f
 cons_read	user/console.c	/^cons_read(struct Fd *fd, void *vbuf, u_int n, u_int offset)$/;"	f
 cons_stat	user/console.c	/^cons_stat(struct Fd *fd, struct Stat *stat)$/;"	f
 cons_write	user/console.c	/^cons_write(struct Fd *fd, const void *vbuf, u_int n, u_int offset)$/;"	f
+count	include/semaphore.h	/^	u_int count;$/;"	m	struct:__anon1
 cp0_badvaddr	include/trap.h	/^	unsigned long cp0_badvaddr;$/;"	m	struct:Trapframe
 cp0_cause	include/trap.h	/^	unsigned long cp0_cause;$/;"	m	struct:Trapframe
 cp0_epc	include/trap.h	/^	unsigned long cp0_epc;$/;"	m	struct:Trapframe
 cp0_status	include/trap.h	/^	unsigned long cp0_status;$/;"	m	struct:Trapframe
 curenv	lib/env.c	/^struct Env *curenv = NULL;	        \/\/ the current env$/;"	v	typeref:struct:Env
+curthrd	lib/thread.c	/^struct Thrd *curthrd = NULL;	\/\/ the current Thread$/;"	v	typeref:struct:Thrd
 debug	user/fd.c	6;"	d	file:
 debug	user/file.c	4;"	d	file:
 debug	user/fsipc.c	5;"	d	file:
 debug	user/pipe.c	4;"	d	file:
 delay	boot/start.S	/^delay:$/;"	l
+detachtest	user/mytest.c	/^void detachtest() {$/;"	f
 dev_close	user/fd.h	/^	int (*dev_close)(struct Fd *);$/;"	m	struct:Dev
 dev_id	user/fd.h	/^	int dev_id;$/;"	m	struct:Dev
 dev_lookup	user/fd.c	/^dev_lookup(int dev_id, struct Dev **dev)$/;"	f
@@ -564,34 +623,34 @@ drivers	drivers/Makefile	/^drivers		  := gxconsole$/;"	m
 drivers_dir	Makefile	/^drivers_dir	  := drivers$/;"	m
 dup	user/fd.c	/^dup(int oldfdnum, int newfdnum)$/;"	f
 duppage	user/fork.c	/^duppage(u_int envid, u_int pn)$/;"	f	file:
-e_ehsize	include/kerelf.h	/^	Elf32_Half	e_ehsize;		\/* ELF header size in bytes *\/$/;"	m	struct:__anon1
-e_ehsize	readelf/kerelf.h	/^        Elf32_Half      e_ehsize;               \/* ELF header size in bytes *\/$/;"	m	struct:__anon3
-e_entry	include/kerelf.h	/^	Elf32_Addr	e_entry;		\/* Entry point virtual address *\/$/;"	m	struct:__anon1
-e_entry	readelf/kerelf.h	/^        Elf32_Addr      e_entry;                \/* Entry point virtual address *\/$/;"	m	struct:__anon3
-e_flags	include/kerelf.h	/^	Elf32_Word	e_flags;		\/* Processor-specific flags *\/$/;"	m	struct:__anon1
-e_flags	readelf/kerelf.h	/^        Elf32_Word      e_flags;                \/* Processor-specific flags *\/$/;"	m	struct:__anon3
-e_ident	include/kerelf.h	/^	unsigned char	e_ident[EI_NIDENT];	\/* Magic number and other info *\/$/;"	m	struct:__anon1
-e_ident	readelf/kerelf.h	/^        unsigned char   e_ident[EI_NIDENT];     \/* Magic number and other info *\/$/;"	m	struct:__anon3
-e_machine	include/kerelf.h	/^	Elf32_Half	e_machine;		\/* Architecture *\/$/;"	m	struct:__anon1
-e_machine	readelf/kerelf.h	/^        Elf32_Half      e_machine;              \/* Architecture *\/$/;"	m	struct:__anon3
-e_phentsize	include/kerelf.h	/^	Elf32_Half	e_phentsize;		\/* Program header table entry size *\/$/;"	m	struct:__anon1
-e_phentsize	readelf/kerelf.h	/^        Elf32_Half      e_phentsize;            \/* Program header table entry size *\/$/;"	m	struct:__anon3
-e_phnum	include/kerelf.h	/^	Elf32_Half	e_phnum;		\/* Program header table entry count *\/$/;"	m	struct:__anon1
-e_phnum	readelf/kerelf.h	/^        Elf32_Half      e_phnum;                \/* Program header table entry count *\/$/;"	m	struct:__anon3
-e_phoff	include/kerelf.h	/^	Elf32_Off	e_phoff;		\/* Program header table file offset *\/$/;"	m	struct:__anon1
-e_phoff	readelf/kerelf.h	/^        Elf32_Off       e_phoff;                \/* Program header table file offset *\/$/;"	m	struct:__anon3
-e_shentsize	include/kerelf.h	/^	Elf32_Half	e_shentsize;		\/* Section header table entry size *\/$/;"	m	struct:__anon1
-e_shentsize	readelf/kerelf.h	/^        Elf32_Half      e_shentsize;            \/* Section header table entry size *\/$/;"	m	struct:__anon3
-e_shnum	include/kerelf.h	/^	Elf32_Half	e_shnum;		\/* Section header table entry count *\/$/;"	m	struct:__anon1
-e_shnum	readelf/kerelf.h	/^        Elf32_Half      e_shnum;                \/* Section header table entry count *\/$/;"	m	struct:__anon3
-e_shoff	include/kerelf.h	/^	Elf32_Off	e_shoff;		\/* Section header table file offset *\/$/;"	m	struct:__anon1
-e_shoff	readelf/kerelf.h	/^        Elf32_Off       e_shoff;                \/* Section header table file offset *\/$/;"	m	struct:__anon3
-e_shstrndx	include/kerelf.h	/^	Elf32_Half	e_shstrndx;		\/* Section header string table index *\/$/;"	m	struct:__anon1
-e_shstrndx	readelf/kerelf.h	/^        Elf32_Half      e_shstrndx;             \/* Section header string table index *\/$/;"	m	struct:__anon3
-e_type	include/kerelf.h	/^	Elf32_Half	e_type;			\/* Object file type *\/$/;"	m	struct:__anon1
-e_type	readelf/kerelf.h	/^        Elf32_Half      e_type;                 \/* Object file type *\/$/;"	m	struct:__anon3
-e_version	include/kerelf.h	/^	Elf32_Word	e_version;		\/* Object file version *\/$/;"	m	struct:__anon1
-e_version	readelf/kerelf.h	/^        Elf32_Word      e_version;              \/* Object file version *\/$/;"	m	struct:__anon3
+e_ehsize	include/kerelf.h	/^	Elf32_Half	e_ehsize;		\/* ELF header size in bytes *\/$/;"	m	struct:__anon2
+e_ehsize	readelf/kerelf.h	/^        Elf32_Half      e_ehsize;               \/* ELF header size in bytes *\/$/;"	m	struct:__anon4
+e_entry	include/kerelf.h	/^	Elf32_Addr	e_entry;		\/* Entry point virtual address *\/$/;"	m	struct:__anon2
+e_entry	readelf/kerelf.h	/^        Elf32_Addr      e_entry;                \/* Entry point virtual address *\/$/;"	m	struct:__anon4
+e_flags	include/kerelf.h	/^	Elf32_Word	e_flags;		\/* Processor-specific flags *\/$/;"	m	struct:__anon2
+e_flags	readelf/kerelf.h	/^        Elf32_Word      e_flags;                \/* Processor-specific flags *\/$/;"	m	struct:__anon4
+e_ident	include/kerelf.h	/^	unsigned char	e_ident[EI_NIDENT];	\/* Magic number and other info *\/$/;"	m	struct:__anon2
+e_ident	readelf/kerelf.h	/^        unsigned char   e_ident[EI_NIDENT];     \/* Magic number and other info *\/$/;"	m	struct:__anon4
+e_machine	include/kerelf.h	/^	Elf32_Half	e_machine;		\/* Architecture *\/$/;"	m	struct:__anon2
+e_machine	readelf/kerelf.h	/^        Elf32_Half      e_machine;              \/* Architecture *\/$/;"	m	struct:__anon4
+e_phentsize	include/kerelf.h	/^	Elf32_Half	e_phentsize;		\/* Program header table entry size *\/$/;"	m	struct:__anon2
+e_phentsize	readelf/kerelf.h	/^        Elf32_Half      e_phentsize;            \/* Program header table entry size *\/$/;"	m	struct:__anon4
+e_phnum	include/kerelf.h	/^	Elf32_Half	e_phnum;		\/* Program header table entry count *\/$/;"	m	struct:__anon2
+e_phnum	readelf/kerelf.h	/^        Elf32_Half      e_phnum;                \/* Program header table entry count *\/$/;"	m	struct:__anon4
+e_phoff	include/kerelf.h	/^	Elf32_Off	e_phoff;		\/* Program header table file offset *\/$/;"	m	struct:__anon2
+e_phoff	readelf/kerelf.h	/^        Elf32_Off       e_phoff;                \/* Program header table file offset *\/$/;"	m	struct:__anon4
+e_shentsize	include/kerelf.h	/^	Elf32_Half	e_shentsize;		\/* Section header table entry size *\/$/;"	m	struct:__anon2
+e_shentsize	readelf/kerelf.h	/^        Elf32_Half      e_shentsize;            \/* Section header table entry size *\/$/;"	m	struct:__anon4
+e_shnum	include/kerelf.h	/^	Elf32_Half	e_shnum;		\/* Section header table entry count *\/$/;"	m	struct:__anon2
+e_shnum	readelf/kerelf.h	/^        Elf32_Half      e_shnum;                \/* Section header table entry count *\/$/;"	m	struct:__anon4
+e_shoff	include/kerelf.h	/^	Elf32_Off	e_shoff;		\/* Section header table file offset *\/$/;"	m	struct:__anon2
+e_shoff	readelf/kerelf.h	/^        Elf32_Off       e_shoff;                \/* Section header table file offset *\/$/;"	m	struct:__anon4
+e_shstrndx	include/kerelf.h	/^	Elf32_Half	e_shstrndx;		\/* Section header string table index *\/$/;"	m	struct:__anon2
+e_shstrndx	readelf/kerelf.h	/^        Elf32_Half      e_shstrndx;             \/* Section header string table index *\/$/;"	m	struct:__anon4
+e_type	include/kerelf.h	/^	Elf32_Half	e_type;			\/* Object file type *\/$/;"	m	struct:__anon2
+e_type	readelf/kerelf.h	/^        Elf32_Half      e_type;                 \/* Object file type *\/$/;"	m	struct:__anon4
+e_version	include/kerelf.h	/^	Elf32_Word	e_version;		\/* Object file version *\/$/;"	m	struct:__anon2
+e_version	readelf/kerelf.h	/^        Elf32_Word      e_version;              \/* Object file version *\/$/;"	m	struct:__anon4
 eflags	lib/traps.c	/^    u_int eflags;$/;"	m	struct:pgfault_trap_frame	file:
 empty1	lib/traps.c	/^    u_int empty1;$/;"	m	struct:pgfault_trap_frame	file:
 empty2	lib/traps.c	/^    u_int empty2;$/;"	m	struct:pgfault_trap_frame	file:
@@ -607,6 +666,7 @@ env_create_priority	lib/env.c	/^env_create_priority(u_char *binary, int size, in
 env_destroy	lib/env.c	/^env_destroy(struct Env *e)$/;"	f
 env_free	lib/env.c	/^env_free(struct Env *e)$/;"	f
 env_free_list	lib/env.c	/^static struct Env_list env_free_list;	\/\/ Free list$/;"	v	typeref:struct:Env_list	file:
+env_free_thrd	include/env.h	/^	u_int env_free_thrd[2];$/;"	m	struct:Env
 env_id	include/env.h	/^	u_int env_id;                   \/\/ Unique environment identifier$/;"	m	struct:Env
 env_init	lib/env.c	/^env_init(void)$/;"	f
 env_ipc_dstva	include/env.h	/^	u_int env_ipc_dstva;		\/\/ va at which to map received page$/;"	m	struct:Env
@@ -620,13 +680,12 @@ env_parent_id	include/env.h	/^	u_int env_parent_id;            \/\/ env_id of th
 env_pgdir	include/env.h	/^	Pde  *env_pgdir;                \/\/ Kernel virtual address of page dir$/;"	m	struct:Env
 env_pgfault_handler	include/env.h	/^	u_int env_pgfault_handler;      \/\/ page fault state$/;"	m	struct:Env
 env_pri	include/env.h	/^	u_int env_pri;$/;"	m	struct:Env
-env_run	lib/env.c	/^env_run(struct Env *e)$/;"	f
 env_runs	include/env.h	/^	u_int env_runs;			\/\/ number of times been env_run'ed$/;"	m	struct:Env
-env_sched_link	include/env.h	/^	LIST_ENTRY(Env) env_sched_link;$/;"	m	struct:Env
 env_sched_list	lib/env.c	/^struct Env_list env_sched_list[2];      \/\/ Runnable list$/;"	v	typeref:struct:Env_list
 env_setup_vm	lib/env.c	/^env_setup_vm(struct Env *e)$/;"	f	file:
 env_status	include/env.h	/^	u_int env_status;               \/\/ Status of the environment$/;"	m	struct:Env
-env_tf	include/env.h	/^	struct Trapframe env_tf;        \/\/ Saved registers$/;"	m	struct:Env	typeref:struct:Env::Trapframe
+env_thrd_counter	include/env.h	/^	u_int env_thrd_counter;$/;"	m	struct:Env
+env_thrd_phy	include/env.h	/^	struct Thrd *env_thrd_phy[4];$/;"	m	struct:Env	typeref:struct:Env::Thrd
 env_xstacktop	include/env.h	/^	u_int env_xstacktop;            \/\/ top of exception stack \/\/ Lab 6 scheduler counts$/;"	m	struct:Env
 envid2env	lib/env.c	/^int envid2env(u_int envid, struct Env **penv, int checkperm)$/;"	f
 envs	lib/env.c	/^struct Env *envs = NULL;		\/\/ All environments$/;"	v	typeref:struct:Env
@@ -634,6 +693,8 @@ envs	user/entry.S	/^envs:$/;"	l
 err	lib/traps.c	/^    u_int err;$/;"	m	struct:pgfault_trap_frame	file:
 exception_handlers	lib/traps.c	/^unsigned long exception_handlers[32];$/;"	v
 exit	user/libos.c	/^exit(void)$/;"	f
+exittest	user/mytest.c	/^void exittest() {$/;"	f
+extid	user/fork.c	/^int extid;$/;"	v
 extmem	mm/pmap.c	/^u_long extmem;           \/* Amount of extended memory(in bytes) *\/$/;"	v
 f_dir	include/fs.h	/^	struct File *f_dir;		\/\/ valid only in memory$/;"	m	struct:File	typeref:struct:File::File
 f_direct	include/fs.h	/^	u_int f_direct[NDIRECT];$/;"	m	struct:File
@@ -679,6 +740,7 @@ gp	include/asm-mips3k/regdef.h	44;"	d
 gp	include/asm/regdef.h	44;"	d
 halt	drivers/gxconsole/console.c	/^void halt(void)$/;"	f
 hi	include/trap.h	/^	unsigned long hi;$/;"	m	struct:Trapframe
+id2thrd	include/thread.h	45;"	d
 init_dir	Makefile	/^init_dir	  := init$/;"	m
 int16_t	include/types.h	/^typedef int      __attribute__((__mode__(HI))) int16_t;$/;"	t
 int16_t	readelf/types.h	/^typedef short                     int16_t;$/;"	t
@@ -691,6 +753,7 @@ ipc_send	user/ipc.c	/^ipc_send(u_int whom, u_int val, u_int srcva, u_int perm)$/
 is_elf_format	lib/kernel_elfloader.c	/^int is_elf_format(u_char *binary)$/;"	f
 is_elf_format	readelf/readelf.c	/^int is_elf_format(u_char *binary)$/;"	f
 iscons	user/console.c	/^iscons(int fdnum)$/;"	f
+jointest	user/mytest.c	/^void jointest() {$/;"	f
 jp	include/asm-mips3k/regdef.h	41;"	d
 jp	include/asm/regdef.h	41;"	d
 k0	include/asm-mips3k/regdef.h	42;"	d
@@ -702,11 +765,12 @@ k0	include/stackframe.h	/^sw	k0, TF_REG29(sp)$/;"	v
 k1	include/asm-mips3k/regdef.h	43;"	d
 k1	include/asm/regdef.h	43;"	d
 k1	include/stackframe.h	/^andi	k1, 0x107C$/;"	v
-k1	include/stackframe.h	/^bnez	k1, 1f$/;"	v
+k1	include/stackframe.h	/^bnez	k1, 1f	\/\/ if this is caused by an interrupt, set sp to KERNEL_SP anyway$/;"	v
 k1	include/stackframe.h	/^move	k1, sp$/;"	v
 k1	include/stackframe.h	/^subu	sp, k1, TF_SIZE$/;"	v
 k1	include/stackframe.h	/^xori	k1, 0x1000$/;"	v
 kclock_init	lib/kclock.c	/^kclock_init(void)$/;"	f
+kthrdid2thrd	lib/thread.c	/^int kthrdid2thrd(u_int thrdid, struct Thrd **pthrd) {$/;"	f
 lib_dir	Makefile	/^lib_dir		  := lib$/;"	m
 libmain	user/libos.c	/^libmain(int argc, char **argv)$/;"	f
 link_script	Makefile	/^link_script   := $(tools_dir)\/scse0_3.lds$/;"	m
@@ -733,9 +797,11 @@ mips_detect_memory	mm/pmap.c	/^void mips_detect_memory()$/;"	f
 mips_init	init/init.c	/^void mips_init()$/;"	f
 mips_vm_init	mm/pmap.c	/^void mips_vm_init()$/;"	f
 mkenvid	lib/env.c	/^u_int mkenvid(struct Env *e)$/;"	f
+mkthrdid	lib/thread.c	/^u_int mkthrdid(struct Thrd *t, u_int idx) {$/;"	f
 mm_dir	Makefile	/^mm_dir		  := mm$/;"	m
 modules	Makefile	/^modules		  := boot drivers init lib mm user$/;"	m
 myoutput	lib/printf.c	/^static void myoutput(void *arg, char *s, int l)$/;"	f	file:
+nop	include/thread.h	/^	u_char nop[_SIZE_THRD_-sizeof(struct Trapframe)-4-4-4-4-4-4-4-4-4-4-8];$/;"	m	struct:Thrd
 nop	lib/genex.S	/^nop$/;"	l
 nop	mm/tlb_asm.S	/^nop$/;"	l
 nop	user/entry.S	/^nop$/;"	l
@@ -746,24 +812,24 @@ offsetof	include/types.h	43;"	d
 offsetof	readelf/types.h	43;"	d
 open	user/file.c	/^open(const char *path, int mode)$/;"	f
 opencons	user/console.c	/^opencons(void)$/;"	f
-p_align	include/kerelf.h	/^	Elf32_Word	p_align;		\/* Segment alignment *\/$/;"	m	struct:__anon2
-p_align	readelf/kerelf.h	/^        Elf32_Word      p_align;                \/* Segment alignment *\/$/;"	m	struct:__anon5
+p_align	include/kerelf.h	/^	Elf32_Word	p_align;		\/* Segment alignment *\/$/;"	m	struct:__anon3
+p_align	readelf/kerelf.h	/^        Elf32_Word      p_align;                \/* Segment alignment *\/$/;"	m	struct:__anon6
 p_buf	user/pipe.c	/^	u_char p_buf[BY2PIPE];	\/\/ data buffer$/;"	m	struct:Pipe	file:
-p_filesz	include/kerelf.h	/^	Elf32_Word	p_filesz;		\/* Segment size in file *\/$/;"	m	struct:__anon2
-p_filesz	readelf/kerelf.h	/^        Elf32_Word      p_filesz;               \/* Segment size in file *\/$/;"	m	struct:__anon5
-p_flags	include/kerelf.h	/^	Elf32_Word	p_flags;		\/* Segment flags *\/$/;"	m	struct:__anon2
-p_flags	readelf/kerelf.h	/^        Elf32_Word      p_flags;                \/* Segment flags *\/$/;"	m	struct:__anon5
-p_memsz	include/kerelf.h	/^	Elf32_Word	p_memsz;		\/* Segment size in memory *\/$/;"	m	struct:__anon2
-p_memsz	readelf/kerelf.h	/^        Elf32_Word      p_memsz;                \/* Segment size in memory *\/$/;"	m	struct:__anon5
-p_offset	include/kerelf.h	/^	Elf32_Off	p_offset;		\/* Segment file offset *\/$/;"	m	struct:__anon2
-p_offset	readelf/kerelf.h	/^        Elf32_Off       p_offset;               \/* Segment file offset *\/$/;"	m	struct:__anon5
-p_paddr	include/kerelf.h	/^	Elf32_Addr	p_paddr;		\/* Segment physical address *\/$/;"	m	struct:__anon2
-p_paddr	readelf/kerelf.h	/^        Elf32_Addr      p_paddr;                \/* Segment physical address *\/$/;"	m	struct:__anon5
+p_filesz	include/kerelf.h	/^	Elf32_Word	p_filesz;		\/* Segment size in file *\/$/;"	m	struct:__anon3
+p_filesz	readelf/kerelf.h	/^        Elf32_Word      p_filesz;               \/* Segment size in file *\/$/;"	m	struct:__anon6
+p_flags	include/kerelf.h	/^	Elf32_Word	p_flags;		\/* Segment flags *\/$/;"	m	struct:__anon3
+p_flags	readelf/kerelf.h	/^        Elf32_Word      p_flags;                \/* Segment flags *\/$/;"	m	struct:__anon6
+p_memsz	include/kerelf.h	/^	Elf32_Word	p_memsz;		\/* Segment size in memory *\/$/;"	m	struct:__anon3
+p_memsz	readelf/kerelf.h	/^        Elf32_Word      p_memsz;                \/* Segment size in memory *\/$/;"	m	struct:__anon6
+p_offset	include/kerelf.h	/^	Elf32_Off	p_offset;		\/* Segment file offset *\/$/;"	m	struct:__anon3
+p_offset	readelf/kerelf.h	/^        Elf32_Off       p_offset;               \/* Segment file offset *\/$/;"	m	struct:__anon6
+p_paddr	include/kerelf.h	/^	Elf32_Addr	p_paddr;		\/* Segment physical address *\/$/;"	m	struct:__anon3
+p_paddr	readelf/kerelf.h	/^        Elf32_Addr      p_paddr;                \/* Segment physical address *\/$/;"	m	struct:__anon6
 p_rpos	user/pipe.c	/^	u_int p_rpos;		    \/\/ read position$/;"	m	struct:Pipe	file:
-p_type	include/kerelf.h	/^	Elf32_Word	p_type;			\/* Segment type *\/$/;"	m	struct:__anon2
-p_type	readelf/kerelf.h	/^        Elf32_Word      p_type;                 \/* Segment type *\/$/;"	m	struct:__anon5
-p_vaddr	include/kerelf.h	/^	Elf32_Addr	p_vaddr;		\/* Segment virtual address *\/$/;"	m	struct:__anon2
-p_vaddr	readelf/kerelf.h	/^        Elf32_Addr      p_vaddr;                \/* Segment virtual address *\/$/;"	m	struct:__anon5
+p_type	include/kerelf.h	/^	Elf32_Word	p_type;			\/* Segment type *\/$/;"	m	struct:__anon3
+p_type	readelf/kerelf.h	/^        Elf32_Word      p_type;                 \/* Segment type *\/$/;"	m	struct:__anon6
+p_vaddr	include/kerelf.h	/^	Elf32_Addr	p_vaddr;		\/* Segment virtual address *\/$/;"	m	struct:__anon3
+p_vaddr	readelf/kerelf.h	/^        Elf32_Addr      p_vaddr;                \/* Segment virtual address *\/$/;"	m	struct:__anon6
 p_wpos	user/pipe.c	/^	u_int p_wpos;		    \/\/ write position$/;"	m	struct:Pipe	file:
 pa2page	include/pmap.h	/^pa2page(u_long pa)$/;"	f
 page2kva	include/pmap.h	/^page2kva(struct Page *pp)$/;"	f
@@ -790,17 +856,30 @@ pgdir_walk	mm/pmap.c	/^pgdir_walk(Pde *pgdir, u_long va, int create, Pte **ppte)
 pgfault	user/fork.c	/^pgfault(u_int va)$/;"	f	file:
 pgfault_trap_frame	lib/traps.c	/^struct pgfault_trap_frame {$/;"	s	file:
 physical_memory_manage_check	mm/pmap.c	/^physical_memory_manage_check(void)$/;"	f
+ping	user/mytest.c	/^sem_t *ping, *pong;$/;"	v
 pipe	user/pipe.c	/^pipe(int pfd[2])$/;"	f
 pipeclose	user/pipe.c	/^pipeclose(struct Fd *fd)$/;"	f	file:
 pipeisclosed	user/pipe.c	/^pipeisclosed(int fdnum)$/;"	f
 piperead	user/pipe.c	/^piperead(struct Fd *fd, void *vbuf, u_int n, u_int offset)$/;"	f	file:
 pipestat	user/pipe.c	/^pipestat(struct Fd *fd, struct Stat *stat)$/;"	f	file:
 pipewrite	user/pipe.c	/^pipewrite(struct Fd *fd, const void *vbuf, u_int n, u_int offset)$/;"	f	file:
+pong	user/mytest.c	/^sem_t *ping, *pong;$/;"	v
 pp_link	include/pmap.h	/^	Page_LIST_entry_t pp_link;	\/* free list link *\/$/;"	m	struct:Page
 pp_ref	include/pmap.h	/^	u_short pp_ref;$/;"	m	struct:Page
 printcharc	drivers/gxconsole/console.c	/^void printcharc(char ch)$/;"	f
 printf	lib/printf.c	/^void printf(char *fmt, ...)$/;"	f
 printstr	drivers/gxconsole/console.c	/^void printstr(char *s)$/;"	f
+pthread_cancel	user/pthread.c	/^pthread_cancel(pthread_t thread)$/;"	f
+pthread_create	user/pthread.c	/^pthread_create(pthread_t *thread, void *attr, void *(*start_routine)(void *), void *arg)$/;"	f
+pthread_detach	user/pthread.c	/^pthread_detach(pthread_t thread) {$/;"	f
+pthread_exit	user/pthread.c	/^pthread_exit(void *retval)$/;"	f
+pthread_join	user/pthread.c	/^pthread_join(pthread_t thread, void **retval) {$/;"	f
+pthread_self	user/pthread.c	/^pthread_self(void) {$/;"	f
+pthread_t	include/thread.h	/^typedef u_int pthread_t;$/;"	t
+pthread_testcancel	user/pthread.c	/^pthread_testcancel(void)$/;"	f
+pv_test1	user/mytest.c	/^void pv_test1() {$/;"	f
+pv_test_block	user/mytest.c	/^void pv_test_block() {$/;"	f
+pv_test_pingpong	user/mytest.c	/^void pv_test_pingpong() {$/;"	f
 qaddr_t	include/types.h	/^typedef	quad_t 	*qaddr_t;$/;"	t
 qaddr_t	readelf/types.h	/^typedef	quad_t *	qaddr_t;$/;"	t
 quad_t	include/types.h	/^typedef	int64_t		quad_t;$/;"	t
@@ -811,6 +890,7 @@ read	user/fd.c	/^read(int fdnum, void *buf, u_int n)$/;"	f
 read_map	user/file.c	/^read_map(int fdnum, u_int offset, void **blk)$/;"	f
 readelf	readelf/readelf.c	/^int readelf(u_char *binary, int size)$/;"	f
 readn	user/fd.c	/^readn(int fdnum, void *buf, u_int n)$/;"	f
+recursive_test	user/mytest.c	/^int recursive_test(int nowat, int to) {$/;"	f
 register_t	include/types.h	/^typedef int32_t                 register_t;$/;"	t
 register_t	readelf/types.h	/^typedef int32_t                 register_t;$/;"	t
 regs	include/trap.h	/^	unsigned long regs[32];$/;"	m	struct:Trapframe
@@ -825,6 +905,7 @@ req_omode	include/fs.h	/^	u_int req_omode;$/;"	m	struct:Fsreq_open
 req_path	include/fs.h	/^	char req_path[MAXPATHLEN];$/;"	m	struct:Fsreq_open
 req_path	include/fs.h	/^	u_char req_path[MAXPATHLEN];$/;"	m	struct:Fsreq_remove
 req_size	include/fs.h	/^	u_int req_size;$/;"	m	struct:Fsreq_set_size
+run_and_sleep	user/pthread.c	/^run_and_sleep(void *(*start_routine)(void *), void *arg)$/;"	f
 s0	include/asm-mips3k/regdef.h	31;"	d
 s0	include/asm/regdef.h	31;"	d
 s1	include/asm-mips3k/regdef.h	32;"	d
@@ -848,24 +929,31 @@ s_nblocks	include/fs.h	/^	u_int s_nblocks;	\/\/ Total number of blocks on disk$/
 s_root	include/fs.h	/^	struct File s_root;	\/\/ Root directory node$/;"	m	struct:Super	typeref:struct:Super::File
 sched_yield	lib/sched.c	/^void sched_yield(void)$/;"	f
 seek	user/fd.c	/^seek(int fdnum, u_int offset)$/;"	f
+sem_destroy	user/semaphore.c	/^sem_destroy(sem_t *sem)$/;"	f
+sem_getvalue	user/semaphore.c	/^sem_getvalue(sem_t *sem, int *ret)$/;"	f
+sem_init	user/semaphore.c	/^sem_init(sem_t *sem, int unused, unsigned value)$/;"	f
+sem_post	user/semaphore.c	/^sem_post(sem_t *sem)$/;"	f
+sem_t	include/semaphore.h	/^} sem_t;$/;"	t	typeref:struct:__anon1
+sem_trywait	user/semaphore.c	/^sem_trywait(sem_t *sem)$/;"	f
+sem_wait	user/semaphore.c	/^sem_wait(sem_t *sem)$/;"	f
 set_except_vector	lib/traps.c	/^void *set_except_vector(int n, void *addr)$/;"	f
 set_pgfault_handler	user/pgfault.c	/^set_pgfault_handler(void (*fn)(u_int va))$/;"	f
 setup_c0_status	lib/kclock_asm.S	/^setup_c0_status STATUS_CU0|0x1001 0$/;"	l
 sfork	user/fork.c	/^sfork(void)$/;"	f
-sh_addr	readelf/kerelf.h	/^        Elf32_Addr sh_addr;                 \/* Section addr *\/$/;"	m	struct:__anon4
-sh_addralign	readelf/kerelf.h	/^        Elf32_Word sh_addralign;            \/* Section alignment *\/$/;"	m	struct:__anon4
-sh_entsize	readelf/kerelf.h	/^        Elf32_Word sh_entsize;              \/* Section entry size *\/$/;"	m	struct:__anon4
-sh_flags	readelf/kerelf.h	/^        Elf32_Word sh_flags;                \/* Section flags *\/$/;"	m	struct:__anon4
-sh_info	readelf/kerelf.h	/^        Elf32_Word sh_info;                 \/* Section extra info *\/$/;"	m	struct:__anon4
-sh_link	readelf/kerelf.h	/^        Elf32_Word sh_link;                 \/* Section link *\/$/;"	m	struct:__anon4
-sh_name	readelf/kerelf.h	/^        Elf32_Word sh_name;                 \/* Section name *\/$/;"	m	struct:__anon4
-sh_offset	readelf/kerelf.h	/^        Elf32_Off  sh_offset;               \/* Section offset *\/$/;"	m	struct:__anon4
-sh_size	readelf/kerelf.h	/^        Elf32_Word sh_size;                 \/* Section size *\/$/;"	m	struct:__anon4
-sh_type	readelf/kerelf.h	/^        Elf32_Word sh_type;                 \/* Section type *\/$/;"	m	struct:__anon4
+sh_addr	readelf/kerelf.h	/^        Elf32_Addr sh_addr;                 \/* Section addr *\/$/;"	m	struct:__anon5
+sh_addralign	readelf/kerelf.h	/^        Elf32_Word sh_addralign;            \/* Section alignment *\/$/;"	m	struct:__anon5
+sh_entsize	readelf/kerelf.h	/^        Elf32_Word sh_entsize;              \/* Section entry size *\/$/;"	m	struct:__anon5
+sh_flags	readelf/kerelf.h	/^        Elf32_Word sh_flags;                \/* Section flags *\/$/;"	m	struct:__anon5
+sh_info	readelf/kerelf.h	/^        Elf32_Word sh_info;                 \/* Section extra info *\/$/;"	m	struct:__anon5
+sh_link	readelf/kerelf.h	/^        Elf32_Word sh_link;                 \/* Section link *\/$/;"	m	struct:__anon5
+sh_name	readelf/kerelf.h	/^        Elf32_Word sh_name;                 \/* Section name *\/$/;"	m	struct:__anon5
+sh_offset	readelf/kerelf.h	/^        Elf32_Off  sh_offset;               \/* Section offset *\/$/;"	m	struct:__anon5
+sh_size	readelf/kerelf.h	/^        Elf32_Word sh_size;                 \/* Section size *\/$/;"	m	struct:__anon5
+sh_type	readelf/kerelf.h	/^        Elf32_Word sh_type;                 \/* Section type *\/$/;"	m	struct:__anon5
 size_t	include/types.h	/^typedef u_int32_t        size_t;$/;"	t
 sp	include/asm-mips3k/regdef.h	45;"	d
 sp	include/asm/regdef.h	45;"	d
-sp	include/stackframe.h	/^bltz	sp, 2f$/;"	v
+sp	include/stackframe.h	/^bltz	sp, 2f	\/\/ meaning it is already a kernel stack pointer$/;"	v
 sp	include/stackframe.h	/^li	sp, 0x82000000$/;"	v
 sp	include/stackframe.h	/^lw	sp, KERNEL_SP$/;"	v
 sp	include/stackframe.h	/^lw	sp, TF_REG29(sp) \/* Deallocate stack *\/$/;"	v
@@ -878,10 +966,12 @@ st_size	user/fd.h	/^	u_int st_size;$/;"	m	struct:Stat
 stat	user/fd.c	/^stat(const char *path, struct Stat *stat)$/;"	f
 static_assert	include/types.h	41;"	d
 static_assert	readelf/types.h	41;"	d
+status	include/semaphore.h	/^	u_int status;$/;"	m	struct:__anon1
 strchr	user/string.c	/^strchr(const char *s, char c)$/;"	f
 strcmp	user/string.c	/^strcmp(const char *p, const char *q)$/;"	f
 strcpy	user/string.c	/^strcpy(char *dst, const char *src)$/;"	f
 strlen	user/string.c	/^strlen(const char *s)$/;"	f
+subthread	user/mytest.c	/^void *subthread(void *args) {$/;"	f
 sync	user/file.c	/^sync(void)$/;"	f
 sys_call_table	lib/syscall.S	/^sys_call_table:                         \/\/ Syscall Table$/;"	l
 sys_env_alloc	lib/syscall_all.c	/^int sys_env_alloc(void)$/;"	f
@@ -894,9 +984,17 @@ sys_mem_map	lib/syscall_all.c	/^int sys_mem_map(int sysno, u_int srcid, u_int sr
 sys_mem_unmap	lib/syscall_all.c	/^int sys_mem_unmap(int sysno, u_int envid, u_int va)$/;"	f
 sys_panic	lib/syscall_all.c	/^void sys_panic(int sysno, char *msg)$/;"	f
 sys_putchar	lib/syscall_all.c	/^void sys_putchar(int sysno, int c, int a2, int a3, int a4, int a5)$/;"	f
+sys_sem_post	lib/syscall_all.c	/^sys_sem_post(int sysno, sem_t *sem)$/;"	f
+sys_sem_trywait	lib/syscall_all.c	/^sys_sem_trywait(int sysno, sem_t *sem)$/;"	f
+sys_sem_wait	lib/syscall_all.c	/^sys_sem_wait(int sysno, sem_t *sem)$/;"	f
 sys_set_env_status	lib/syscall_all.c	/^int sys_set_env_status(int sysno, u_int envid, u_int status)$/;"	f
 sys_set_pgfault_handler	lib/syscall_all.c	/^int sys_set_pgfault_handler(int sysno, u_int envid, u_int func, u_int xstacktop)$/;"	f
 sys_set_trapframe	lib/syscall_all.c	/^int sys_set_trapframe(int sysno, u_int envid, struct Trapframe *tf)$/;"	f
+sys_thread_cancel	lib/syscall_all.c	/^sys_thread_cancel(int sysno, pthread_t tid)$/;"	f
+sys_thread_create	lib/syscall_all.c	/^sys_thread_create(int sysno, void *(*setup_routine)(void *), void *arg, void (*ras)(void *(*)(void *), void *))$/;"	f
+sys_thread_destroy	lib/syscall_all.c	/^sys_thread_destroy(int sysno, pthread_t thread)$/;"	f
+sys_thread_finish	lib/syscall_all.c	/^sys_thread_finish(int sysno, pthread_t thread)$/;"	f
+sys_thread_self	lib/syscall_all.c	/^sys_thread_self(void)$/;"	f
 sys_yield	lib/syscall_all.c	/^void sys_yield(void)$/;"	f
 syscall_cgetc	user/syscall_lib.c	/^syscall_cgetc()$/;"	f
 syscall_env_alloc	user/lib.h	/^inline static int syscall_env_alloc(void)$/;"	f
@@ -909,9 +1007,17 @@ syscall_mem_map	user/syscall_lib.c	/^syscall_mem_map(u_int srcid, u_int srcva, u
 syscall_mem_unmap	user/syscall_lib.c	/^syscall_mem_unmap(u_int envid, u_int va)$/;"	f
 syscall_panic	user/syscall_lib.c	/^syscall_panic(char *msg)$/;"	f
 syscall_putchar	user/syscall_lib.c	/^void syscall_putchar(char ch)$/;"	f
+syscall_sem_post	user/syscall_lib.c	/^syscall_sem_post(sem_t *sem)$/;"	f
+syscall_sem_trywait	user/syscall_lib.c	/^syscall_sem_trywait(sem_t *sem)$/;"	f
+syscall_sem_wait	user/syscall_lib.c	/^syscall_sem_wait(sem_t *sem)$/;"	f
 syscall_set_env_status	user/syscall_lib.c	/^syscall_set_env_status(u_int envid, u_int status)$/;"	f
 syscall_set_pgfault_handler	user/syscall_lib.c	/^syscall_set_pgfault_handler(u_int envid, void (*func)(void), u_int xstacktop)$/;"	f
 syscall_set_trapframe	user/syscall_lib.c	/^syscall_set_trapframe(u_int envid, struct Trapframe *tf)$/;"	f
+syscall_thread_cancel	user/syscall_lib.c	/^syscall_thread_cancel(pthread_t tid)$/;"	f
+syscall_thread_create	user/syscall_lib.c	/^syscall_thread_create(void *(*setup_routine)(void *), void *arg, void (*ras)(void *(*)(void *), void *))$/;"	f
+syscall_thread_destroy	user/syscall_lib.c	/^syscall_thread_destroy(pthread_t thread)$/;"	f
+syscall_thread_finish	user/syscall_lib.c	/^syscall_thread_finish(pthread_t thread)$/;"	f
+syscall_thread_self	user/syscall_lib.c	/^syscall_thread_self(void)$/;"	f
 syscall_yield	user/syscall_lib.c	/^syscall_yield(void)$/;"	f
 t0	include/asm-mips3k/regdef.h	23;"	d
 t0	include/asm/regdef.h	23;"	d
@@ -941,6 +1047,31 @@ t8	include/asm/regdef.h	39;"	d
 t9	include/asm-mips3k/regdef.h	40;"	d
 t9	include/asm/regdef.h	40;"	d
 theFatalMsg	lib/print.c	/^static const char theFatalMsg[] = "fatal error in lp_Print!";$/;"	v	file:
+thrd_alloc	lib/thread.c	/^thrd_alloc(struct Thrd **new, struct Env *e) {$/;"	f
+thrd_destroy	lib/thread.c	/^thrd_destroy(struct Thrd *t) {$/;"	f
+thrd_env	include/thread.h	/^	struct Env *thrd_env;$/;"	m	struct:Thrd	typeref:struct:Thrd::Env
+thrd_finish	lib/thread.c	/^thrd_finish(struct Thrd *t) {$/;"	f
+thrd_free	lib/thread.c	/^thrd_free(struct Thrd *t) {$/;"	f
+thrd_id	include/thread.h	/^	u_int thrd_id;$/;"	m	struct:Thrd
+thrd_init	lib/thread.c	/^thrd_init(void) {$/;"	f
+thrd_join_id	include/thread.h	/^	u_int thrd_join_id;$/;"	m	struct:Thrd
+thrd_pgfault_handler	include/thread.h	/^	u_int thrd_pgfault_handler;$/;"	m	struct:Thrd
+thrd_pri	include/thread.h	/^	u_int thrd_pri;$/;"	m	struct:Thrd
+thrd_retval	include/thread.h	/^	void *thrd_retval;$/;"	m	struct:Thrd
+thrd_run	lib/thread.c	/^thrd_run(struct Thrd *t) {$/;"	f
+thrd_sched_link	include/thread.h	/^	LIST_ENTRY(Thrd) thrd_sched_link;$/;"	m	struct:Thrd
+thrd_sched_list	lib/thread.c	/^struct Thrd_list thrd_sched_list[2];$/;"	v	typeref:struct:Thrd_list
+thrd_stacktop	include/thread.h	/^	u_int thrd_stacktop;$/;"	m	struct:Thrd
+thrd_status	include/thread.h	/^	u_int thrd_status;$/;"	m	struct:Thrd
+thrd_tf	include/thread.h	/^	struct Trapframe thrd_tf;$/;"	m	struct:Thrd	typeref:struct:Thrd::Trapframe
+thrd_wait	include/thread.h	/^	u_int thrd_wait;$/;"	m	struct:Thrd
+thrd_xstacktop	include/thread.h	/^	u_int thrd_xstacktop;$/;"	m	struct:Thrd
+thrdid2thrd	user/pthread.c	/^thrdid2thrd(u_int thrdid, struct Thrd **thrd) {$/;"	f	file:
+thrds	lib/thread.c	/^struct Thrd *thrds = THRDS;$/;"	v	typeref:struct:Thrd
+thread_canceling	user/mytest.c	/^void *thread_canceling(void *args) {$/;"	f
+thread_keyholder	user/mytest.c	/^void *thread_keyholder(void *args) {$/;"	f
+thread_pong	user/mytest.c	/^void *thread_pong(void *args) {$/;"	f
+thread_with_retval	user/mytest.c	/^void *thread_with_retval(void *args) {$/;"	f
 timer_irq	lib/genex.S	/^timer_irq:$/;"	l
 tlb_invalidate	mm/pmap.c	/^tlb_invalidate(Pde *pgdir, u_long va)$/;"	f
 tlbra	boot/start.S	/^tlbra:$/;"	l
@@ -972,18 +1103,19 @@ uint64_t	include/kerelf.h	/^typedef u_int64_t		uint64_t;$/;"	t
 uint64_t	readelf/kerelf.h	/^typedef u_int64_t               uint64_t;$/;"	t
 umain	user/fktest.c	/^void umain()$/;"	f
 umain	user/idle.c	/^void umain()$/;"	f
+umain	user/mytest.c	/^void umain(void) {$/;"	f
 umain	user/pingpong.c	/^umain(void)$/;"	f
 user_PrintChar	user/print.c	/^user_PrintChar(char *buf, char c, int length, int ladjust)$/;"	f
 user_PrintNum	user/print.c	/^user_PrintNum(char *buf, unsigned long u, int base, int negFlag,$/;"	f
 user_PrintString	user/print.c	/^user_PrintString(char *buf, char *s, int length, int ladjust)$/;"	f
-user_assert	user/lib.h	128;"	d
+user_assert	user/lib.h	155;"	d
 user_bcopy	user/fork.c	/^void user_bcopy(const void *src, void *dst, size_t len)$/;"	f
 user_bzero	user/fork.c	/^void user_bzero(void *v, u_int n)$/;"	f
 user_dir	Makefile	/^user_dir	  := user$/;"	m
 user_lp_Print	user/print.c	/^user_lp_Print(void (*output)(void *, const char *, int),$/;"	f
 user_myoutput	user/printf.c	/^static void user_myoutput(void *arg, const char *s, int l)$/;"	f	file:
 user_out2string	user/fprintf.c	/^static void user_out2string(void *arg, const char *s, int l)$/;"	f	file:
-user_panic	user/lib.h	33;"	d
+user_panic	user/lib.h	35;"	d
 user_theFatalMsg	user/print.c	/^static const char user_theFatalMsg[] = "fatal error in user_lp_Print!";$/;"	v	file:
 v0	include/asm-mips3k/regdef.h	17;"	d
 v0	include/asm/regdef.h	17;"	d
