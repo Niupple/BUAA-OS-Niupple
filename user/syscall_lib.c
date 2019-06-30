@@ -93,7 +93,7 @@ syscall_cgetc()
 int
 syscall_thread_create(void *(*setup_routine)(void *), void *arg, void (*ras)(void *(*)(void *), void *))
 {
-	writef("in syscall routine = %x, arg = %x, ras = %x\n", setup_routine, arg, ras);
+	//writef("in syscall routine = %x, arg = %x, ras = %x\n", setup_routine, arg, ras);
 	return msyscall(SYS_thread_create, setup_routine, arg, ras, 0, 0);
 }
 

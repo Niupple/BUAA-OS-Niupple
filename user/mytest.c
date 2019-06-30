@@ -140,6 +140,49 @@ void pv_test_block() {
 	writef("the waiter entered the door\n");
 }
 
+void *thread_modify(void *args) {
+	int *x = (int *)args;
+	writef("arg is %d\n", *x);
+	*x = 17231164;
+	return NULL;
+}
+
+void pthread_test_stack_share() {
+	pthread_t p;
+	int x = 233;
+	user_assert(pthread_create(&p, NULL, thread_modify, (void *)&x) == 0);
+	user_assert(pthread_join(p, NULL) == 0);
+	writef("x is now %d\n", x);
+}
+
+void *thread_scan(void *args) {
+	int i;
+	int *av = (int *)args;
+	for (i = 0; i < 10; ++i) {
+		writef("av[%d] = %d\n", i, av[i]);
+		av[i] = 233 - i;
+	}
+	return NULL;
+}
+
+void pthread_test_heap_share() {
+	pthread_t p;
+	int *arr;
+	int i;
+
+	arr = (int *)0x7f3fe000;
+	user_assert(syscall_mem_alloc(0, (u_int)arr, PTE_V | PTE_R) == 0);
+	for (i = 0; i < 10; ++i) {
+		arr[i] = 233 + i;
+	}
+	user_assert(pthread_create(&p, NULL, thread_scan, (void *)arr) == 0);
+	user_assert(pthread_join(p, 0) == 0);
+	writef("after join\n");
+	for (i = 0; i < 10; ++i) {
+		writef("arr[%d] = %d\n", i, arr[i]);
+	}
+}
+
 void umain(void) {
 	int r;
 	writef("I am here!!!\n");
@@ -149,6 +192,8 @@ void umain(void) {
 	//pv_test1();
 	pv_test_pingpong();
 	//pv_test_block();
+	//pthread_test_stack_share();
+	//pthread_test_heap_share();
 	while(1);
 
 }

@@ -239,12 +239,12 @@ env_alloc(struct Env **new, u_int parent_id)
 		//printf("%x\n", KADDR(e->env_thrd_phy[i]));
 		page_insert(KADDR(e->env_cr3), p, THRDS + BY2PG*i, PTE_V | PTE_R);
 	}
-	printf("stack allocated\n");
+	//printf("stack allocated\n");
 
 	if ((r = thrd_alloc(&t, e)) < 0) {
 		return r;
 	}
-	printf("thread allocated\n");
+	//printf("thread allocated\n");
 
 	/*Step 5: Remove the new Env from Env free list*/
 	LIST_REMOVE(e, env_link);
@@ -398,7 +398,7 @@ env_create_priority(u_char *binary, int size, int priority)
 		//printf("env_alloc failed\n");
 		return;
 	}
-	printf("env_alloc finished\n");
+	//printf("env_alloc finished\n");
 
 	/*Step 2: assign priority to the new env. */
 	t = id2thrd(0, e);
@@ -408,7 +408,7 @@ env_create_priority(u_char *binary, int size, int priority)
 	/*Step 3: Use load_icode() to load the named elf binary. */
 	load_icode(e, binary, size);
 
-	printf("inserting %x\n", t);
+	//printf("inserting %x\n", t);
 	LIST_INSERT_HEAD(&thrd_sched_list[0], t, thrd_sched_link);
 
 	//printf("inserting env into env_sched_list %x\n", e);

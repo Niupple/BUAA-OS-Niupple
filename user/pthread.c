@@ -101,7 +101,7 @@ pthread_exit(void *retval)
 
 int
 pthread_join(pthread_t thread, void **retval) {
-	writef("in pthread_join with %d\n", thread);
+	//writef("in pthread_join with %d\n", thread);
 	struct Thrd *t;
 	int r;
 

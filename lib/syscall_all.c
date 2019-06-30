@@ -468,7 +468,7 @@ int sys_ipc_can_send(int sysno, u_int envid, u_int value, u_int srcva,
 int
 sys_thread_create(int sysno, void *(*setup_routine)(void *), void *arg, void (*ras)(void *(*)(void *), void *))
 {
-	printf("routine = %x, arg = %x, ras = %x\n", setup_routine, arg, ras);
+	//printf("routine = %x, arg = %x, ras = %x\n", setup_routine, arg, ras);
 	struct Thrd *t;
 	int r;
 
@@ -481,7 +481,7 @@ sys_thread_create(int sysno, void *(*setup_routine)(void *), void *arg, void (*r
 	t->thrd_tf.regs[4] = setup_routine;
 	t->thrd_tf.regs[5] = arg;
 	t->thrd_tf.pc = ras;
-	printf("pc = %x\n", t->thrd_tf.pc);
+	//printf("pc = %x\n", t->thrd_tf.pc);
 	LIST_INSERT_HEAD(&thrd_sched_list[0], t, thrd_sched_link);
 
 	return t->thrd_id;

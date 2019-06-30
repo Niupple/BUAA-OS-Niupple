@@ -31,9 +31,9 @@ int kthrdid2thrd(u_int thrdid, struct Thrd **pthrd) {
 		return 0;
 	}
 
-	printf("curenv = %x\n", curenv);
+	//printf("curenv = %x\n", curenv);
 	t = id2thrd(THRDX(thrdid), curenv);
-	printf("status of %d(%d) is %x\n", thrdid, t->thrd_id, t->thrd_status);
+	//printf("status of %d(%d) is %x\n", thrdid, t->thrd_id, t->thrd_status);
 	status = (t->thrd_status & THRD_RUN_MASK);
 	if (status == THRD_FREE || t->thrd_id != thrdid) {
 		if(status == THRD_FREE) {
@@ -81,7 +81,7 @@ thrd_alloc(struct Thrd **new, struct Env *e) {
 			}
 		}
 	}
-	printf("found empty, %d, %d\n", i, j);
+	//printf("found empty, %d, %d\n", i, j);
 	if (r == -1) {
 		return -E_NO_FREE_THRD;
 	}
@@ -90,7 +90,7 @@ thrd_alloc(struct Thrd **new, struct Env *e) {
 
 	t->thrd_env = e;
 	t->thrd_id = mkthrdid(t, r);
-	printf("id = %x\n", t->thrd_id);
+	//printf("id = %x\n", t->thrd_id);
 	t->thrd_status = THRD_RUNNABLE;
 
 	t->thrd_join_id = 0;
@@ -107,7 +107,7 @@ thrd_alloc(struct Thrd **new, struct Env *e) {
 
 	void
 thrd_free(struct Thrd *t) {
-	printf("thrd free %x\n", t);
+	//printf("thrd free %x\n", t);
 	t->thrd_status = THRD_FREE;
 	if (curthrd == t) {
 		curthrd = NULL;
@@ -118,7 +118,7 @@ thrd_free(struct Thrd *t) {
 
 	void
 thrd_destroy(struct Thrd *t) {
-	printf("in destroy of %x\n", t);
+	//printf("in destroy of %x\n", t);
 	thrd_free(t);
 	if (curthrd == t) {
 		curthrd = NULL;
@@ -146,12 +146,12 @@ thrd_run(struct Thrd *t) {
 
 	void
 thrd_finish(struct Thrd *t) {
-	printf("in thread_finish %d, %x\n", t->thrd_id, t);
+	//printf("in thread_finish %d, %x\n", t->thrd_id, t);
 	struct Thrd *waiter;
 	int r;
 
 	if ((t->thrd_status & THRD_JOIN_MASK) == THRD_DETACHED) {
-		printf("destroy due to detached\n");
+		//printf("destroy due to detached\n");
 		thrd_destroy(t);
 	}
 	//printf("s before = %x\n", t->thrd_status);
@@ -159,7 +159,7 @@ thrd_finish(struct Thrd *t) {
 	t->thrd_status = (t->thrd_status & ~THRD_RUN_MASK) | THRD_NOT_RUNNABLE;
 	//printf("s after = %x\n", t->thrd_status);
 
-	printf("hold up to wait for joining\n");
+	//printf("hold up to wait for joining\n");
 	sched_yield();
 	//syscall_yield();
 }
