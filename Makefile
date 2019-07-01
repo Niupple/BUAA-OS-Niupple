@@ -41,7 +41,8 @@ $(modules):
 run:
 	/OSLAB/gxemul -E testmips -C R3000 -M 64 -d gxemul/fs.img $(vmlinux_elf)
 
-test: clean all run
+test: clean all
+	/OSLAB/gxemul -E testmips -C R3000 -M 64 -d gxemul/fs.img $(vmlinux_elf)
 
 
 clean: 
